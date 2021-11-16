@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-	findGame,
 	getGameByName
 };
 
@@ -13,6 +12,7 @@ const fetch = require('node-fetch');
 // FY6IrZTDRe
 const BOARD_GAME_ATLAS_BASE_URI = 'https://api.boardgameatlas.com/api/search?' + 'client_id=' + process.env['ATLAS_CLIENT_ID'];
 const HTTP_SERVER_ERROR = 5;
+const HTTP_CLIENT_ERROR = 4;
 
 
 /**
@@ -28,6 +28,9 @@ function getStatusClass(statusCode) {
 /**
  * Does a fetch request to the specified uri.
  * @param {String} uri 
+ * @throws EXT_SVC_FAIL if there was an external server side error
+ * @throws NOT_FOUND if the solicited resource wasn't found (client error)
+ * @throws FAIL if there was some other error
  * @returns promise with a json response
  */
 async function do_fetch(uri) {
@@ -39,7 +42,14 @@ async function do_fetch(uri) {
 		return res.json()
 			.catch(err => err) // can you see what this does?
 			.then(info => {
-				throw (getStatusClass(res.status) === HTTP_SERVER_ERROR) ? errors.EXT_SVC_FAIL(info) : errors.FAIL(info);
+				switch(getStatusClass(res.status)){
+					case HTTP_SERVER_ERROR:
+						throw errors.EXT_SVC_FAIL(info);
+					case HTTP_CLIENT_ERROR:
+						throw errors.NOT_FOUND("");
+					default:
+						throw errors.FAIL(info)
+				}
 			});
 	}
 }
@@ -65,32 +75,22 @@ function makeGameObj(gameInfo) {
 
 
 /**
- * Gets a game object given a query
- * @param {String} query 
- * @returns promise with the game object response
- */
-async function findGame(query) {
-	const search_uri = BOARD_GAME_ATLAS_BASE_URI + '?q=' + query;
-
-	const answer = await do_fetch(search_uri);
-	if (answer.items && answer.items.length)
-		return makeGameObj(answer.items[0]);
-	else
-		throw errors.NOT_FOUND({ query });
-}
-
-
-/**
  * Gets a game by its name
- * @param {String} name 
+ * @param {String} name
+ * @throws error NOT_FOUND if no game was found with the given name
  * @returns promise with the game object response
  */
-async function getGameByName(name) {
+ async function getGameByName(name) {
 	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + name;
 
 	const res = await do_fetch(game_uri);
+
+	if(res.games.length == 0 || res.count == 0)
+		throw errors.NOT_FOUND({ name });
+	
 	return makeGameObj(res.games[0]);
 }
+
 
 (async () => {
 	try {

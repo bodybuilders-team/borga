@@ -1,7 +1,5 @@
 'use strict';
 
-module.exports = errorList;
-
 
 /**
  * Builds an errors list.
@@ -30,3 +28,5 @@ function buildErrorList() {
 }
 
 const errorList = buildErrorList();
+
+module.exports = errorList;
