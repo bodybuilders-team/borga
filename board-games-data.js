@@ -1,12 +1,5 @@
 'use strict';
 
-module.exports = {
-	getGameByName,
-	getStatusClass,
-	makeGameObj,
-	do_fetch
-};
-
 
 require('dotenv').config();
 
@@ -94,3 +87,11 @@ async function getGameByName(name) {
 
 	return makeGameObj(res.games[0]);
 }
+
+
+module.exports = {
+	getGameByName,
+	getStatusClass,
+	makeGameObj,
+	do_fetch
+};

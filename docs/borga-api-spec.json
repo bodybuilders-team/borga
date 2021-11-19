@@ -1,0 +1,277 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "BORGA",
+      "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token.",
+      "version": "1"
+    },
+    "tags": [
+      {
+        "name": "user",
+        "description": "Everything about Users"
+      },
+      {
+        "name": "games",
+        "description": "Everything about Games"
+      }
+    ],
+    "paths": {
+      "/user": {
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Creates a new user.",
+          "requestBody": {
+            "description": "User information",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserToCreate"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/createGroup": {
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Creates a group providing its name and description",
+          "requestBody": {
+            "description": "Group information",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupToCreate"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/addGameToGroup": {
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Adds a game to a group",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/editGroup": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Edits a group by changing its name and description",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/getGroupDetails": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Gets the details of a group, with its name, description and names of the included games",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/listGroups": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Lists all groups",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/deleteGroup": {
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Deletes a group",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/user/groups/removeGameFromGroup": {
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Removes a game from a group",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/games/popular": {
+        "get": {
+          "tags": [
+            "games"
+          ],
+          "summary": "Gets the list of the most popular games",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/games/searchByName": {
+        "get": {
+          "tags": [
+            "games"
+          ],
+          "summary": "Searches games by name",
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {}
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Game": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            },
+            "publisher": {
+              "type": "string"
+            },
+            "amazon_rank": {
+              "type": "integer"
+            },
+            "price": {
+              "type": "integer"
+            }
+          },
+          "xml": {
+            "name": "Game"
+          }
+        },
+        "Group": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "games": {
+              "type": "object"
+            }
+          },
+          "xml": {
+            "name": "Group"
+          }
+        },
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "groups": {
+              "type": "object"
+            }
+          },
+          "xml": {
+            "name": "User"
+          }
+        },
+        "UserToCreate": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "xml": {
+            "name": "UserToCreate"
+          }
+        },
+        "GroupToCreate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "xml": {
+            "name": "GroupToCreate"
+          }
+        }
+      }
+    }
+  }

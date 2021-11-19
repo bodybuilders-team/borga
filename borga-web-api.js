@@ -1,5 +1,6 @@
 'use strict';
 
+
 const express = require('express');
 
 module.exports = function (services) {
@@ -48,9 +49,9 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-    async function searchGamebyName(req, res) {
+    async function searchGameByName(req, res) {
         try {
-            const game = await services.searchGamebyName(req.params.gameName);
+            const game = await services.searchGameByName(req.params.gameName);
             res.json(game);
         } catch (err) {
             onError(req, res, err);
@@ -81,7 +82,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function editGroup(req, res) {
+    async function editGroup(req, res) {
         try {
             const groupName = req.params.groupName;
             const newGroupDescription = req.params.description;
@@ -100,7 +101,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function listGroups(req, res) {
+    async function listGroups(req, res) {
         try {
             const userId = req.params.userId;
             const groups = await services.listUserGroups(userId);
@@ -116,7 +117,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function deleteGroup(req, res) {
+    async function deleteGroup(req, res) {
         try {
             const groupName = req.params.groupName;
             const userId = req.params.userId;
@@ -133,7 +134,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function getDetailsOfGroup(req, res) {
+    async function getDetailsOfGroup(req, res) {
         try {
             const groupName = req.params.groupName;
             const userId = req.params.userId;
@@ -151,7 +152,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function addGameToGroup(req, res) {
+    async function addGameToGroup(req, res) {
         try {
             const groupName = req.params.groupName;
             const userId = req.params.userId;
@@ -170,7 +171,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function deleteGamefromGroup(req, res) {
+    async function deleteGameFromGroup(req, res) {
         try {
             const groupName = req.params.groupName;
             const userId = req.params.userId;
@@ -188,10 +189,10 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function createNewUser(req, res) {
+    async function createNewUser(req, res) {
         try {
-            const userName = req.params.groupName;
-            const userId = req.params.userId;
+            const userName = req.body.userName;
+            const userId = req.body.userId;
             const addedId = await services.createNewUser(userId, userName);
             res.json(addedId);
         } catch (err) {
@@ -208,7 +209,7 @@ module.exports = function (services) {
     router.get('/games/popular', getPopularGames);
 
     //Search games by name
-    router.get('/games/search/:gameName', searchGamebyName);
+    router.get('/games/search/:gameName', searchGameByName);
 
     //Create group providing its name and description
     router.post('/user/:userId/myGroup/:groupName/:description', createGroup);
@@ -229,10 +230,10 @@ module.exports = function (services) {
     router.post('/user/:userId/myGroup/:groupName/addGame/:gameName', addGameToGroup);
 
     //Remove a game from a group
-    router.delete('/user/:userId/myGroup/:groupName/deleteGame/:gameName', deleteGamefromGroup);
+    router.delete('/user/:userId/myGroup/:groupName/deleteGame/:gameName', deleteGameFromGroup);
 
     //Create new user
-    router.put('user/create/:userId', createNewUser);
+    router.put('/user/create', createNewUser);
 
     return router;
 };

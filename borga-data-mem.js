@@ -47,7 +47,7 @@ function getPopularGames() {
  * @throws ALREADY_EXISTS if the user already exists
  */
 function createNewUser(userId, userName) {
-    if(users[userId]) throw errors.ALREADY_EXISTS({ userId })
+    if (users[userId]) throw errors.ALREADY_EXISTS({ userId })
     return addUser(userId, createUserObj(userName));
 }
 
@@ -85,7 +85,7 @@ function listUsers() {
  * @throws ALREADY_EXISTS if the group already exists
  */
 function createGroup(userId, groupName, groupDescription) {
-    if(getUser(userId).groups[groupName]) throw errors.ALREADY_EXISTS({ groupName })
+    if (getUser(userId).groups[groupName]) throw errors.ALREADY_EXISTS({ groupName })
     return addGroupToUser(userId, createGroupObj(groupName, groupDescription));
 }
 
@@ -276,7 +276,7 @@ function getGameFromGroup(userId, groupName, gameName) {
 /**
  * Resets memory by assigning {} to the object users.
  */
-function resetMem(){
+function resetMem() {
     users = {}
 }
 
