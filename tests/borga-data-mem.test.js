@@ -4,28 +4,49 @@ const dataMem = require("../borga-data-mem.js");
 const errors = require('../borga-errors.js');
 
 
+const userId1 = "A48287"
+const userName1 = "Nyck Brandon"
+const groupName1 = "RPG Games"
+const groupDescription1 = "This is a description"
+const gameName1 = "Skyrim"
+const game1 = {
+    id: "I9azM1kA6l",
+    name: gameName1,
+    url: "games.net/skyrim",
+    image: "skyrim.jpg",
+    publisher: "Bethesda Game Studios",
+    amazon_rank: 1,
+    price: 420.69
+};
+const groupObj1 = {
+    name: groupName1,
+    description: groupDescription1,
+    games: {}
+}
+
+const ResetMem = () => dataMem.resetMem();
+const CreateUser1 = () => dataMem.createNewUser(userId1, userName1);
+const CreateGroup1 = () => dataMem.createGroup(userId1, groupName1, groupDescription1);
+
+
+function assertThrowsNotFound(func, info) {
+    expect(func)
+    .toThrow(errors.NOT_FOUND(info));
+}
+
+function assertThrowsAlreadyExists(func, info) {
+    expect(func)
+    .toThrow(errors.ALREADY_EXISTS(info));
+}
+
+
 test("getPopularGames returns names of most popular games", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
-
-    const game = {
-        id: "I9azM1kA6l",
-        name: "Skyrim",
-        url: "games.net/skyrim",
-        image: "skyrim.jpg",
-        publisher: "Bethesda Game Studios",
-        amazon_rank: 1,
-        price: 420.69
-    };
-    dataMem.addGameToGroup(userId, groupName, game)
+    dataMem.addGameToGroup(userId1, groupName1, game1)
 
     expect(dataMem.getPopularGames())
-    .toEqual([game.name]);
+    .toEqual([gameName1]);
 });
 
 
@@ -33,56 +54,44 @@ test("getPopularGames returns names of most popular games", () => {
 
 
 test("createNewUser creates user, returning id of the new user", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const userId = "A48287";
-    expect(dataMem.createNewUser(userId, "Nyck Brandon"))
-    .toEqual(userId);
+    expect(dataMem.createNewUser(userId1, userName1))
+    .toEqual(userId1);
 });
 
 test("createNewUser throws if user already exists", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-    expect(() => dataMem.createNewUser(userId, "Nyck Brandon"))
-    .toThrow(errors.ALREADY_EXISTS({ userId }));
+    assertThrowsAlreadyExists(() => dataMem.createNewUser(userId1, userName1), { userId: userId1 });
 });
 
 test("deleteUser deletes user, returning id of the deleted user", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
+    expect(dataMem.deleteUser(userId1))
+    .toEqual(userId1);
 
-    expect(dataMem.deleteUser(userId))
-    .toEqual(userId);
-
-    expect(() => dataMem.getUser(userId))
-    .toThrow(errors.NOT_FOUND({ userId }))
+    assertThrowsNotFound(() => dataMem.getUser(userId1), { userId: userId1 });
 });
 
 test("deleteUser throws if the user already doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const userId = "A48287";
-
-    expect(() => dataMem.deleteUser(userId))
-    .toThrow(errors.NOT_FOUND({ userId }));
+    assertThrowsNotFound(() => dataMem.deleteUser(userId1), { userId: userId1 });
 });
 
 test("listUsers returns array containing all user objects", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    dataMem.createNewUser("48280", "Andre Jesus");
-    dataMem.createNewUser("48287", "Nyck Brandon");
-    dataMem.createNewUser("48309", "Andre Santos");
+    dataMem.createNewUser("A48280", "Andre Jesus");
+    dataMem.createNewUser("A48287", userName1);
+    dataMem.createNewUser("A48309", "Andre Santos");
 
     expect(dataMem.listUsers())
     .toEqual([
         { name: "Andre Jesus", groups: {} },
-        { name: "Nyck Brandon", groups: {} },
+        { name: userName1, groups: {} },
         { name: "Andre Santos", groups: {} }
     ]);
 });
@@ -92,45 +101,28 @@ test("listUsers returns array containing all user objects", () => {
 
 
 test("createGroup returns name of the created group", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-
-    const groupName = "RPG Games";
-    expect(dataMem.createGroup(userId, groupName, "This is a description"))
-    .toEqual(groupName);
+    expect(dataMem.createGroup(userId1, groupName1, groupDescription1))
+    .toEqual(groupName1);
 });
 
 test("createGroup throws if group already exists", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
-
-    expect(() => dataMem.createGroup(userId, groupName, "This is a description"))
-    .toThrow(errors.ALREADY_EXISTS({ groupName }));
+    assertThrowsAlreadyExists(() => dataMem.createGroup(userId1, groupName1, groupDescription1), { groupName: groupName1 });
 });
 
 test("editGroup edits a group, returning name of the edited group", () => {
-    dataMem.resetMem();
-
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
+    ResetMem(), CreateUser1(), CreateGroup1();
 
     const newGroupName = "FPS Games";
     const newDescription = "Another description";
-    expect(dataMem.editGroup(userId, groupName, newGroupName, newDescription))
+
+    expect(dataMem.editGroup(userId1, groupName1, newGroupName, newDescription))
     .toEqual(newGroupName);
 
-    expect(dataMem.getGroupFromUser(userId, groupName))
+    expect(dataMem.getGroupFromUser(userId1, groupName1))
     .toEqual({
         name: newGroupName,
         description: newDescription,
@@ -139,65 +131,39 @@ test("editGroup edits a group, returning name of the edited group", () => {
 });
 
 test("listUserGroups returns array containing all group objects", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    const description = "This is a description";
-    dataMem.createGroup(userId, groupName, "This is a description");
-
-    expect(dataMem.listUserGroups(userId))
-    .toEqual([
-        { name : groupName, description: description, games: {} }
-    ]);
+    expect(dataMem.listUserGroups(userId1))
+    .toEqual([groupObj1]);
 });
 
 test("deleteGroup deletes a group, returning name of the group", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
+    expect(dataMem.deleteGroup(userId1, groupName1))
+    .toEqual(groupName1);
 
-    expect(dataMem.deleteGroup(userId, groupName))
-    .toEqual(groupName);
-
-    expect(() => dataMem.getGroupFromUser(userId, groupName))
-    .toThrow(errors.NOT_FOUND({ groupName }));
+    assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, groupName1), { groupName: groupName1 });
 });
 
 test("deleteGroup throws if the group already doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-
-    expect(() => dataMem.deleteGroup(userId, groupName))
-    .toThrow(errors.NOT_FOUND({ groupName }));
+    assertThrowsNotFound(() => dataMem.deleteGroup(userId1, groupName1), { groupName: groupName1 });
 });
 
 test("getGroupDetails returns object containing the group details", () => {
-    dataMem.resetMem();
-
-    const groupName = "RPG Games";
-    const groupDescription = "This is the description of RPG Games";
-    const gameName = "Skyrim";
+    ResetMem();
 
     expect(dataMem.getGroupDetails({
-        name: groupName,
-        description: groupDescription,
-        games: { gameName: { name: gameName } }
+        name: groupName1,
+        description: groupDescription1,
+        games: { gameName1: { name: gameName1 } }
     }))
     .toEqual({
-        name: groupName,
-        description: groupDescription,
-        games: [gameName]
+        name: groupName1,
+        description: groupDescription1,
+        games: [gameName1]
     });
 });
 
@@ -206,74 +172,30 @@ test("getGroupDetails returns object containing the group details", () => {
 
 
 test("addGameToGroup adds game to a group, returning name of the added game", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
+    expect(dataMem.addGameToGroup(userId1, groupName1, game1))
+    .toEqual(gameName1);
 
-    const gameName = "Skyrim";
-    const game = {
-        id: "I9azM1kA6l",
-        name: gameName,
-        url: "games.net/skyrim",
-        image: "skyrim.jpg",
-        publisher: "Bethesda Game Studios",
-        amazon_rank: 1,
-        price: 420.69
-    };
-
-    expect(dataMem.addGameToGroup(userId, groupName, game))
-    .toEqual(gameName);
-
-    expect(dataMem.getGameFromGroup(userId, groupName, gameName))
-    .toEqual(game);
+    expect(dataMem.getGameFromGroup(userId1, groupName1, gameName1))
+    .toEqual(game1);
 });
 
 test("removeGameFromGroup removes game, returning name of the removed game", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
+    dataMem.addGameToGroup(userId1, groupName1, game1)
 
-    const gameName = "Skyrim"
+    expect(dataMem.removeGameFromGroup(userId1, groupName1, gameName1))
+    .toEqual(gameName1);
 
-    const game = {
-        id: "I9azM1kA6l",
-        name: gameName,
-        url: "games.net/skyrim",
-        image: "skyrim.jpg",
-        publisher: "Bethesda Game Studios",
-        amazon_rank: 1,
-        price: 420.69
-    };
-    dataMem.addGameToGroup(userId, groupName, game)
-
-    expect(dataMem.removeGameFromGroup(userId, groupName, gameName))
-    .toEqual(gameName);
-
-    expect(() => dataMem.getGameFromGroup(userId, groupName, gameName))
-    .toThrow(errors.NOT_FOUND({ gameName }));
+    assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
 });
 
 test("removeGameFromGroup throws if the game already doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-    
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
-
-    const gameName = "Skyrim";
-
-    expect(() => dataMem.removeGameFromGroup(userId, groupName, gameName))
-    .toThrow(errors.NOT_FOUND({ gameName }));
+    assertThrowsNotFound(() => dataMem.removeGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
 });
 
 
@@ -281,160 +203,85 @@ test("removeGameFromGroup throws if the game already doesn't exist", () => {
 
 
 test("createUserObj creates an user object from a name", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const userName = "Nyck Brandon";
-
-    expect(dataMem.createUserObj(userName))
+    expect(dataMem.createUserObj(userName1))
     .toEqual({
-        name: userName,
+        name: userName1,
         groups: {}
     });
 });
 
 test("addUser creates an user given an id and an user object", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const userId = "A48287";
-    const userName = "Nyck Brandon";
+    expect(dataMem.addUser(userId1, dataMem.createUserObj(userName1)))
+    .toEqual(userId1);
 
-    expect(dataMem.addUser(userId, dataMem.createUserObj(userName)))
-    .toEqual(userId);
-
-    expect(dataMem.getUser(userId))
+    expect(dataMem.getUser(userId1))
     .toEqual({
-        name: userName,
+        name: userName1,
         groups: {}
     });
 });
 
 test("createGroupObj creates a group object from a name and a description", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const groupName = "RPG Games";
-    const groupDescription = "This is a description";
-
-    expect(dataMem.createGroupObj(groupName, groupDescription))
-    .toEqual({
-        name: groupName,
-        description: groupDescription,
-        games: {}
-    });
+    expect(dataMem.createGroupObj(groupName1, groupDescription1))
+    .toEqual(groupObj1);
 });
 
 test("addGroupToUser adds a group to a user given a group object", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    const userName = "Nyck Brandon";
-    dataMem.createNewUser(userId, userName)
+    expect(dataMem.addGroupToUser(userId1, dataMem.createGroupObj(groupName1, groupDescription1)))
+    .toEqual(groupName1);
 
-
-    const groupName = "RPG Games";
-    const groupDescription = "This is a description";
-
-    expect(dataMem.addGroupToUser(userId, dataMem.createGroupObj(groupName, groupDescription)))
-    .toEqual(groupName);
-
-    expect(dataMem.getGroupFromUser(userId, groupName))
-    .toEqual({
-        name: groupName,
-        description: groupDescription,
-        games: {}
-    });
+    expect(dataMem.getGroupFromUser(userId1, groupName1))
+    .toEqual(groupObj1);
 });
 
 test("getUser returns a user object", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    const userName = "Nyck Brandon";
-    dataMem.createNewUser(userId, userName)
-
-
-    expect(dataMem.getUser(userId))
+    expect(dataMem.getUser(userId1))
     .toEqual({
-        name: userName,
+        name: userName1,
         groups: {}
     });
 });
 
 test("getUser throws if the user doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem();
 
-    const userId = "A48287";
-
-    expect(() => dataMem.getUser(userId))
-    .toThrow(errors.NOT_FOUND({ userId }));
+    assertThrowsNotFound(() => dataMem.getUser(userId1), { userId: userId1 });
 });
 
 test("getGroupFromUser returns a group object from a user", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-    const groupName = "RPG Games";
-    const groupDescription = "This is a description"
-    dataMem.createGroup(userId, groupName, groupDescription);
-
-    expect(dataMem.getGroupFromUser(userId, groupName))
-    .toEqual({
-        name: groupName,
-        description: groupDescription,
-        games: {}
-    });
+    expect(dataMem.getGroupFromUser(userId1, groupName1))
+    .toEqual(groupObj1);
 });
 
 test("getGroupFromUser throws if the group doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-    const groupName = "RPG Games";
-
-    expect(() => dataMem.getGroupFromUser(userId, groupName))
-    .toThrow(errors.NOT_FOUND({ groupName }));
+    assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, groupName1), { groupName: groupName1 });
 });
 
 test("getGameFromGroup returns a game object from a group", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
+    dataMem.addGameToGroup(userId1, groupName1, game1);
 
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
-    
-    const gameName = "Skyrim";
-    const game = {
-        id: "I9azM1kA6l",
-        name: gameName,
-        url: "games.net/skyrim",
-        image: "skyrim.jpg",
-        publisher: "Bethesda Game Studios",
-        amazon_rank: 1,
-        price: 420.69
-    };
-
-    dataMem.addGameToGroup(userId, groupName, game);
-
-    expect(dataMem.getGameFromGroup(userId, groupName, gameName))
-    .toEqual(game);
+    expect(dataMem.getGameFromGroup(userId1, groupName1, gameName1))
+    .toEqual(game1);
 });
 
 test("getGameFromGroup throws if the game doesn't exist", () => {
-    dataMem.resetMem();
+    ResetMem(), CreateUser1(), CreateGroup1();
 
-    const userId = "A48287";
-    dataMem.createNewUser(userId, "Nyck Brandon");
-
-    const groupName = "RPG Games";
-    dataMem.createGroup(userId, groupName, "This is a description");
-
-    const gameName = "Skyrim";
-
-    expect(() => dataMem.getGameFromGroup(userId, groupName, gameName))
-    .toThrow(errors.NOT_FOUND({ gameName }));
+    assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
 });
