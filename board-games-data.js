@@ -7,6 +7,7 @@ module.exports = {
 	do_fetch
 };
 
+
 require('dotenv').config();
 
 const errors = require('./borga-errors');
@@ -43,9 +44,9 @@ async function do_fetch(uri) {
 
 	else {
 		return res.json()
-			.catch(err => err) // can you see what this does?
+			.catch(err => err)
 			.then(info => {
-				switch(getStatusClass(res.status)){
+				switch (getStatusClass(res.status)) {
 					case HTTP_SERVER_ERROR:
 						throw errors.EXT_SVC_FAIL(info);
 					case HTTP_CLIENT_ERROR:
@@ -60,7 +61,7 @@ async function do_fetch(uri) {
 
 
 /**
- * Builds an object containing the game information
+ * Builds an object containing the game information.
  * @param {Object} gameInfo 
  * @returns object with game information
  */
@@ -78,27 +79,18 @@ function makeGameObj(gameInfo) {
 
 
 /**
- * Gets a game by its name
+ * Gets a game by its name.
  * @param {String} name
  * @throws error NOT_FOUND if no game was found with the given name
  * @returns promise with the game object response
  */
- async function getGameByName(name) {
+async function getGameByName(name) {
 	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + name;
 
 	const res = await do_fetch(game_uri);
 
-	if(res.games.length == 0 || res.count == 0)
+	if (res.games.length == 0 || res.count == 0)
 		throw errors.NOT_FOUND({ name });
-	
+
 	return makeGameObj(res.games[0]);
 }
-
-
-(async () => {
-	try {
-		const game = await getGameByName("Catan");
-		console.log(game);
-	}
-	catch (err) { console.log(err) };
-})();

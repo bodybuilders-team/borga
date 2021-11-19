@@ -1,162 +1,181 @@
 'use strict';
 
-module.exports = {
-    hasUser,
-    userHasGroup,
-    addUser,
-    addGroupToUser,
-    getUser,
-    getGroupFromUser,
-    deleteUser,
-    deleteGroupFromUser,
-    listUsers,
-    listGroupsFromUser,
-    createUser,
-    createGroup,
-    getGroupDetails,
-    editGroupInUser,
-    addGameToGroupInUser,
-    removeGameFromGroupInUser
-};
 
-const errors = require('./app-errors');
+const errors = require('./borga-errors');
 
 
 /**
- * Object that represents a map of all users
+ * Object that represents a map of all users.
  */
 const users = {};
 
 
 /**
- * Returns true if the user exists within the users object
+ * Gets the most popular games.
+ * @returns an array containing the twenty most popular games
+ */
+function getPopularGames() {
+    const games = {};
+
+    for (const userId in users) {
+        for (const groupName in getUser(userId).groups) {
+            for (const gameName in getGroupFromUser(userId, groupName).games) {
+                const currentCount = games[gameName];
+                games[gameName] = currentCount ? currentCount + 1 : 1;
+            }
+        }
+    }
+
+    const sortedGames = Object.entries(games).sort(([, a], [, b]) => b - a);
+    const popularGames = [];
+
+    for (let i = 0; i < 20 && i < sortedGames.length; i++)
+        popularGames[i] = sortedGames[i][0];
+
+    return popularGames;
+}
+
+
+// ------------------------- Users Functions -------------------------
+
+
+/**
+ * Creates a new user by its id and name.
  * @param {String} userId 
- * @returns true if the user exists within the users object
+ * @param {String} userName 
+ * @returns userId of the new user
  */
- const hasUser = async (userId) => users[userId];
-
-
-/**
- * Returns true if the group exists within the groups object inside the user
- * @param {String} userId
- * @param {String} groupName 
- * @returns true if the group exists within the groups object inside the user
- */
-const userHasGroup = async (userId, groupName) => users[userId].groups[groupName];
-
-
-/**
- * Adds a new user to the users object
- * @param {String} userId
- * @param {Object} userObj 
- * @returns the name of the added user
- */
- async function addUser(userId, userObj) {
-    users[userId] = userObj;
-    return userId;
+function createNewUser(userId, userName) {
+    return addUser(userId, createUserObj(userName));
 }
 
 
 /**
- * Adds a new group to the groups object list inside the user
- * @param {String} userId
- * @param {Object} groupObj 
- * @returns the name of the added group
- */
- async function addGroupToUser(userId, groupObj) {
-    const groupName = groupObj.name;
-    users[userId].groups[groupName] = groupObj;
-    return groupName;
-}
-
-
-/**
- * Returns the user of the specified userId
- * @param {String} userId
- * @returns the user object
- */
- async function getUser(userId) {
-    const userObj = users[userId];
-    if (!userObj) {
-        const err = errors.NOT_FOUND({ id: userId });
-        throw err;
-    }
-    return userObj;
-}
-
-
-/**
- * Returns the group of the specified group name and userId
- * @param {String} userId
- * @param {String} groupName 
- * @returns the group object
- */
-async function getGroupFromUser(userId, groupName) {
-    const groupObj = users[userId].groups[groupName];
-    if (!groupObj) {
-        const err = errors.NOT_FOUND({ name: groupName });
-        throw err;
-    }
-    return groupObj;
-}
-
-
-/**
- * Deletes the user of the specified userId
+ * Deletes the user of the specified userId.
  * @param {String} userId 
  * @returns id of the deleted user
  */
-async function deleteUser(userId) {
-    const userObj = users[userId];
-    if (!userObj) {
-        throw errors.NOT_FOUND({ id: userId });
-    }
-    delete users[userId];
+function deleteUser(userId) {
+    delete getUser(userId);
     return userId;
 }
 
 
 /**
- * Deletes the group of the specified groupName
- * @param {String} userId 
- * @param {String} groupName 
- * @returns name of the deleted group
- */
- async function deleteGroupFromUser(userId, groupName) {
-    const groupObj = users[userId].groups[groupName];
-    if (!groupObj) {
-        throw errors.NOT_FOUND({ name: groupName });
-    }
-    delete users[userId].groups[groupName];
-    return groupName;
-}
-
-
-/**
- * List all existing users
+ * List all existing users.
  * @returns array containing all user objects
  */
- async function listUsers() {
+function listUsers() {
     return Object.values(users);
 }
 
 
+// ------------------------- Groups Functions -------------------------
+
+
 /**
- * List all existing groups inside the user 
+ * Creates a new group of the user.
  * @param {String} userId 
- * @returns array containing all group objects
+ * @param {String} groupName 
+ * @param {String} groupDescription 
+ * @returns the name of the new group
  */
-async function listGroupsFromUser(userId) {
-    return Object.values(users[userId].groups);
+function createGroup(userId, groupName, groupDescription) {
+    return addGroupToUser(userId, createGroupObj(groupName, groupDescription));
 }
 
 
 /**
- * Creates a new user providing its name
- * @param {String} userName 
- * @returns a user object 
+ * Edits a group by changing its name and description.
+ * @param {String} userId 
+ * @param {String} groupName 
+ * @param {String} newGroupName 
+ * @param {String} newGroupDescription 
+ * @returns the new group name
  */
- async function createUser(userName) {
+function editGroup(userId, groupName, newGroupName, newGroupDescription) {
+    const group = getGroupFromUser(userId, groupName);
+    group.name = newGroupName;
+    group.description = newGroupDescription;
+    return newGroupName;
+}
+
+
+/**
+ * List all existing groups inside the user.
+ * @param {String} userId 
+ * @returns array containing all group objects
+ */
+function listUserGroups(userId) {
+    return Object.values(getUser(userId).groups);
+}
+
+
+/**
+ * Deletes the group of the specified groupName.
+ * @param {String} userId 
+ * @param {String} groupName 
+ * @returns name of the deleted group
+ */
+function deleteGroup(userId, groupName) {
+    delete getGroupFromUser(userId, groupName);
+    return groupName;
+}
+
+
+/**
+ * Creates a new object containing the group details.
+ * @param {Object} groupObj 
+ * @returns an object containing the group details
+ */
+function getGroupDetails(groupObj) {
+    return {
+        name: groupObj.name,
+        description: groupObj.description,
+        games: Object.values(groupObj.games).map(game => game.name)
+    };
+}
+
+
+// ------------------------- Games Functions -------------------------
+
+
+/**
+ * Adds a new game to a group.
+ * @param {String} userId 
+ * @param {String} groupName 
+ * @param {Object} gameObj
+ * @return name of the added name
+ */
+function addGameToGroup(userId, groupName, gameObj) {
+    const gameName = gameObj.name;
+    getGroupFromUser(userId, groupName).games[gameName] = gameObj;
+    return gameName;
+}
+
+
+/**
+ * Removes a game from a group providing its name.
+ * @param {String} userId 
+ * @param {String} groupName 
+ * @param {String} gameName
+ * @return name of removed game 
+ */
+function removeGameFromGroup(userId, groupName, gameName) {
+    delete getGameFromGroup(userId, groupName, gameName);
+    return gameName;
+}
+
+
+// ------------------------- Utils -------------------------
+
+
+/**
+ * Creates a new user object providing its name.
+ * @param {String} userName 
+ * @returns the user object 
+ */
+function createUserObj(userName) {
     return {
         name: userName,
         groups: {}
@@ -165,12 +184,24 @@ async function listGroupsFromUser(userId) {
 
 
 /**
- * Creates a new group providing its name and description
+ * Adds a new user to the users object.
+ * @param {String} userId
+ * @param {Object} userObj 
+ * @returns userId of the added user
+ */
+function addUser(userId, userObj) {
+    users[userId] = userObj;
+    return userId;
+}
+
+
+/**
+ * Creates a new group providing its name and description.
  * @param {String} groupName 
  * @param {String} groupDescription 
- * @returns a group object 
+ * @returns the group object 
  */
-async function createGroup(groupName, groupDescription) {
+function createGroupObj(groupName, groupDescription) {
     return {
         name: groupName,
         description: groupDescription,
@@ -180,56 +211,73 @@ async function createGroup(groupName, groupDescription) {
 
 
 /**
- * Creates a new object containing the group details
+ * Adds a new group to the groups object list inside the user.
+ * @param {String} userId
  * @param {Object} groupObj 
- * @returns an object containing the group details
+ * @returns the name of the added group
  */
- async function getGroupDetails(groupObj) {
-    return {
-        name: groupObj.name,
-        description: groupObj.description,
-        games: Object.values(groupObj.games).map(game => game.name)
-    };
+function addGroupToUser(userId, groupObj) {
+    const groupName = groupObj.name;
+    getUser(userId).groups[groupName] = groupObj;
+    return groupName;
 }
 
 
 /**
- * Edits a group by changing its name and description 
- * @param {String} userId 
- * @param {String} groupName 
- * @param {String} newGroupName 
- * @param {String} newGroupDescription 
- * @returns the new group name
+ * Gets the user of the specified userId.
+ * @param {String} userId
+ * @returns the user object
+ * @throws NOT_FOUND if the user was not found
  */
-async function editGroupInUser(userId, groupName, newGroupName, newGroupDescription) {
-    const myGroup = getGroupFromUser(userId, groupName);
-    myGroup.name = newGroupName;
-    myGroup.description = newGroupDescription;
-    return newGroupName;
+function getUser(userId) {
+    const userObj = users[userId];
+    if (!userObj) throw errors.NOT_FOUND({ id: userId });
+    return userObj;
 }
 
 
 /**
- * Adds a new game to a group
- * @param {String} userId 
+ * Gets the group of the specified group name and userId.
+ * @param {String} userId
  * @param {String} groupName 
- * @param {Object} gameObj
- * @return name of the added name
+ * @returns the group object
+ * @throws NOT_FOUND if the group was not found
  */
-async function addGameToGroupInUser(userId, groupName, gameObj) {
-    users[userId].groups[groupName].games[gameObj.name] = gameObj;
-    return gameObj.name;
+function getGroupFromUser(userId, groupName) {
+    const groupObj = getUser(userId).groups[groupName];
+    if (!groupObj) throw errors.NOT_FOUND({ name: groupName });
+    return groupObj;
 }
 
 
 /**
- * Removes a game from a group providing its name
- * @param {String} userId 
- * @param {String} groupName 
+ * Gets the game of the specified game name.
+ * @param {String} userId
+ * @param {String} groupName
  * @param {String} gameName
- * @return name of removed game 
+ * @returns the game object
+ * @throws NOT_FOUND if the game was not found
  */
-async function removeGameFromGroupInUser(userId, groupName, gameName) {
-    delete users[userId].groups[groupName].games[gameName];
-    return gameName;
+function getGameFromGroup(userId, groupName, gameName) {
+    const gameObj = getGroupFromUser(userId, groupName).games[gameName];
+    if (!gameObj) throw errors.NOT_FOUND({ name: gameName });
+    return gameObj;
 }
+
+
+
+module.exports = {
+    getPopularGames,
+
+    createGroup,
+    editGroup,
+    listUserGroups,
+    deleteGroup,
+    getGroupDetails,
+
+    addGameToGroup,
+    removeGameFromGroup,
+
+    createNewUser,
+    hasUser: getUser
+};
