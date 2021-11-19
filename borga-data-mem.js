@@ -58,7 +58,8 @@ function createNewUser(userId, userName) {
  * @returns id of the deleted user
  */
 function deleteUser(userId) {
-    delete getUser(userId);
+    getUser(userId);
+    delete users[userId];
     return userId;
 }
 

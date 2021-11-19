@@ -59,8 +59,8 @@ test("deleteUser deletes user, returning id of the deleted user", () => {
     expect(dataMem.deleteUser(userId))
     .toEqual(userId);
 
-    expect(dataMem.getUser(userId))
-    .toBeTruthy()
+    expect(() => dataMem.getUser(userId))
+    .toThrow(errors.NOT_FOUND({ userId }))
 });
 
 test("deleteUser throws if the user already doesn't exist", () => {
@@ -185,15 +185,19 @@ test("deleteGroup throws if the group already doesn't exist", () => {
 test("getGroupDetails returns object containing the group details", () => {
     dataMem.resetMem();
 
+    const groupName = "RPG Games";
+    const groupDescription = "This is the description of RPG Games";
+    const gameName = "Skyrim";
+
     expect(dataMem.getGroupDetails({
-        name: "RPG Games",
-        description: "This is the description of RPG Games",
-        games: { Skyrim: { name: "Skyrim" } }
+        name: groupName,
+        description: groupDescription,
+        games: { gameName: { name: gameName } }
     }))
     .toEqual({
-        name: "RPG Games",
-        description: "This is the description of RPG Games",
-        games: ["Skyrim"]
+        name: groupName,
+        description: groupDescription,
+        games: [gameName]
     });
 });
 
