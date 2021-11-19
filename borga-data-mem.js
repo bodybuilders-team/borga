@@ -7,7 +7,7 @@ const errors = require('./borga-errors');
 /**
  * Object that represents a map of all users.
  */
-const users = {};
+let users = {};
 
 
 /**
@@ -44,8 +44,10 @@ function getPopularGames() {
  * @param {String} userId 
  * @param {String} userName 
  * @returns userId of the new user
+ * @throws ALREADY_EXISTS if the user already exists
  */
 function createNewUser(userId, userName) {
+    if(users[userId]) throw errors.ALREADY_EXISTS({ userId })
     return addUser(userId, createUserObj(userName));
 }
 
@@ -79,8 +81,10 @@ function listUsers() {
  * @param {String} groupName 
  * @param {String} groupDescription 
  * @returns the name of the new group
+ * @throws ALREADY_EXISTS if the group already exists
  */
 function createGroup(userId, groupName, groupDescription) {
+    if(getUser(userId).groups[groupName]) throw errors.ALREADY_EXISTS({ groupName })
     return addGroupToUser(userId, createGroupObj(groupName, groupDescription));
 }
 
@@ -118,7 +122,9 @@ function listUserGroups(userId) {
  * @returns name of the deleted group
  */
 function deleteGroup(userId, groupName) {
-    delete getGroupFromUser(userId, groupName);
+    getGroupFromUser(userId, groupName);
+
+    delete getUser(userId).groups[groupName];
     return groupName;
 }
 
@@ -162,7 +168,9 @@ function addGameToGroup(userId, groupName, gameObj) {
  * @return name of removed game 
  */
 function removeGameFromGroup(userId, groupName, gameName) {
-    delete getGameFromGroup(userId, groupName, gameName);
+    getGameFromGroup(userId, groupName, gameName);
+
+    delete getGroupFromUser(userId, groupName).games[gameName];
     return gameName;
 }
 
@@ -231,7 +239,7 @@ function addGroupToUser(userId, groupObj) {
  */
 function getUser(userId) {
     const userObj = users[userId];
-    if (!userObj) throw errors.NOT_FOUND({ id: userId });
+    if (!userObj) throw errors.NOT_FOUND({ userId });
     return userObj;
 }
 
@@ -245,7 +253,7 @@ function getUser(userId) {
  */
 function getGroupFromUser(userId, groupName) {
     const groupObj = getUser(userId).groups[groupName];
-    if (!groupObj) throw errors.NOT_FOUND({ name: groupName });
+    if (!groupObj) throw errors.NOT_FOUND({ groupName });
     return groupObj;
 }
 
@@ -260,8 +268,15 @@ function getGroupFromUser(userId, groupName) {
  */
 function getGameFromGroup(userId, groupName, gameName) {
     const gameObj = getGroupFromUser(userId, groupName).games[gameName];
-    if (!gameObj) throw errors.NOT_FOUND({ name: gameName });
+    if (!gameObj) throw errors.NOT_FOUND({ gameName });
     return gameObj;
+}
+
+/**
+ * Resets memory by assigning {} to the object users.
+ */
+function resetMem(){
+    users = {}
 }
 
 
@@ -269,15 +284,30 @@ function getGameFromGroup(userId, groupName, gameName) {
 module.exports = {
     getPopularGames,
 
+    //-- User --
+    createNewUser,
+    deleteUser,
+    listUsers,
+
+    //-- Group --
     createGroup,
     editGroup,
     listUserGroups,
     deleteGroup,
     getGroupDetails,
 
+    //-- Game --
     addGameToGroup,
     removeGameFromGroup,
 
-    createNewUser,
-    hasUser: getUser
+    //-- Utils --
+    createUserObj,
+    addUser,
+    createGroupObj,
+    addGroupToUser,
+    getUser,
+    getGroupFromUser,
+    getGameFromGroup,
+
+    resetMem
 };

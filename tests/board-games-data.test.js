@@ -5,23 +5,23 @@ const errors = require('../borga-errors.js');
 
 
 test("getStatusClass returns correct class from a statusCode 500", () => {
-    expect(gamesData.getStatusClass(504)).toStrictEqual(5);
+    expect(gamesData.getStatusClass(504)).toEqual(5);
 });
 
 test("getStatusClass returns correct class from a statusCode 400", () => {
-    expect(gamesData.getStatusClass(404)).toStrictEqual(4);
+    expect(gamesData.getStatusClass(404)).toEqual(4);
 });
 
 test("getStatusClass returns correct class from a statusCode 303", () => {
-    expect(gamesData.getStatusClass(303)).toStrictEqual(3);
+    expect(gamesData.getStatusClass(303)).toEqual(3);
 });
 
 test("getStatusClass returns correct class from a statusCode 200", () => {
-    expect(gamesData.getStatusClass(200)).toStrictEqual(2);
+    expect(gamesData.getStatusClass(200)).toEqual(2);
 });
 
 test("getStatusClass returns correct class from a statusCode 100", () => {
-    expect(gamesData.getStatusClass(100)).toStrictEqual(1);
+    expect(gamesData.getStatusClass(100)).toEqual(1);
 });
 
 
@@ -40,7 +40,7 @@ test("makeGameObj returns a game obj created from another object", () => {
             mentions: 1000
         }
     ))
-        .toStrictEqual(
+        .toEqual(
             {
                 id: "I9azM1kA6l",
                 name: "Skyrim",
@@ -56,7 +56,7 @@ test("makeGameObj returns a game obj created from another object", () => {
 
 test("getGameByName return correct game object of game with name \"Catan\"", async () => {
     expect(await gamesData.getGameByName("Catan"))
-        .toStrictEqual(
+        .toEqual(
             {
                 id: 'OIXt3DmJU0',
                 name: 'Catan',
@@ -72,7 +72,7 @@ test("getGameByName return correct game object of game with name \"Catan\"", asy
 
 test("do_fetch does fetch correctly, returning a promise with a json response", async () => {
     expect(await gamesData.do_fetch("https://reqbin.com/echo/get/json"))
-        .toStrictEqual(
+        .toEqual(
             {
                 success: "true"
             }
@@ -84,7 +84,7 @@ test("do_fetch throws EXT_SVC_FAIL in case of HTTP_SERVER_ERROR", async () => {
         await gamesData.do_fetch("http://httpstat.us/500")
     }
     catch (err) {
-        expect(err['name']).toEqual(errors.EXT_SVC_FAIL()['name'])
+        expect(err.name).toEqual(errors.EXT_SVC_FAIL().name)
     }
 });
 
