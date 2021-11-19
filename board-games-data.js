@@ -1,7 +1,10 @@
 'use strict';
 
 module.exports = {
-	getGameByName
+	getGameByName,
+	getStatusClass,
+	makeGameObj,
+	do_fetch
 };
 
 require('dotenv').config();
@@ -46,7 +49,7 @@ async function do_fetch(uri) {
 					case HTTP_SERVER_ERROR:
 						throw errors.EXT_SVC_FAIL(info);
 					case HTTP_CLIENT_ERROR:
-						throw errors.NOT_FOUND("");
+						throw errors.NOT_FOUND(uri);
 					default:
 						throw errors.FAIL(info)
 				}
