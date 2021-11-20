@@ -4,8 +4,8 @@
 const express = require('express');
 const errors = require('./borga-errors');
 
-module.exports = function (services) {
 
+module.exports = function (services) {
 
     /**
      * Returns json format object containing the cause of the error
@@ -35,18 +35,19 @@ module.exports = function (services) {
         res.json({ cause: err });
     }
 
+
     /**
      * Checks if a bad request is to be thrown, given parameters and properties.
      * @param {Object} params 
      * @param {Object} properties 
      */
-    function checkBadRequest(params, properties){
+    function checkBadRequest(params, properties) {
         const info = {};
 
-        for(let param in params)        if(!params[param]) info[param] = "parameter missing";
-        for(let property in properties) if(!properties[property]) info[property] = "property missing";
+        for (let param in params)        if (!params[param]) info[param] = "parameter missing";
+        for (let property in properties) if (!properties[property]) info[property] = "property missing";
 
-        if(Object.keys(info).length != 0) throw errors.BAD_REQUEST(info);
+        if (Object.keys(info).length != 0) throw errors.BAD_REQUEST(info);
     }
 
 
@@ -57,8 +58,8 @@ module.exports = function (services) {
      */
     async function getPopularGames(req, res) {
         try {
-            const games = await services.getPopularGames();
-            res.json(games);
+            const popularGames = await services.getPopularGames();
+            res.json({ popularGames });
         } catch (err) {
             onError(res, err);
         }
@@ -74,10 +75,30 @@ module.exports = function (services) {
         try {
             const gameName = req.params.gameName;
 
-            checkBadRequest({ gameName: gameName});
+            checkBadRequest({ gameName: gameName });
 
             const game = await services.searchGameByName(gameName);
             res.json(game);
+        } catch (err) {
+            onError(res, err);
+        }
+    }
+
+
+    /**
+     * Returns an object containing the new user´s Id.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function createNewUser(req, res) {
+        try {
+            const userId = req.body.userId;
+            const userName = req.body.username;
+
+            checkBadRequest({}, { userId: userId, username: userName });
+
+            const addedId = await services.createNewUser(userId, userName);
+            res.json({ "Created user": addedId });
         } catch (err) {
             onError(res, err);
         }
@@ -92,13 +113,13 @@ module.exports = function (services) {
     async function createGroup(req, res) {
         try {
             const userId = req.params.userId;
-            const groupName = req.body.name;
-            const groupDescription = req.body.description;
+            const groupName = req.body.groupName;
+            const groupDescription = req.body.groupDescription;
 
-            checkBadRequest({ userId: userId }, { name: groupName, description: groupDescription });
+            checkBadRequest({ userId: userId }, { groupName: groupName, groupDescription: groupDescription });
 
             const group = await services.createGroup(userId, groupName, groupDescription);
-            res.json(group);
+            res.json({ "Created group": group });
         } catch (err) {
             onError(res, err);
         }
@@ -113,14 +134,14 @@ module.exports = function (services) {
     async function editGroup(req, res) {
         try {
             const userId = req.params.userId;
-            const groupName = req.body.name;
-            const newGroupName = req.body.newName;
+            const groupName = req.body.groupName;
+            const newGroupName = req.body.newGroupName;
             const newGroupDescription = req.body.newDescription;
 
-            checkBadRequest({ userId: userId}, { name: groupName, newName: newGroupName, newDescription: newGroupDescription});
+            checkBadRequest({ userId: userId }, { name: groupName, newName: newGroupName, newDescription: newGroupDescription });
 
             const group = await services.editGroup(userId, groupName, newGroupName, newGroupDescription);
-            res.json(group);
+            res.json({ "Edited group": group });
         } catch (err) {
             onError(res, err);
         }
@@ -159,7 +180,7 @@ module.exports = function (services) {
             checkBadRequest({ userId: userId, groupName: groupName }, {});
 
             const group = await services.deleteGroup(userId, groupName);
-            res.json(group);
+            res.json({ "Deleted group": group });
         } catch (err) {
             onError(res, err);
         }
@@ -196,14 +217,14 @@ module.exports = function (services) {
         try {
             const userId = req.params.userId;
             const groupName = req.params.groupName;
-            const gameName = req.params.gameName;
+            const gameName = req.body.gameName;
 
-            checkBadRequest({ userId: userId, groupName: groupName, gameName: gameName }, {});
+            checkBadRequest({ userId: userId, groupName: groupName }, { gameName: gameName });
 
             const game = await services.searchGameByName(gameName);
 
             await services.addGameToGroup(userId, groupName, game);
-            res.json(gameName);
+            res.json({ "Added game": gameName });
         } catch (err) {
             onError(res, err);
         }
@@ -215,7 +236,7 @@ module.exports = function (services) {
      * @param {Object} req 
      * @param {Object} res 
      */
-    async function deleteGameFromGroup(req, res) {
+    async function removeGameFromGroup(req, res) {
         try {
             const userId = req.params.userId;
             const groupName = req.params.groupName;
@@ -224,27 +245,7 @@ module.exports = function (services) {
             checkBadRequest({ userId: userId, groupName: groupName, gameName: gameName }, {});
 
             await services.removeGameFromGroup(userId, groupName, gameName);
-            res.json(gameName);
-        } catch (err) {
-            onError(res, err);
-        }
-    }
-
-
-    /**
-     * Returns an object containing the new user´s Id.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-    async function createNewUser(req, res) {
-        try {
-            const userId = req.body.userId;
-            const userName = req.body.name;
-
-            checkBadRequest({}, { userId: userId, name: userName });
-
-            const addedId = await services.createNewUser(userId, userName);
-            res.json(addedId);
+            res.json({ "Removed game": gameName });
         } catch (err) {
             onError(res, err);
         }
@@ -252,38 +253,39 @@ module.exports = function (services) {
 
 
     const router = express.Router();
-
     router.use(express.json());
 
-    //Get the list of the most popular games
+
+    // Get the list of the most popular games
     router.get('/games/popular', getPopularGames);
 
-    //Search games by name
+    // Search games by name
     router.get('/games/search/:gameName', searchGameByName);
 
-    //Create group providing its name and description
-    router.post('/user/:userId/myGroup/add/', createGroup);
 
-    //Edit group by changing its name and description
-    router.put('/user/:userId/myGroup/edit/', editGroup);
+    // Create new user
+    router.post('/user/create', createNewUser);
 
-    //List all groups
-    router.get('/user/:userId/myGroup/list', listGroups);
+    // Create group providing its name and description
+    router.post('/user/:userId/myGroups/add', createGroup);
 
-    //Delete a group
-    router.delete('/user/:userId/myGroup/delete/:groupName', deleteGroup);
+    // Edit group by changing its name and description
+    router.post('/user/:userId/myGroups/edit', editGroup);
 
-    //Get the details of a group, with its name, description and names of the included games
-    router.get('/user/:userId/myGroup/:groupName/details', getDetailsOfGroup);
+    // List all groups
+    router.get('/user/:userId/myGroups/list', listGroups);
 
-    //Add a game to a group
-    router.post('/user/:userId/myGroup/:groupName/addGame/:gameName', addGameToGroup);
+    // Delete a group
+    router.delete('/user/:userId/myGroups/:groupName/delete', deleteGroup);
 
-    //Remove a game from a group
-    router.delete('/user/:userId/myGroup/:groupName/deleteGame/:gameName', deleteGameFromGroup);
+    // Get the details of a group, with its name, description and names of the included games
+    router.get('/user/:userId/myGroups/:groupName/details', getDetailsOfGroup);
 
-    //Create new user
-    router.put('/user/create', createNewUser);
+    // Add a game to a group
+    router.put('/user/:userId/myGroups/:groupName/addGame', addGameToGroup);
+
+    // Remove a game from a group
+    router.delete('/user/:userId/myGroups/:groupName/removeGame/:gameName', removeGameFromGroup);
 
     return router;
 };

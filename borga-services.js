@@ -3,9 +3,10 @@
 
 module.exports = function (data_ext, data_int) {
         return {
+                getPopularGames: data_int.getPopularGames,
                 searchGameByName: data_ext.getGameByName,
 
-                getGroup: data_int.getGroupFromUser,
+                createNewUser: data_int.createNewUser,
                 createGroup: data_int.createGroup,
                 editGroup: data_int.editGroup,
                 listUserGroups: data_int.listUserGroups,
@@ -13,8 +14,7 @@ module.exports = function (data_ext, data_int) {
                 getGroupDetails: data_int.getGroupDetails,
                 addGameToGroup: data_int.addGameToGroup,
                 removeGameFromGroup: data_int.removeGameFromGroup,
-                getPopularGames: data_int.getPopularGames,
-
-                createNewUser: data_int.createNewUser,
+                
+                getGroup: data_int.getGroupFromUser
         };
 }

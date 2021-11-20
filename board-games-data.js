@@ -6,7 +6,6 @@ require('dotenv').config();
 const errors = require('./borga-errors');
 const fetch = require('node-fetch');
 
-// FY6IrZTDRe
 const BOARD_GAME_ATLAS_BASE_URI = 'https://api.boardgameatlas.com/api/search?' + 'client_id=' + process.env['ATLAS_CLIENT_ID'];
 const HTTP_SERVER_ERROR = 5;
 const HTTP_CLIENT_ERROR = 4;

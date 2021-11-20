@@ -3,6 +3,8 @@
 
 const errors = require('./borga-errors');
 
+const numberOfPopularGames = 20;
+
 
 /**
  * Object that represents a map of all users.
@@ -29,7 +31,7 @@ function getPopularGames() {
     const sortedGames = Object.entries(games).sort(([, a], [, b]) => b - a);
     const popularGames = [];
 
-    for (let i = 0; i < 20 && i < sortedGames.length; i++)
+    for (let i = 0; i < numberOfPopularGames && i < sortedGames.length; i++)
         popularGames[i] = sortedGames[i][0];
 
     return popularGames;
@@ -100,8 +102,12 @@ function createGroup(userId, groupName, groupDescription) {
  */
 function editGroup(userId, groupName, newGroupName, newGroupDescription) {
     const group = getGroupFromUser(userId, groupName);
+    deleteGroup(userId, groupName);
+    
     group.name = newGroupName;
     group.description = newGroupDescription;
+    addGroupToUser(userId, group);
+    
     return newGroupName;
 }
 
@@ -109,10 +115,10 @@ function editGroup(userId, groupName, newGroupName, newGroupDescription) {
 /**
  * List all existing groups inside the user.
  * @param {String} userId 
- * @returns array containing all group objects
+ * @returns object containing all group objects
  */
 function listUserGroups(userId) {
-    return Object.values(getUser(userId).groups);
+    return getUser(userId).groups;
 }
 
 

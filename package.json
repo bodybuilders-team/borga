@@ -4,6 +4,7 @@
   "description": "",
   "main": "borga-server.js",
   "scripts": {
+    "server": "node borga-server.js",
     "test": "jest"
   },
   "keywords": [],
