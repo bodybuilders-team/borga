@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "4d2fde67-c3ef-4740-bfcb-de7921e8919b",
+		"name": "BORGA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get popular games",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/games/popular",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"games",
+						"popular"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search game by name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/games/search/:gameName",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"games",
+						"search",
+						":gameName"
+					],
+					"variable": [
+						{
+							"key": "gameName",
+							"value": "Catan"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"A48287\",\r\n    \"username\": \"Nyck Brandon\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/user/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						"create"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"groupDescription\": \"This is a description.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						"add"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newDescription\": \"This is a new description.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/edit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						"edit"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all groups from user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						"list"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete group",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						":groupName",
+						"delete"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						},
+						{
+							"key": "groupName",
+							"value": "FPS Games"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get group details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						":groupName",
+						"details"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						},
+						{
+							"key": "groupName",
+							"value": "FPS Games"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add game to group",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"gameName\": \"Catan\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/addGame",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						":groupName",
+						"addGame"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						},
+						{
+							"key": "groupName",
+							"value": "FPS Games"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove game from group",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/removeGame/:gameName",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user",
+						":userId",
+						"myGroups",
+						":groupName",
+						"removeGame",
+						":gameName"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "A48287"
+						},
+						{
+							"key": "groupName",
+							"value": "FPS Games"
+						},
+						{
+							"key": "gameName",
+							"value": "Catan"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

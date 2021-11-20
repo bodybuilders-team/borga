@@ -2,22 +2,79 @@
     "openapi": "3.0.1",
     "info": {
       "title": "BORGA",
-      "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token.",
+      "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token. \n Authors: André Jesus, Nyckollas Brandão and André Santos.",
       "version": "1"
     },
     "tags": [
       {
-        "name": "user",
-        "description": "Everything about Users"
-      },
-      {
         "name": "games",
         "description": "Everything about Games"
+      },
+      {
+        "name": "user",
+        "description": "Everything about Users"
       }
     ],
     "paths": {
-      "/user": {
-        "put": {
+      "/games/popular": {
+        "get": {
+          "tags": [
+            "games"
+          ],
+          "summary": "Gets the list of the most popular games.",
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "json": {
+                  "example": {
+                    "popularGames": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/games/search/:gameName": {
+        "get": {
+          "tags": [
+            "games"
+          ],
+          "summary": "Searches games by name.",
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Game"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                        "code": 1001,
+                        "name": "NOT_FOUND",
+                        "message": "The item does not exist {\"gameName\":\"Catan\"}",
+                        "info": {
+                            "gameName": "Catan"
+                        }
+                    }
+                }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/create": {
+        "post": {
           "tags": [
             "user"
           ],
@@ -25,155 +82,414 @@
           "requestBody": {
             "description": "User information",
             "content": {
-              "*/*": {
+              "default": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserToCreate"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             },
             "required": true
           },
           "responses": {
-            "default": {
+            "200": {
               "description": "successful operation",
-              "content": {}
-            }
-          }
-        }
-      },
-      "/user/groups/createGroup": {
-        "put": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Creates a group providing its name and description",
-          "requestBody": {
-            "description": "Group information",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GroupToCreate"
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Created user": "A48287"
+                    }
+                  }
                 }
               }
             },
-            "required": true
-          },
-          "responses": {
-            "default": {
-              "description": "successful operation",
-              "content": {}
+            "409": {
+              "description": "already exists",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                        "code": 1002,
+                        "name": "ALREADY_EXISTS",
+                        "message": "The item already exists {\"userId\":\"A48287\"}",
+                        "info": {
+                            "userId": "A48287"
+                        }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       },
-      "/user/groups/addGameToGroup": {
-        "put": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Adds a game to a group",
-          "responses": {
-            "default": {
-              "description": "successful operation",
-              "content": {}
-            }
-          }
-        }
-      },
-      "/user/groups/editGroup": {
+      "/user/:userId/myGroups/add": {
         "post": {
           "tags": [
             "user"
           ],
-          "summary": "Edits a group by changing its name and description",
+          "summary": "Creates a group providing its name and description.",
+          "requestBody": {
+            "description": "Group information",
+            "content": {
+              "default": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "groupName": {
+                      "type": "string"
+                    },
+                    "groupDescription": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
-            "default": {
+            "200": {
               "description": "successful operation",
-              "content": {}
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Created group": "FPS Games"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "already exists",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1002,
+                      "name": "ALREADY_EXISTS",
+                      "message": "The item already exists {\"groupName\":\"FPS Games\"}",
+                      "info": {
+                        "groupName": "FPS Games"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       },
-      "/user/groups/getGroupDetails": {
+      "/user/:userId/myGroups/edit": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Edits a group by changing its name and description.",
+          "requestBody": {
+            "description": "Group information",
+            "content": {
+              "default": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "groupName": {
+                      "type": "string"
+                    },
+                    "newGroupName": {
+                      "type": "string"
+                    },
+                    "newDescription": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Edited group": "First-Person Shooter Games"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "user or group not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/:userId/myGroups/list": {
         "get": {
           "tags": [
             "user"
           ],
-          "summary": "Gets the details of a group, with its name, description and names of the included games",
+          "summary": "Lists all groups.",
           "responses": {
-            "default": {
+            "200": {
               "description": "successful operation",
-              "content": {}
+              "content": {
+                "array": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       },
-      "/user/groups/listGroups": {
-        "get": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Lists all groups",
-          "responses": {
-            "default": {
-              "description": "successful operation",
-              "content": {}
-            }
-          }
-        }
-      },
-      "/user/groups/deleteGroup": {
+      "/user/:userId/myGroups/:groupName/delete": {
         "delete": {
           "tags": [
             "user"
           ],
-          "summary": "Deletes a group",
+          "summary": "Deletes a group.",
           "responses": {
-            "default": {
+            "200": {
               "description": "successful operation",
-              "content": {}
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Deleted group": "FPS Games"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "user or group not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       },
-      "/user/groups/removeGameFromGroup": {
+      "/user/:userId/myGroups/:groupName/details": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Gets the details of a group, with its name, description and names of the included games.",
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "games": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "user or group not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/:userId/myGroups/:groupName/addGame": {
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Adds a game to a group.",
+          "requestBody": {
+            "description": "Game information",
+            "content": {
+              "default": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "gameName": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Added game": "Catan"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "user or group not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/:userId/myGroups/:groupName/removeGame/:gameName": {
         "delete": {
           "tags": [
             "user"
           ],
-          "summary": "Removes a game from a group",
+          "summary": "Removes a game from a group.",
           "responses": {
-            "default": {
+            "200": {
               "description": "successful operation",
-              "content": {}
+              "content": {
+                "json": {
+                  "schema": {
+                    "type": "string",
+                    "example": {
+                      "Removed game": "Catan"
+                    }
+                  }
+              }
             }
-          }
-        }
-      },
-      "/games/popular": {
-        "get": {
-          "tags": [
-            "games"
-          ],
-          "summary": "Gets the list of the most popular games",
-          "responses": {
-            "default": {
-              "description": "successful operation",
-              "content": {}
-            }
-          }
-        }
-      },
-      "/games/searchByName": {
-        "get": {
-          "tags": [
-            "games"
-          ],
-          "summary": "Searches games by name",
-          "responses": {
-            "default": {
-              "description": "successful operation",
-              "content": {}
+            },
+            "404": {
+              "description": "user, group or game not found",
+              "content": {
+                "json": {
+                  "example": {
+                    "cause": {
+                      "code": 1001,
+                      "name": "NOT_FOUND",
+                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                      "info": {
+                        "userId": "A4828723"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -185,7 +501,7 @@
           "type": "object",
           "properties": {
             "id": {
-              "type": "integer"
+              "type": "string"
             },
             "name": {
               "type": "string"
@@ -203,7 +519,7 @@
               "type": "integer"
             },
             "price": {
-              "type": "integer"
+              "type": "string"
             }
           },
           "xml": {
@@ -220,7 +536,10 @@
               "type": "string"
             },
             "games": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/Game"
+              }
             }
           },
           "xml": {
@@ -237,39 +556,14 @@
               "type": "string"
             },
             "groups": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/Group"
+              }
             }
           },
           "xml": {
             "name": "User"
-          }
-        },
-        "UserToCreate": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "username": {
-              "type": "string"
-            }
-          },
-          "xml": {
-            "name": "UserToCreate"
-          }
-        },
-        "GroupToCreate": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            }
-          },
-          "xml": {
-            "name": "GroupToCreate"
           }
         }
       }

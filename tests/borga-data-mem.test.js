@@ -1,14 +1,15 @@
 'use strict';
 
+
 const dataMem = require("../borga-data-mem.js");
 const errors = require('../borga-errors.js');
 
-
-const userId1 = "A48287"
-const userName1 = "Nyck Brandon"
-const groupName1 = "RPG Games"
-const groupDescription1 = "This is a description"
-const gameName1 = "Skyrim"
+// ----------------------------- Constants used in tests -----------------------------
+const userId1 = "A48287";
+const userName1 = "Nyck Brandon";
+const groupName1 = "RPG Games";
+const groupDescription1 = "This is a description";
+const gameName1 = "Skyrim";
 const game1 = {
     id: "I9azM1kA6l",
     name: gameName1,
@@ -22,22 +23,44 @@ const groupObj1 = {
     name: groupName1,
     description: groupDescription1,
     games: {}
-}
+};
 
+/**
+ * Resets memory by assigning {} to the object users.
+ */
 const ResetMem = () => dataMem.resetMem();
+
+/**
+ * Creates a new user with the information of the tests constants.
+ */
 const CreateUser1 = () => dataMem.createNewUser(userId1, userName1);
+
+/**
+ * Creates a new group with the information of the tests constants.
+ */
 const CreateGroup1 = () => dataMem.createGroup(userId1, groupName1, groupDescription1);
 
 
+/**
+ * Asserts that the function throws NOT_FOUND error.
+ * @param {Function} func 
+ * @param {Object} info 
+ */
 function assertThrowsNotFound(func, info) {
     expect(func)
     .toThrow(errors.NOT_FOUND(info));
 }
 
+/**
+ * Asserts that the function throws ALREADY_EXISTS error.
+ * @param {Function} func 
+ * @param {Object} info 
+ */
 function assertThrowsAlreadyExists(func, info) {
     expect(func)
     .toThrow(errors.ALREADY_EXISTS(info));
 }
+
 
 
 test("getPopularGames returns names of most popular games", () => {

@@ -34,7 +34,7 @@ test("makeGameObj returns a game obj created from another object", () => {
             image_url: "skyrim.jpg",
             publisher: "Bethesda Game Studios",
             amazon_rank: 1,
-            price: 420.69,
+            price: '420.69',
             min_age: 8,
             discount: 0,
             mentions: 1000
@@ -48,7 +48,7 @@ test("makeGameObj returns a game obj created from another object", () => {
                 image: "skyrim.jpg",
                 publisher: "Bethesda Game Studios",
                 amazon_rank: 1,
-                price: 420.69
+                price: '420.69'
             }
         );
 });
