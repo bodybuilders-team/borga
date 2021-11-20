@@ -11,6 +11,7 @@ module.exports = function (data_ext, data_int) {
                 listUserGroups: data_int.listUserGroups,
                 deleteGroup: data_int.deleteGroup,
                 getGroupDetails: data_int.getGroupDetails,
+                addGameToGroup: data_int.addGameToGroup,
                 removeGameFromGroup: data_int.removeGameFromGroup,
                 getPopularGames: data_int.getPopularGames,
 

@@ -2,6 +2,7 @@
 
 
 const express = require('express');
+const errors = require('./borga-errors');
 
 module.exports = function (services) {
 
@@ -13,11 +14,17 @@ module.exports = function (services) {
      */
     function onError(res, err) {
         switch (err.name) {
+            case 'BAD_REQUEST':
+                res.status(400);
+                break;
             case 'NOT_FOUND':
                 res.status(404);
                 break;
             case 'ALREADY_EXISTS':
                 res.status(409);
+                break;
+            case 'UNPROCESSABLE_ENTITY':
+                res.status(422);
                 break;
             case 'EXT_SVC_FAIL':
                 res.status(502);
@@ -39,7 +46,7 @@ module.exports = function (services) {
             const games = await services.getPopularGames();
             res.json(games);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -51,10 +58,14 @@ module.exports = function (services) {
      */
     async function searchGameByName(req, res) {
         try {
-            const game = await services.searchGameByName(req.params.gameName);
+            const gameName = req.params.gameName;
+
+            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+
+            const game = await services.searchGameByName(gameName);
             res.json(game);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -66,13 +77,18 @@ module.exports = function (services) {
      */
     async function createGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
-            const groupDescription = req.params.description;
-            const userId = req.params.userId;
+            const userId = req.body.userId;
+            const groupName = req.body.groupName;
+            const groupDescription = req.body.description;
+            
+            if(!userId) throw errors.BAD_REQUEST("userId property missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName property missing");
+            if(!groupDescription) throw errors.BAD_REQUEST("description property missing");
+
             const group = await services.createGroup(userId, groupName, groupDescription);
             res.json(group);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -84,14 +100,20 @@ module.exports = function (services) {
      */
     async function editGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
-            const newGroupDescription = req.params.description;
             const userId = req.params.userId;
-            const newGroupName = req.params.newGroupName;
-            const group = await services.editGroup(userId, groupName, newGroupDescription, newGroupName);
+            const groupName = req.body.groupName;
+            const newGroupName = req.body.newGroupName;
+            const newGroupDescription = req.body.description;
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName property missing");
+            if(!newGroupName) throw errors.BAD_REQUEST("newGroupName property missing");
+            if(!newGroupDescription) throw errors.BAD_REQUEST("newGroupDescription property missing");
+
+            const group = await services.editGroup(userId, groupName, newGroupName, newGroupDescription);
             res.json(group);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -104,10 +126,13 @@ module.exports = function (services) {
     async function listGroups(req, res) {
         try {
             const userId = req.params.userId;
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+
             const groups = await services.listUserGroups(userId);
             res.json(groups);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -119,12 +144,16 @@ module.exports = function (services) {
      */
     async function deleteGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
             const userId = req.params.userId;
+            const groupName = req.params.groupName;
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+
             const group = await services.deleteGroup(userId, groupName);
             res.json(group);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -136,13 +165,17 @@ module.exports = function (services) {
      */
     async function getDetailsOfGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
             const userId = req.params.userId;
+            const groupName = req.params.groupName;
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+
             const group = await services.getGroup(userId, groupName);
             const details = await services.getGroupDetails(group);
             res.json(details);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -154,14 +187,20 @@ module.exports = function (services) {
      */
     async function addGameToGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
             const userId = req.params.userId;
+            const groupName = req.params.groupName;
             const gameName = req.params.gameName;
-            const game = await services.searchGamebyName(gameName);
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+
+            const game = await services.searchGameByName(gameName);
+
             await services.addGameToGroup(userId, groupName, game);
             res.json(gameName);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -173,13 +212,18 @@ module.exports = function (services) {
      */
     async function deleteGameFromGroup(req, res) {
         try {
-            const groupName = req.params.groupName;
             const userId = req.params.userId;
+            const groupName = req.params.groupName;
             const gameName = req.params.gameName;
+
+            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+
             await services.removeGameFromGroup(userId, groupName, gameName);
             res.json(gameName);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -191,12 +235,16 @@ module.exports = function (services) {
      */
     async function createNewUser(req, res) {
         try {
-            const userName = req.body.userName;
             const userId = req.body.userId;
-            const addedId = await services.createNewUser(userId, userName);
+            const name = req.body.name;
+            
+            if(!userId) throw errors.BAD_REQUEST("userId property missing");
+            if(!name) throw errors.BAD_REQUEST("name property missing");
+
+            const addedId = await services.createNewUser(userId, name);
             res.json(addedId);
         } catch (err) {
-            onError(req, res, err);
+            onError(res, err);
         }
     }
 
@@ -212,10 +260,10 @@ module.exports = function (services) {
     router.get('/games/search/:gameName', searchGameByName);
 
     //Create group providing its name and description
-    router.post('/user/:userId/myGroup/:groupName/:description', createGroup);
+    router.post('/user/myGroup/add/', createGroup);
 
     //Edit group by changing its name and description
-    router.put('/user/:userId/myGroup/edit/:groupName/:newGroupName/:description', editGroup);
+    router.put('/user/:userId/myGroup/edit/', editGroup);
 
     //List all groups
     router.get('/user/:userId/myGroup/list', listGroups);
