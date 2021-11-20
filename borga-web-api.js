@@ -35,6 +35,20 @@ module.exports = function (services) {
         res.json({ cause: err });
     }
 
+    /**
+     * Checks if a bad request is to be thrown, given parameters and properties.
+     * @param {Object} params 
+     * @param {Object} properties 
+     */
+    function checkBadRequest(params, properties){
+        const info = {};
+
+        for(let param in params)        if(!params[param]) info[param] = "parameter missing";
+        for(let property in properties) if(!properties[property]) info[property] = "property missing";
+
+        if(Object.keys(info).length != 0) throw errors.BAD_REQUEST(info);
+    }
+
 
     /**
      * Returns an object containing all popular games from BGA
@@ -60,7 +74,7 @@ module.exports = function (services) {
         try {
             const gameName = req.params.gameName;
 
-            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+            checkBadRequest({ gameName: gameName});
 
             const game = await services.searchGameByName(gameName);
             res.json(game);
@@ -77,13 +91,11 @@ module.exports = function (services) {
      */
     async function createGroup(req, res) {
         try {
-            const userId = req.body.userId;
-            const groupName = req.body.groupName;
+            const userId = req.params.userId;
+            const groupName = req.body.name;
             const groupDescription = req.body.description;
-            
-            if(!userId) throw errors.BAD_REQUEST("userId property missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName property missing");
-            if(!groupDescription) throw errors.BAD_REQUEST("description property missing");
+
+            checkBadRequest({ userId: userId }, { name: groupName, description: groupDescription });
 
             const group = await services.createGroup(userId, groupName, groupDescription);
             res.json(group);
@@ -101,14 +113,11 @@ module.exports = function (services) {
     async function editGroup(req, res) {
         try {
             const userId = req.params.userId;
-            const groupName = req.body.groupName;
-            const newGroupName = req.body.newGroupName;
-            const newGroupDescription = req.body.description;
+            const groupName = req.body.name;
+            const newGroupName = req.body.newName;
+            const newGroupDescription = req.body.newDescription;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName property missing");
-            if(!newGroupName) throw errors.BAD_REQUEST("newGroupName property missing");
-            if(!newGroupDescription) throw errors.BAD_REQUEST("newGroupDescription property missing");
+            checkBadRequest({ userId: userId}, { name: groupName, newName: newGroupName, newDescription: newGroupDescription});
 
             const group = await services.editGroup(userId, groupName, newGroupName, newGroupDescription);
             res.json(group);
@@ -127,7 +136,7 @@ module.exports = function (services) {
         try {
             const userId = req.params.userId;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
+            checkBadRequest({ userId: userId }, {});
 
             const groups = await services.listUserGroups(userId);
             res.json(groups);
@@ -147,8 +156,7 @@ module.exports = function (services) {
             const userId = req.params.userId;
             const groupName = req.params.groupName;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+            checkBadRequest({ userId: userId, groupName: groupName }, {});
 
             const group = await services.deleteGroup(userId, groupName);
             res.json(group);
@@ -168,8 +176,7 @@ module.exports = function (services) {
             const userId = req.params.userId;
             const groupName = req.params.groupName;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
+            checkBadRequest({ userId: userId, groupName: groupName }, {});
 
             const group = await services.getGroup(userId, groupName);
             const details = await services.getGroupDetails(group);
@@ -191,9 +198,7 @@ module.exports = function (services) {
             const groupName = req.params.groupName;
             const gameName = req.params.gameName;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
-            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+            checkBadRequest({ userId: userId, groupName: groupName, gameName: gameName }, {});
 
             const game = await services.searchGameByName(gameName);
 
@@ -216,9 +221,7 @@ module.exports = function (services) {
             const groupName = req.params.groupName;
             const gameName = req.params.gameName;
 
-            if(!userId) throw errors.BAD_REQUEST("userId parameter missing");
-            if(!groupName) throw errors.BAD_REQUEST("groupName parameter missing");
-            if(!gameName) throw errors.BAD_REQUEST("gameName parameter missing");
+            checkBadRequest({ userId: userId, groupName: groupName, gameName: gameName }, {});
 
             await services.removeGameFromGroup(userId, groupName, gameName);
             res.json(gameName);
@@ -236,12 +239,11 @@ module.exports = function (services) {
     async function createNewUser(req, res) {
         try {
             const userId = req.body.userId;
-            const name = req.body.name;
-            
-            if(!userId) throw errors.BAD_REQUEST("userId property missing");
-            if(!name) throw errors.BAD_REQUEST("name property missing");
+            const userName = req.body.name;
 
-            const addedId = await services.createNewUser(userId, name);
+            checkBadRequest({}, { userId: userId, name: userName });
+
+            const addedId = await services.createNewUser(userId, userName);
             res.json(addedId);
         } catch (err) {
             onError(res, err);
@@ -260,7 +262,7 @@ module.exports = function (services) {
     router.get('/games/search/:gameName', searchGameByName);
 
     //Create group providing its name and description
-    router.post('/user/myGroup/add/', createGroup);
+    router.post('/user/:userId/myGroup/add/', createGroup);
 
     //Edit group by changing its name and description
     router.put('/user/:userId/myGroup/edit/', editGroup);
