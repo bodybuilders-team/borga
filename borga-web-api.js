@@ -8,7 +8,7 @@ const errors = require('./borga-errors');
 module.exports = function (services) {
 
     /**
-     * Returns json format object containing the cause of the error
+     * Returns json format object containing the cause of the error.
      * @param {Object} res 
      * @param {Object} err
      */
@@ -38,18 +38,22 @@ module.exports = function (services) {
 
     /**
      * Checks if a bad request is to be thrown, given parameters and properties.
+     * Bad request is thrown when:
+     * - a needed parameter/property is missing;
+     * - the type of a property (from body's json) is different from the expected.
+     * 
+     * All the information (multiple parameters/properties can fail simultaneously) is thrown in a single json.
      * @param {Object} params 
      * @param {Object} properties 
+     * @throws BAD_REQUEST if needed parameters/properties are missing and/or the types of properties are different from the expected
      */
     function checkBadRequest(params, properties) {
         const info = {};
 
         for (let param in params){
             const value = params[param].value;
-            const type = params[param].type;
 
             if (!value) info[param] = "parameter missing";
-            else if (typeof value !== type) info[param] = "wrong type. expected " + type + ". instead got " + typeof value;
         }
         for (let property in properties){
             const value = properties[property].value;
@@ -64,7 +68,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns an object containing all popular games from BGA
+     * Returns an object containing the most popular games among all users.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -79,7 +83,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns a specific game object given its name 
+     * Returns a specific game object given its name.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -88,7 +92,7 @@ module.exports = function (services) {
             const gameName = req.params.gameName;
 
             checkBadRequest({
-                gameName: { value: gameName, type: 'string' }
+                gameName: { value: gameName }
             }, {});
 
             const game = await services.searchGameByName(gameName);
@@ -100,7 +104,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns an object containing the new user´s Id.
+     * Creates a new user. In case of success, returns an object containing the new user´s Id.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -123,7 +127,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns the newly created group object with the specified parameters
+     * Creates a new group. In case of success, returns the newly created group object with the specified parameters.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -134,14 +138,14 @@ module.exports = function (services) {
             const groupDescription = req.body.groupDescription;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' }
+                userId: { value: userId }
             }, {
                 groupName: { value: groupName, type: 'string' },
                 groupDescription: { value: groupDescription, type: 'string' }
             });
 
-            const group = await services.createGroup(userId, groupName, groupDescription);
-            res.json({ "Created group": group });
+            const name = await services.createGroup(userId, groupName, groupDescription);
+            res.json({ "Created group": name });
         } catch (err) {
             onError(res, err);
         }
@@ -149,7 +153,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns the newly edited group name with the specified parameters
+     * Edits a group with the specified parameters. In case of success, returns an object with the newly edited group.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -161,15 +165,15 @@ module.exports = function (services) {
             const newGroupDescription = req.body.newGroupDescription;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' }
+                userId: { value: userId }
             }, {
                 groupName: { value: groupName, type: 'string' },
                 newGroupName: { value: newGroupName, type: 'string' },
                 newGroupDescription: { value: newGroupDescription, type: 'string' }
             });
 
-            const group = await services.editGroup(userId, groupName, newGroupName, newGroupDescription);
-            res.json({ "Edited group": group });
+            const name = await services.editGroup(userId, groupName, newGroupName, newGroupDescription);
+            res.json({ "Edited group": name });
         } catch (err) {
             onError(res, err);
         }
@@ -177,7 +181,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns the list of all groups of the specified user
+     * Returns the list of all groups of the specified user.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -186,7 +190,7 @@ module.exports = function (services) {
             const userId = req.params.userId;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' }
+                userId: { value: userId }
             }, {});
 
             const groups = await services.listUserGroups(userId);
@@ -198,7 +202,7 @@ module.exports = function (services) {
 
 
     /**
-     * Returns the newly deleted group name 
+     * Deltes a group. In case of success, returns the newly deleted group name.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -208,12 +212,12 @@ module.exports = function (services) {
             const groupName = req.params.groupName;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' },
-                groupName: { value: groupName, type: 'string' }
+                userId: { value: userId },
+                groupName: { value: groupName }
             }, {});
 
-            const group = await services.deleteGroup(userId, groupName);
-            res.json({ "Deleted group": group });
+            const name = await services.deleteGroup(userId, groupName);
+            res.json({ "Deleted group": name });
         } catch (err) {
             onError(res, err);
         }
@@ -231,8 +235,8 @@ module.exports = function (services) {
             const groupName = req.params.groupName;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' },
-                groupName: { value: groupName, type: 'string' }
+                userId: { value: userId },
+                groupName: { value: groupName }
             }, {});
 
             const group = await services.getGroup(userId, groupName);
@@ -256,16 +260,16 @@ module.exports = function (services) {
             const gameName = req.body.gameName;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' },
-                groupName: { value: groupName, type: 'string' }
+                userId: { value: userId },
+                groupName: { value: groupName }
             }, {
                 gameName: { value: gameName, type: 'string' }
             });
 
             const game = await services.searchGameByName(gameName);
 
-            await services.addGameToGroup(userId, groupName, game);
-            res.json({ "Added game": gameName });
+            const name = await services.addGameToGroup(userId, groupName, game);
+            res.json({ "Added game": name });
         } catch (err) {
             onError(res, err);
         }
@@ -284,13 +288,13 @@ module.exports = function (services) {
             const gameName = req.params.gameName;
 
             checkBadRequest({
-                userId: { value: userId, type: 'string' },
-                groupName: { value: groupName, type: 'string' },
-                gameName: { value: gameName, type: 'string' }
+                userId: { value: userId },
+                groupName: { value: groupName },
+                gameName: { value: gameName }
             }, {});
 
-            await services.removeGameFromGroup(userId, groupName, gameName);
-            res.json({ "Removed game": gameName });
+            const name = await services.removeGameFromGroup(userId, groupName, gameName);
+            res.json({ "Removed game": name });
         } catch (err) {
             onError(res, err);
         }
