@@ -113,11 +113,11 @@ function createGroup(userId, groupName, groupDescription) {
 function editGroup(userId, groupName, newGroupName, newGroupDescription) {
 	const group = getGroupFromUser(userId, groupName);
 	deleteGroup(userId, groupName);
-
+	
 	group.name = newGroupName;
 	group.description = newGroupDescription;
 	addGroupToUser(userId, group);
-
+	
 	return newGroupName;
 }
 
