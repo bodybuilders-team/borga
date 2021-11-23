@@ -172,6 +172,8 @@ function getGroupDetails(groupObj) {
  */
 function addGameToGroup(userId, groupName, gameObj) {
 	const gameName = gameObj.name;
+	const gameId = gameObj.id;
+	games[gameId] = gameObj;
 	getGroupFromUser(userId, groupName).games[gameName] = gameObj.id;
 	return gameName;
 }
