@@ -2,6 +2,8 @@
 
 
 const express = require('express');
+const openApiUi = require('swagger-ui-express');
+const openApiSpec = require('./docs/borga-api-spec.json');
 const errors = require('./borga-errors');
 
 
@@ -50,12 +52,12 @@ module.exports = function (services) {
     function checkBadRequest(params, properties) {
         const info = {};
 
-        for (let param in params){
+        for (let param in params) {
             const value = params[param].value;
 
             if (!value) info[param] = "parameter missing";
         }
-        for (let property in properties){
+        for (let property in properties) {
             const value = properties[property].value;
             const type = properties[property].type;
 
@@ -302,6 +304,8 @@ module.exports = function (services) {
 
 
     const router = express.Router();
+    router.use('/docs', openApiUi.serve);
+	router.get('/docs', openApiUi.setup(openApiSpec));
     router.use(express.json());
 
 

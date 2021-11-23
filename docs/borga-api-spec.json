@@ -3,7 +3,8 @@
     "info": {
       "title": "BORGA",
       "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token. \n Authors: André Jesus, Nyckollas Brandão and André Santos.",
-      "version": "1"
+      "termsOfService": "http://swagger.io/terms/",
+      "version": "1.0.0"
     },
     "tags": [
       {
@@ -26,7 +27,7 @@
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "popularGames": []
                   }
@@ -36,17 +37,28 @@
           }
         }
       },
-      "/games/search/:gameName": {
+      "/games/search/{gameName}": {
         "get": {
           "tags": [
             "games"
           ],
           "summary": "Searches games by name.",
+          "parameters": [
+            {
+              "name": "gameName",
+              "in": "path",
+              "description": "The name of the game to search",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/Game"
                   }
@@ -56,7 +68,7 @@
             "404": {
               "description": "not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                         "code": 1001,
@@ -82,7 +94,7 @@
           "requestBody": {
             "description": "User information",
             "content": {
-              "default": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -102,7 +114,7 @@
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -115,7 +127,7 @@
             "409": {
               "description": "already exists",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                         "code": 1002,
@@ -132,16 +144,27 @@
           }
         }
       },
-      "/user/:userId/myGroups/add": {
+      "/user/{userId}/myGroups/add": {
         "post": {
           "tags": [
             "user"
           ],
           "summary": "Creates a group providing its name and description.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "requestBody": {
             "description": "Group information",
             "content": {
-              "default": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -161,7 +184,7 @@
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -174,7 +197,7 @@
             "404": {
               "description": "not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -191,7 +214,7 @@
             "409": {
               "description": "already exists",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1002,
@@ -208,16 +231,27 @@
           }
         }
       },
-      "/user/:userId/myGroups/edit": {
+      "/user/{userId}/myGroups/edit": {
         "post": {
           "tags": [
             "user"
           ],
           "summary": "Edits a group by changing its name and description.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "requestBody": {
             "description": "Group information",
             "content": {
-              "default": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -240,7 +274,7 @@
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -253,7 +287,7 @@
             "404": {
               "description": "user or group not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -270,17 +304,28 @@
           }
         }
       },
-      "/user/:userId/myGroups/list": {
+      "/user/{userId}/myGroups/list": {
         "get": {
           "tags": [
             "user"
           ],
           "summary": "Lists all groups.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "successful operation",
               "content": {
-                "array": {
+                "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/Group"
                   }
@@ -290,7 +335,7 @@
             "404": {
               "description": "not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -307,17 +352,37 @@
           }
         }
       },
-      "/user/:userId/myGroups/:groupName/delete": {
+      "/user/{userId}/myGroups/{groupName}/delete": {
         "delete": {
           "tags": [
             "user"
           ],
           "summary": "Deletes a group.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "groupName",
+              "in": "path",
+              "description": "The name of the group to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -330,7 +395,7 @@
             "404": {
               "description": "user or group not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -347,17 +412,37 @@
           }
         }
       },
-      "/user/:userId/myGroups/:groupName/details": {
+      "/user/{userId}/myGroups/{groupName}/details": {
         "get": {
           "tags": [
             "user"
           ],
           "summary": "Gets the details of a group, with its name, description and names of the included games.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "groupName",
+              "in": "path",
+              "description": "The name of the group to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "object",
                     "properties": {
@@ -381,7 +466,7 @@
             "404": {
               "description": "user or group not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -398,16 +483,36 @@
           }
         }
       },
-      "/user/:userId/myGroups/:groupName/addGame": {
+      "/user/{userId}/myGroups/{groupName}/addGame": {
         "put": {
           "tags": [
             "user"
           ],
           "summary": "Adds a game to a group.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "groupName",
+              "in": "path",
+              "description": "The name of the group to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "requestBody": {
             "description": "Game information",
             "content": {
-              "default": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -424,7 +529,7 @@
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "application/json": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -437,7 +542,7 @@
             "404": {
               "description": "user or group not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,
@@ -454,17 +559,46 @@
           }
         }
       },
-      "/user/:userId/myGroups/:groupName/removeGame/:gameName": {
+      "/user/{userId}/myGroups/{groupName}/removeGame/{gameName}": {
         "delete": {
           "tags": [
             "user"
           ],
           "summary": "Removes a game from a group.",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "The user ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "groupName",
+              "in": "path",
+              "description": "The name of the group to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "gameName",
+              "in": "path",
+              "description": "The name of the game to remove from the group",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "successful operation",
               "content": {
-                "json": {
+                "japplication/jsonson": {
                   "schema": {
                     "type": "string",
                     "example": {
@@ -477,7 +611,7 @@
             "404": {
               "description": "user, group or game not found",
               "content": {
-                "json": {
+                "application/json": {
                   "example": {
                     "cause": {
                       "code": 1001,

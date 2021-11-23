@@ -14,7 +14,7 @@ module.exports = function (data_ext, data_int) {
                 getGroupDetails: data_int.getGroupDetails,
                 addGameToGroup: data_int.addGameToGroup,
                 removeGameFromGroup: data_int.removeGameFromGroup,
-                
+
                 getGroup: data_int.getGroupFromUser
         };
 }

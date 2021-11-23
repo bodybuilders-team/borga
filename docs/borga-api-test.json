@@ -11,12 +11,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/games/popular",
-					"protocol": "http",
+					"raw": "{{baseURL}}/games/popular",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"games",
 						"popular"
@@ -31,12 +29,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/games/search/:gameName",
-					"protocol": "http",
+					"raw": "{{baseURL}}/games/search/:gameName",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"games",
 						"search",
@@ -59,7 +55,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"userId\": \"A48287\",\r\n    \"username\": \"Nyck Brandon\"\r\n}",
+					"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"username\": \"Paulão\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,12 +63,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8888/user/create",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/create",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						"create"
@@ -103,12 +97,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/add",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/add",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -118,7 +110,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						}
 					]
 				}
@@ -132,7 +124,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newDescription\": \"This is a new description.\"\r\n}",
+					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newGroupDescription\": \"This is a new description.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -140,12 +132,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/edit",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/edit",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -155,7 +145,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						}
 					]
 				}
@@ -168,12 +158,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/list",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/list",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -183,7 +171,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						}
 					]
 				}
@@ -196,12 +184,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/delete",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -212,7 +198,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						},
 						{
 							"key": "groupName",
@@ -229,12 +215,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/details",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -245,7 +229,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						},
 						{
 							"key": "groupName",
@@ -271,12 +255,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/addGame",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -287,7 +269,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						},
 						{
 							"key": "groupName",
@@ -304,12 +286,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8888/user/:userId/myGroups/:groupName/removeGame/:gameName",
-					"protocol": "http",
+					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "8888",
 					"path": [
 						"user",
 						":userId",
@@ -321,7 +301,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "A48287"
+							"value": "12345"
 						},
 						{
 							"key": "groupName",
@@ -335,6 +315,32 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8888"
 		}
 	]
 }
