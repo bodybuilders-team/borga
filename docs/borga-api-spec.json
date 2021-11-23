@@ -1,625 +1,87 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "BORGA",
-      "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token. \n Authors: André Jesus, Nyckollas Brandão and André Santos.",
-      "termsOfService": "http://swagger.io/terms/",
-      "version": "1.0.0"
+  
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BORGA",
+    "description": "BORGA (BOaRd Games Application) provides access, through a web interface (hypermedia), to some of the features provided by the [Board Game Atlas](https://www.boardgameatlas.com/) website, making use of its [Web API](https://www.boardgameatlas.com/api/docs) for this purpose. For all group operations, a user token must be sent in the Authorization header using a Bearer Token. \n Authors: André Jesus, Nyckollas Brandão and André Santos.",
+    "termsOfService": "http://swagger.io/terms/",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8888/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "games",
+      "description": "Everything about Games"
     },
-    "tags": [
-      {
-        "name": "games",
-        "description": "Everything about Games"
-      },
-      {
-        "name": "user",
-        "description": "Everything about Users"
+    {
+      "name": "user",
+      "description": "Everything about Users"
+    }
+  ],
+  "paths": {
+    "/games/popular": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Gets the list of the most popular games.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "popularGames": []
+                }
+              }
+            }
+          }
+        }
       }
-    ],
-    "paths": {
-      "/games/popular": {
-        "get": {
-          "tags": [
-            "games"
-          ],
-          "summary": "Gets the list of the most popular games.",
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "popularGames": []
-                  }
-                }
-              }
+    },
+    "/games/search/{gameName}": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Searches games by name.",
+        "parameters": [
+          {
+            "name": "gameName",
+            "in": "path",
+            "description": "The name of the game to search",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        }
-      },
-      "/games/search/{gameName}": {
-        "get": {
-          "tags": [
-            "games"
-          ],
-          "summary": "Searches games by name.",
-          "parameters": [
-            {
-              "name": "gameName",
-              "in": "path",
-              "description": "The name of the game to search",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Game"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                        "code": 1001,
-                        "name": "NOT_FOUND",
-                        "message": "The item does not exist {\"gameName\":\"Catan\"}",
-                        "info": {
-                            "gameName": "Catan"
-                        }
-                    }
-                }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/create": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Creates a new user.",
-          "requestBody": {
-            "description": "User information",
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "string"
-                    },
-                    "username": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Game"
                 }
               }
-            },
-            "required": true
+            }
           },
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Created user": "A48287"
-                    }
-                  }
-                }
-              }
-            },
-            "409": {
-              "description": "already exists",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                        "code": 1002,
-                        "name": "ALREADY_EXISTS",
-                        "message": "The item already exists {\"userId\":\"A48287\"}",
-                        "info": {
-                            "userId": "A48287"
-                        }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/add": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Creates a group providing its name and description.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "description": "Group information",
+          "404": {
+            "description": "not found",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "groupName": {
-                      "type": "string"
-                    },
-                    "groupDescription": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Created group": "FPS Games"
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "409": {
-              "description": "already exists",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1002,
-                      "name": "ALREADY_EXISTS",
-                      "message": "The item already exists {\"groupName\":\"FPS Games\"}",
-                      "info": {
-                        "groupName": "FPS Games"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/edit": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Edits a group by changing its name and description.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "description": "Group information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "groupName": {
-                      "type": "string"
-                    },
-                    "newGroupName": {
-                      "type": "string"
-                    },
-                    "newDescription": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Edited group": "First-Person Shooter Games"
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "user or group not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/list": {
-        "get": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Lists all groups.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Group"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/{groupName}/delete": {
-        "delete": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Deletes a group.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "groupName",
-              "in": "path",
-              "description": "The name of the group to delete",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Deleted group": "FPS Games"
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "user or group not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/{groupName}/details": {
-        "get": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Gets the details of a group, with its name, description and names of the included games.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "groupName",
-              "in": "path",
-              "description": "The name of the group to delete",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "description": {
-                        "type": "string"
-                      },
-                      "games": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "user or group not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/{groupName}/addGame": {
-        "put": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Adds a game to a group.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "groupName",
-              "in": "path",
-              "description": "The name of the group to delete",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "description": "Game information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "gameName": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Added game": "Catan"
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "user or group not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/{userId}/myGroups/{groupName}/removeGame/{gameName}": {
-        "delete": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Removes a game from a group.",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "The user ID",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "groupName",
-              "in": "path",
-              "description": "The name of the group to delete",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "gameName",
-              "in": "path",
-              "description": "The name of the game to remove from the group",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "japplication/jsonson": {
-                  "schema": {
-                    "type": "string",
-                    "example": {
-                      "Removed game": "Catan"
-                    }
-                  }
-              }
-            }
-            },
-            "404": {
-              "description": "user, group or game not found",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "cause": {
-                      "code": 1001,
-                      "name": "NOT_FOUND",
-                      "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                      "info": {
-                        "userId": "A4828723"
-                      }
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"gameName\":\"Catan\"}",
+                    "info": {
+                      "gameName": "Catan"
                     }
                   }
                 }
@@ -629,77 +91,621 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "Game": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "image": {
-              "type": "string"
-            },
-            "publisher": {
-              "type": "string"
-            },
-            "amazon_rank": {
-              "type": "integer"
-            },
-            "price": {
-              "type": "string"
-            }
-          },
-          "xml": {
-            "name": "Game"
-          }
-        },
-        "Group": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "games": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/components/schemas/Game"
+    "/user/create": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Creates a new user.",
+        "requestBody": {
+          "description": "User information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  }
+                }
               }
             }
           },
-          "xml": {
-            "name": "Group"
-          }
+          "required": true
         },
-        "User": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "username": {
-              "type": "string"
-            },
-            "groups": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/components/schemas/Group"
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Created user": "A48287"
+                  }
+                }
               }
             }
           },
-          "xml": {
-            "name": "User"
+          "409": {
+            "description": "already exists",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1002,
+                    "name": "ALREADY_EXISTS",
+                    "message": "The item already exists {\"userId\":\"A48287\"}",
+                    "info": {
+                      "userId": "A48287"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/add": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Creates a group providing its name and description.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Group information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "groupName": {
+                    "type": "string"
+                  },
+                  "groupDescription": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Created group": "FPS Games"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "already exists",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1002,
+                    "name": "ALREADY_EXISTS",
+                    "message": "The item already exists {\"groupName\":\"FPS Games\"}",
+                    "info": {
+                      "groupName": "FPS Games"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/edit": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Edits a group by changing its name and description.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Group information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "groupName": {
+                    "type": "string"
+                  },
+                  "newGroupName": {
+                    "type": "string"
+                  },
+                  "newDescription": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Edited group": "First-Person Shooter Games"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user or group not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/list": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Lists all groups.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/{groupName}/delete": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Deletes a group.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupName",
+            "in": "path",
+            "description": "The name of the group to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Deleted group": "FPS Games"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user or group not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/{groupName}/details": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Gets the details of a group, with its name, description and names of the included games.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupName",
+            "in": "path",
+            "description": "The name of the group to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user or group not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/{groupName}/addGame": {
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Adds a game to a group.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupName",
+            "in": "path",
+            "description": "The name of the group to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Game information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gameName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Added game": "Catan"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user or group not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/myGroups/{groupName}/removeGame/{gameName}": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Removes a game from a group.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupName",
+            "in": "path",
+            "description": "The name of the group to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameName",
+            "in": "path",
+            "description": "The name of the game to remove from the group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "japplication/jsonson": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "Removed game": "Catan"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user, group or game not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "Game": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "amazon_rank": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "Game"
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "games": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Game"
+            }
+          }
+        },
+        "xml": {
+          "name": "Group"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "groups": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      }
+    }
   }
+}

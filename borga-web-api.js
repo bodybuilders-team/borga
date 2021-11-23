@@ -219,7 +219,7 @@ module.exports = function (services) {
 
 
 	const router = express.Router();
-    router.use('/docs', openApiUi.serve);
+	router.use('/docs', openApiUi.serve);
 	router.get('/docs', openApiUi.setup(openApiSpec));
 	router.use(express.json());
 

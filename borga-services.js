@@ -17,12 +17,12 @@ module.exports = function (data_ext, data_int) {
 	function checkBadRequest(params, properties) {
 		const info = {};
 
-		for (let param in params){
+		for (let param in params) {
 			const value = params[param].value;
 
 			if (!value) info[param] = "parameter missing";
 		}
-		for (let property in properties){
+		for (let property in properties) {
 			const value = properties[property].value;
 			const type = properties[property].type;
 
@@ -34,30 +34,54 @@ module.exports = function (data_ext, data_int) {
 	}
 
 
-	async function getPopularGames(){
-		await data_int.getPopularGames();
+	/**
+	 * Gets the most popular games.
+	 * @returns a promise with an array containing the twenty most popular games
+	 */
+	async function getPopularGames() {
+		return await data_int.getPopularGames();
 	}
 
-	async function searchGameByName(gameName){
+
+	/**
+	 * Gets a game by its name.
+	 * @param {String} name
+	 * @throws error NOT_FOUND if no game was found with the given name
+	 * @returns promise with the game object response
+	 */
+	async function searchGameByName(gameName) {
 		checkBadRequest({
 			gameName: { value: gameName }
 		}, {});
 
-		await data_ext.getGameByName(gameName);
+		return await data_ext.getGameByName(gameName);
 	}
 
 
-	async function createNewUser(userId, username){
+	/**
+	 * Creates a new user by its id and name.
+	 * @param {String} userId 
+	 * @param {String} userName 
+	 * @returns a promise with the userId of the new user
+	 */
+	async function createNewUser(userId, username) {
 		checkBadRequest({}, {
 			userId: { value: userId, type: 'string' },
 			username: { value: username, type: 'string' }
 		});
 
-		await data_int.createNewUser(userId, username);
+		return await data_int.createNewUser(userId, username);
 	}
 
 
-	async function createGroup(userId, groupName, groupDescription){
+	/**
+	 * Creates a new group of the user.
+	 * @param {String} userId 
+	 * @param {String} groupName 
+	 * @param {String} groupDescription 
+	 * @returns promise with the name of the new group
+	 */
+	async function createGroup(userId, groupName, groupDescription) {
 		checkBadRequest({
 			userId: { value: userId }
 		}, {
@@ -65,11 +89,19 @@ module.exports = function (data_ext, data_int) {
 			groupDescription: { value: groupDescription, type: 'string' }
 		});
 
-		await data_int.createGroup(userId, groupName, groupDescription);
+		return await data_int.createGroup(userId, groupName, groupDescription);
 	}
 
 
-	async function editGroup(userId, groupName, newGroupName, newGroupDescription){
+	/**
+	 * Edits a group by changing its name and description.
+	 * @param {String} userId 
+	 * @param {String} groupName 
+	 * @param {String} newGroupName 
+	 * @param {String} newGroupDescription 
+	 * @returns promise with the new group name
+	 */
+	async function editGroup(userId, groupName, newGroupName, newGroupDescription) {
 		checkBadRequest({
 			userId: { value: userId }
 		}, {
@@ -78,30 +110,46 @@ module.exports = function (data_ext, data_int) {
 			newGroupDescription: { value: newGroupDescription, type: 'string' }
 		});
 
-		await data_int.editGroup(userId, groupName, newGroupName, newGroupDescription);
+		return await data_int.editGroup(userId, groupName, newGroupName, newGroupDescription);
 	}
 
 
-	async function listUserGroups(userId){
+	/**
+	 * List all existing groups inside the user.
+	 * @param {String} userId 
+	 * @returns promise with object containing all group objects
+	 */
+	async function listUserGroups(userId) {
 		checkBadRequest({
 			userId: { value: userId }
 		}, {});
 
-		await data_int.listUserGroups(userId);
+		return await data_int.listUserGroups(userId);
 	}
 
 
-	async function deleteGroup(userId, groupName){
+	/**
+	 * Deletes the group of the specified groupName.
+	 * @param {String} userId 
+	 * @param {String} groupName 
+	 * @returns promise with name of the deleted group
+	 */
+	async function deleteGroup(userId, groupName) {
 		checkBadRequest({
 			userId: { value: userId },
 			groupName: { value: groupName }
 		}, {});
 
-		await data_int.deleteGroup(userId, groupName);
+		return await data_int.deleteGroup(userId, groupName);
 	}
 
 
-	async function getGroupDetails(userId, groupName){
+	/**
+	 * Creates a new object containing the group details.
+	 * @param {Object} groupObj 
+	 * @returns promise an object containing the group details
+	 */
+	async function getGroupDetails(userId, groupName) {
 		checkBadRequest({
 			userId: { value: userId },
 			groupName: { value: groupName }
@@ -109,11 +157,18 @@ module.exports = function (data_ext, data_int) {
 
 		const group = await data_int.getGroup(userId, groupName);
 
-		await data_int.getGroupDetails(group);
+		return await data_int.getGroupDetails(group);
 	}
 
 
-	async function addGameToGroup(userId, groupName, gameName){
+	/**
+	 * Adds a new game to a group.
+	 * @param {String} userId 
+	 * @param {String} groupName 
+	 * @param {Object} gameObj
+	 * @return promise with name of the added name
+	 */
+	async function addGameToGroup(userId, groupName, gameName) {
 		checkBadRequest({
 			userId: { value: userId },
 			groupName: { value: groupName }
@@ -123,20 +178,26 @@ module.exports = function (data_ext, data_int) {
 
 		const game = await data_ext.searchGameByName(gameName);
 
-		await data_int.addGameToGroup(userId, groupName, game);
+		return await data_int.addGameToGroup(userId, groupName, game);
 	}
 
 
-	async function removeGameFromGroup(userId, groupName, gameName){
+	/**
+	 * Removes a game from a group providing its name.
+	 * @param {String} userId 
+	 * @param {String} groupName 
+	 * @param {String} gameName
+	 * @return promise with name of removed game 
+	 */
+	async function removeGameFromGroup(userId, groupName, gameName) {
 		checkBadRequest({
 			userId: { value: userId },
 			groupName: { value: groupName },
 			gameName: { value: gameName }
 		}, {});
 
-		await data_int.removeGameFromGroup(userId, groupName, gameName);
+		return await data_int.removeGameFromGroup(userId, groupName, gameName);
 	}
-
 
 
 	return {
