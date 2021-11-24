@@ -145,7 +145,7 @@ test("editGroup edits a group, returning name of the edited group", () => {
     expect(dataMem.editGroup(userId1, groupName1, newGroupName, newDescription))
         .toEqual(newGroupName);
 
-    expect(dataMem.getGroupFromUser(userId1, groupName1))
+    expect(dataMem.getGroupFromUser(userId1, newGroupName))
         .toEqual({
             name: newGroupName,
             description: newDescription,
@@ -157,7 +157,7 @@ test("listUserGroups returns array containing all group objects", () => {
     ResetMem(), CreateUser1(), CreateGroup1();
 
     expect(dataMem.listUserGroups(userId1))
-        .toEqual([groupObj1]);
+        .toEqual({ [groupName1]: groupObj1 });
 });
 
 test("deleteGroup deletes a group, returning name of the group", () => {
@@ -181,7 +181,7 @@ test("getGroupDetails returns object containing the group details", () => {
     expect(dataMem.getGroupDetails({
         name: groupName1,
         description: groupDescription1,
-        games: { gameName1: { name: gameName1 } }
+        games: { [gameName1]: game1.id }
     }))
         .toEqual({
             name: groupName1,

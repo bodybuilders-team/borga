@@ -64,7 +64,7 @@ test("getGameByName return correct game object of game with name \"Catan\"", asy
 				image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
 				publisher: 'KOSMOS',
 				amazon_rank: 133,
-				price: '32.97'
+				price: '22.00'
 			}
 		);
 });

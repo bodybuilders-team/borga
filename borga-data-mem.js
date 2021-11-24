@@ -2,6 +2,7 @@
 
 
 const errors = require('./borga-errors');
+const crypto = require('crypto');
 
 const numberOfPopularGames = 20;
 

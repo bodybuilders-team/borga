@@ -1,5 +1,5 @@
 {
-  
+  "security": [],
   "openapi": "3.0.1",
   "info": {
     "title": "BORGA",
@@ -7,11 +7,6 @@
     "termsOfService": "http://swagger.io/terms/",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "http://localhost:8888/"
-    }
-  ],
   "tags": [
     {
       "name": "games",
@@ -20,6 +15,11 @@
     {
       "name": "user",
       "description": "Everything about Users"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:8888/"
     }
   ],
   "paths": {
