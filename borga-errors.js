@@ -30,7 +30,8 @@ function buildErrorList() {
 	addError(1002, 'NOT_FOUND', 'The item does not exist');
 	addError(1003, 'ALREADY_EXISTS', 'The item already exists');
 	addError(1004, 'EXT_SVC_FAIL', 'External service failure');
-
+	addError(1005, 'UNAUTHENTICATED', 'Invalid or missing token');
+	
 	return errors;
 }
 

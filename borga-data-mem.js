@@ -23,6 +23,12 @@ const games = {};
 
 
 /**
+ * Object containing the association between user token and userId: "token": "userId".
+ */
+const tokens = {};
+
+
+/**
  * Gets the most popular games.
  * @returns an array containing the twenty most popular games
  */
@@ -59,7 +65,8 @@ function getPopularGames() {
  * @throws ALREADY_EXISTS if the user already exists
  */
 function createNewUser(userId, userName) {
-	if (users[userId]) throw errors.ALREADY_EXISTS({ userId })
+	if (users[userId]) throw errors.ALREADY_EXISTS({ userId });
+	tokens[crypto.randomUUID()] = userId;
 	return addUser(userId, createUserObj(userName));
 }
 
@@ -71,6 +78,7 @@ function createNewUser(userId, userName) {
  */
 function deleteUser(userId) {
 	getUser(userId);
+	delete tokens[UserIDtoToken(userId)];
 	delete users[userId];
 	return userId;
 }
@@ -194,6 +202,27 @@ function removeGameFromGroup(userId, groupName, gameName) {
 }
 
 
+// ------------------------- Tokens -------------------------
+
+/**
+ * Returns the token associated with the provided userId.
+ * @param {String} userId 
+ * @returns the token associated with the provided userId
+ */
+function UserIDtoToken(userId) {
+	return Object.keys(tokens).find(token => tokens[token] === userId);
+}
+
+
+/**
+ * Return the userId associated with the provided token.
+ * @param {String} token 
+ * @returns the userId associated with the provided token
+ */
+async function tokenToUsername(token) {
+	return tokens[token];
+}
+
 // ------------------------- Utils -------------------------
 
 
@@ -203,6 +232,7 @@ function removeGameFromGroup(userId, groupName, gameName) {
  * @returns the user object 
  */
 function createUserObj(userName) {
+
 	return {
 		name: userName,
 		groups: {}
