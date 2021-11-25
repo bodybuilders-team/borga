@@ -5,7 +5,7 @@
   "main": "borga-server.js",
   "scripts": {
     "start": "node borga-server.js",
-    "test": "jest"
+    "test": "jest --testTimeout=100000"
   },
   "keywords": [],
   "author": "",

@@ -6,7 +6,558 @@
 	},
 	"item": [
 		{
+			"name": "webapi-errors-tests",
+			"item": [
+				{
+					"name": "Search game by name-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /games/search/\\\"\",\r",
+									"            \"info\": \"Cannot find /games/search/\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/games/search/:gameName",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games",
+								"search",
+								":gameName"
+							],
+							"variable": [
+								{
+									"key": "gameName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new user-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error bad request information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"cause\": {\r",
+									"                \"code\": 1001,\r",
+									"                \"name\": \"BAD_REQUEST\",\r",
+									"                \"message\": \"The request is bad {\\\"userId\\\":\\\"property missing\\\",\\\"username\\\":\\\"property missing\\\"}\",\r",
+									"                \"info\": {\r",
+									"                    \"userId\": \"property missing\",\r",
+									"                    \"username\": \"property missing\"\r",
+									"                }\r",
+									"            }\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create group-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/add\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups/add\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/add",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"add"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit group-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/edit\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups/edit\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/edit",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all groups from user-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/list\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups/list\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/list",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"list"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete group-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//delete\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups//delete\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"delete"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "groupName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get group details-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//details\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups//details\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"details"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "groupName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add game to group-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//addGame\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups//addGame\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"addGame"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "groupName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove game from group-test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"json contains error not found information\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(\r",
+									"        {\r",
+									"            \"code\": 1002,\r",
+									"            \"name\": \"NOT_FOUND\",\r",
+									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//removeGame/\\\"\",\r",
+									"            \"info\": \"Cannot find /user//myGroups//removeGame/\"\r",
+									"        }\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"removeGame",
+								":gameName"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "groupName",
+									"value": ""
+								},
+								{
+									"key": "gameName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Get popular games",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"body contains popularGames string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"popularGames\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -21,13 +572,87 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Get popular games",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/games/popular",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games",
+								"popular"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1a-8ivtIr1Yczmzu3F6bOvn5uJ2ukk\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:24:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"popularGames\": [\n        \"Catan\"\n    ]\n}"
+				}
+			]
 		},
 		{
 			"name": "Search game by name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"url": {
 					"raw": "{{baseURL}}/games/search/:gameName",
 					"host": [
@@ -46,10 +671,84 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Search game by name",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/games/search/:gameName",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games",
+								"search",
+								":gameName"
+							],
+							"variable": [
+								{
+									"key": "gameName",
+									"value": "Catan"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "239"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ef-QtFfOEHartQuaBpOZpDmwSGzZ7c\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:24:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"OIXt3DmJU0\",\n    \"name\": \"Catan\",\n    \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n    \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n    \"publisher\": \"KOSMOS\",\n    \"amazon_rank\": 133,\n    \"price\": \"22.00\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Create new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -80,10 +779,93 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Create new user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"username\": \"Paulão\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "24"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"18-BDuFpB9qgR3VZCVLDgHa4Xu4zPk\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:22:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Created user\": \"12345\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Create group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -115,10 +897,94 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Create group",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"groupDescription\": \"This is a description.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/add",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"add"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1d-5qWVehQDRn9STjoAK+mF6c9YiOY\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:23:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Created group\": \"FPS Games\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Edit group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -150,10 +1016,94 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Edit group",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newGroupDescription\": \"This is a new description.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/edit",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "45"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2d-uaD2eSrFT+fkHZw+lQrdK6cYyTU\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:23:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Edited group\": \"First-Person Shooter Games\"\n}"
+				}
+			]
 		},
 		{
 			"name": "List all groups from user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -176,10 +1126,85 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "List all groups from user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/list",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								"list"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "205"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"cd-DDw5fBKQbqANDDsOTex3to//tRU\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:24:05 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"First-Person Shooter Games\": {\n        \"name\": \"First-Person Shooter Games\",\n        \"description\": \"This is a new description.\",\n        \"games\": {}\n    },\n    \"FPS Games\": {\n        \"name\": \"FPS Games\",\n        \"description\": \"This is a description.\",\n        \"games\": {}\n    }\n}"
+				}
+			]
 		},
 		{
 			"name": "Delete group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -207,10 +1232,90 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Delete group",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"delete"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								},
+								{
+									"key": "groupName",
+									"value": "FPS Games"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1d-dCJd6bzQanMSbLkPKW85W0qh9/g\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:30:10 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Deleted group\": \"FPS Games\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Get group details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -238,10 +1343,90 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Get group details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"details"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								},
+								{
+									"key": "groupName",
+									"value": "FPS Games"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "77"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"4d-fRH41tacJJDPR6ObCh1vx0T5ym4\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:24:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"FPS Games\",\n    \"description\": \"This is a description.\",\n    \"games\": [\n        \"Catan\"\n    ]\n}"
+				}
+			]
 		},
 		{
 			"name": "Add game to group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -278,10 +1463,99 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Add game to group",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gameName\": \"Catan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"addGame"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								},
+								{
+									"key": "groupName",
+									"value": "FPS Games"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"16-1k9D66VNb+lY4G7nin83WXs7bQg\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:24:18 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Added game\": \"Catan\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Remove game from group",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -314,7 +1588,78 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Remove game from group",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"myGroups",
+								":groupName",
+								"removeGame",
+								":gameName"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "12345"
+								},
+								{
+									"key": "groupName",
+									"value": "FPS Games"
+								},
+								{
+									"key": "gameName",
+									"value": "Catan"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "24"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"18-o8wkwY1NSNGxopsdn3cHfEleWLA\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 23 Nov 2021 19:29:58 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Removed game\": \"Catan\"\n}"
+				}
+			]
 		}
 	],
 	"event": [

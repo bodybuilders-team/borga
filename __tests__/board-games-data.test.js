@@ -1,7 +1,9 @@
 'use strict';
 
+
 const gamesData = require("../board-games-data.js");
 const errors = require('../borga-errors.js');
+const mockDataExt = require('../__mock__/borga-mock-data-ext.js');
 
 
 test("getStatusClass returns correct class from a statusCode 500", () => {
@@ -40,33 +42,13 @@ test("makeGameObj returns a game obj created from another object", () => {
 			mentions: 1000
 		}
 	))
-		.toEqual(
-			{
-				id: "I9azM1kA6l",
-				name: "Skyrim",
-				url: "games.net/skyrim",
-				image: "skyrim.jpg",
-				publisher: "Bethesda Game Studios",
-				amazon_rank: 1,
-				price: '420.69'
-			}
-		);
+		.toEqual(mockDataExt.games["I9azM1kA6l"]);
 });
 
 
-test("getGameByName return correct game object of game with name \"Catan\"", async () => {
-	expect(await gamesData.getGameByName("Catan"))
-		.toEqual(
-			{
-				id: 'OIXt3DmJU0',
-				name: 'Catan',
-				url: 'https://www.boardgameatlas.com/game/OIXt3DmJU0/catan',
-				image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
-				publisher: 'KOSMOS',
-				amazon_rank: 133,
-				price: '22.00'
-			}
-		);
+test("getGameByName return correct game object of game with name \"Skyrim\"", async () => {
+	expect(await mockDataExt.searchGameByName("Skyrim"))
+		.toEqual(mockDataExt.games["I9azM1kA6l"]);
 });
 
 
@@ -78,6 +60,7 @@ test("do_fetch does fetch correctly, returning a promise with a json response", 
 			}
 		);
 });
+
 
 test("do_fetch throws EXT_SVC_FAIL in case of HTTP_SERVER_ERROR", async () => {
 	try {

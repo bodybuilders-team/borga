@@ -47,7 +47,7 @@ module.exports = function (services) {
 				break;
 			case 'EXT_SVC_FAIL':
 				res.status(502);
-				break;	
+				break;
 			default:
 				console.log(err)
 				res.status(500);

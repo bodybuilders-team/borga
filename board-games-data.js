@@ -76,7 +76,7 @@ function makeGameObj(gameInfo) {
  * @throws error NOT_FOUND if no game was found with the given name
  * @returns promise with the game object response
  */
-async function getGameByName(name) {
+async function searchGameByName(name) {
 	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + name;
 
 	const res = await do_fetch(game_uri);
@@ -89,7 +89,7 @@ async function getGameByName(name) {
 
 
 module.exports = {
-	getGameByName,
+	searchGameByName,
 	getStatusClass,
 	makeGameObj,
 	do_fetch

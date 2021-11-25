@@ -66,7 +66,7 @@ module.exports = function (data_ext, data_int) {
 	async function searchGameByName(gameName) {
 		checkBadRequest({});
 
-		return await data_ext.getGameByName(gameName);
+		return await data_ext.searchGameByName(gameName);
 	}
 
 
@@ -201,22 +201,22 @@ module.exports = function (data_ext, data_int) {
 	async function removeGameFromGroup(userId, token, groupName, gameName) {
 		checkBadRequest({});
 		checkAuthentication(userId, token);
-		
+
 		return await data_int.removeGameFromGroup(userId, groupName, gameName);
 	}
 
 
 	return {
-		getPopularGames: getPopularGames,
-		searchGameByName: searchGameByName,
+		getPopularGames,
+		searchGameByName,
 
-		createNewUser: createNewUser,
-		createGroup: createGroup,
-		editGroup: editGroup,
-		listUserGroups: listUserGroups,
-		deleteGroup: deleteGroup,
-		getGroupDetails: getGroupDetails,
-		addGameToGroup: addGameToGroup,
-		removeGameFromGroup: removeGameFromGroup,
+		createNewUser,
+		createGroup,
+		editGroup,
+		listUserGroups,
+		deleteGroup,
+		getGroupDetails,
+		addGameToGroup,
+		removeGameFromGroup,
 	};
 }
