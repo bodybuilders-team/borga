@@ -10,7 +10,7 @@ const errors = require('./borga-errors');
 module.exports = function (services) {
 
 	/**
-	 * Searches for an identification Bearer token in the request's Authorization Header.
+	 * Searches for an identification Bearer token in the request's Authorization Header
 	 * @param {Object} req 
 	 * @returns the token found if it´s a Bearer Token. 
 	 */
@@ -27,7 +27,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Returns json format object containing the cause of the error.
+	 * Sends as response an object containing the cause of the error
 	 * @param {Object} res 
 	 * @param {Object} err
 	 */
@@ -45,13 +45,11 @@ module.exports = function (services) {
 			case 'ALREADY_EXISTS':
 				res.status(409);
 				break;
-			case 'UNPROCESSABLE_ENTITY':
-				res.status(422);
-				break;
 			case 'EXT_SVC_FAIL':
 				res.status(502);
 				break;	
 			default:
+				console.log(err)
 				res.status(500);
 		}
 		res.json({ cause: err });
@@ -59,7 +57,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Returns an object containing the most popular games among all users.
+	 * Sends as response an object containing the most popular games among all users
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -68,14 +66,13 @@ module.exports = function (services) {
 			const popularGames = await services.getPopularGames();
 			res.json({ popularGames });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Returns a specific game object given its name.
+	 * Sends as response a specific game object given its name
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -86,14 +83,13 @@ module.exports = function (services) {
 			const game = await services.searchGameByName(gameName);
 			res.json(game);
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Creates a new user. In case of success, returns an object with the new user information.
+	 * Creates a new user. In case of success, sends as response an object with the new user's information
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -105,14 +101,13 @@ module.exports = function (services) {
 			const userInfo = await services.createNewUser(userId, username);
 			res.json({ "Created user": userInfo });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Creates a new group. In case of success, returns the newly created group object with the specified parameters.
+	 * Creates a new group. In case of success, sends as response an object with the name of the created group
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -126,14 +121,13 @@ module.exports = function (services) {
 			const name = await services.createGroup(userId, token, groupName, groupDescription);
 			res.json({ "Created group": name });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Edits a group with the specified parameters. In case of success, returns an object with the newly edited group.
+	 * Edits a group with the specified parameters. In case of success, sends as response an object with the new name of the edited group
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -148,14 +142,13 @@ module.exports = function (services) {
 			const name = await services.editGroup(userId, token, groupName, newGroupName, newGroupDescription);
 			res.json({ "Edited group": name });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Returns the list of all groups of the specified user.
+	 * Sends as response the list of all groups of the specified user.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -167,14 +160,13 @@ module.exports = function (services) {
 			const groups = await services.listUserGroups(userId, token);
 			res.json(groups);
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Deltes a group. In case of success, returns the newly deleted group name.
+	 * Deletes a group. In case of success, sends as response an object with the name of the deleted group
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -187,14 +179,13 @@ module.exports = function (services) {
 			const name = await services.deleteGroup(userId, token, groupName);
 			res.json({ "Deleted group": name });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Returns an object containing the details of the specified groupName 
+	 * Sends as response an object containing the details of the specified group 
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -207,14 +198,13 @@ module.exports = function (services) {
 			const details = await services.getGroupDetails(userId, token, groupName);
 			res.json(details);
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Returns an object containing the name of game added
+	 * Adds a game to a group. In case of success, sends as response an object with the name of added game
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -228,14 +218,13 @@ module.exports = function (services) {
 			const name = await services.addGameToGroup(userId, token, groupName, gameName);
 			res.json({ "Added game": name });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Returns an object containing the name of game removed
+	 * Removes a game from a group. In case of success, sends as response an object with the name of the removed game
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -249,7 +238,6 @@ module.exports = function (services) {
 			const name = await services.removeGameFromGroup(userId, token, groupName, gameName);
 			res.json({ "Removed game": name });
 		} catch (err) {
-			console.log(err)
 			onError(res, err);
 		}
 	}

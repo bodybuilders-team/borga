@@ -107,7 +107,7 @@ function listUsers() {
  * @param {String} userId 
  * @param {String} groupName 
  * @param {String} groupDescription 
- * @returns the name of the new group
+ * @returns name of the new group
  * @throws ALREADY_EXISTS if the group already exists
  */
 function createGroup(userId, groupName, groupDescription) {
@@ -122,7 +122,7 @@ function createGroup(userId, groupName, groupDescription) {
  * @param {String} groupName 
  * @param {String} newGroupName 
  * @param {String} newGroupDescription 
- * @returns the new group name
+ * @returns new name of the group
  */
 function editGroup(userId, groupName, newGroupName, newGroupDescription) {
 	const group = getGroupFromUser(userId, groupName);
@@ -198,7 +198,7 @@ function addGameToGroup(userId, groupName, gameObj) {
  * @param {String} userId 
  * @param {String} groupName 
  * @param {String} gameName
- * @return name of removed game 
+ * @return name of the removed game 
  */
 function removeGameFromGroup(userId, groupName, gameName) {
 	getGameFromGroup(userId, groupName, gameName);

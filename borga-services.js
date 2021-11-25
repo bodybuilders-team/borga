@@ -37,12 +37,12 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} token 
 	 * @returns the user id associated with the provided token
 	 */
-	async function checkAuthentication(userId, token) {
+	function checkAuthentication(userId, token) {
 		if (!token) {
 			throw errors.UNAUTHENTICATED('Please insert your user token');
 		}
 
-		if(userId != await data_int.tokenToUserID(token)) {
+		if(userId != data_int.tokenToUserID(token)) {
 			throw errors.UNAUTHENTICATED('Please insert a valid user token');
 		}
 	}
