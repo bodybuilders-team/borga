@@ -36,6 +36,9 @@ module.exports = function (services) {
 			case 'BAD_REQUEST':
 				res.status(400);
 				break;
+			case 'UNAUTHENTICATED':
+				res.status(401);
+			break;
 			case 'NOT_FOUND':
 				res.status(404);
 				break;
@@ -47,9 +50,6 @@ module.exports = function (services) {
 				break;
 			case 'EXT_SVC_FAIL':
 				res.status(502);
-				break;
-			case 'UNAUTHENTICATED':
-				res.status(401);
 				break;	
 			default:
 				res.status(500);
@@ -68,6 +68,7 @@ module.exports = function (services) {
 			const popularGames = await services.getPopularGames();
 			res.json({ popularGames });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -85,13 +86,14 @@ module.exports = function (services) {
 			const game = await services.searchGameByName(gameName);
 			res.json(game);
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
 
 
 	/**
-	 * Creates a new user. In case of success, returns an object containing the new user´s Id.
+	 * Creates a new user. In case of success, returns an object with the new user information.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -100,9 +102,10 @@ module.exports = function (services) {
 			const userId = req.body.userId;
 			const username = req.body.username;
 
-			const addedId = await services.createNewUser(userId, username);
-			res.json({ "Created user": addedId });
+			const userInfo = await services.createNewUser(userId, username);
+			res.json({ "Created user": userInfo });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -115,12 +118,15 @@ module.exports = function (services) {
 	 */
 	async function createGroup(req, res) {
 		try {
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
 
-			const name = await services.createGroup(getBearerToken(req), groupName, groupDescription);
+			const name = await services.createGroup(userId, token, groupName, groupDescription);
 			res.json({ "Created group": name });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -133,13 +139,16 @@ module.exports = function (services) {
 	 */
 	async function editGroup(req, res) {
 		try {
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
 			const groupName = req.body.groupName;
 			const newGroupName = req.body.newGroupName;
 			const newGroupDescription = req.body.newGroupDescription;
 
-			const name = await services.editGroup(getBearerToken(req), groupName, newGroupName, newGroupDescription);
+			const name = await services.editGroup(userId, token, groupName, newGroupName, newGroupDescription);
 			res.json({ "Edited group": name });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -152,9 +161,13 @@ module.exports = function (services) {
 	 */
 	async function listGroups(req, res) {
 		try {
-			const groups = await services.listUserGroups(getBearerToken(req));
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
+
+			const groups = await services.listUserGroups(userId, token);
 			res.json(groups);
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -167,11 +180,14 @@ module.exports = function (services) {
 	 */
 	async function deleteGroup(req, res) {
 		try {
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
 			const groupName = req.params.groupName;
 
-			const name = await services.deleteGroup(getBearerToken(req), groupName);
+			const name = await services.deleteGroup(userId, token, groupName);
 			res.json({ "Deleted group": name });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -184,11 +200,14 @@ module.exports = function (services) {
 	 */
 	async function getDetailsOfGroup(req, res) {
 		try {
-			const groupName = req.params.groupName;
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
+			const groupName = req.params.groupName;	
 
-			const details = await services.getGroupDetails(getBearerToken(req), groupName);
+			const details = await services.getGroupDetails(userId, token, groupName);
 			res.json(details);
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -201,12 +220,15 @@ module.exports = function (services) {
 	 */
 	async function addGameToGroup(req, res) {
 		try {
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
 			const groupName = req.params.groupName;
 			const gameName = req.body.gameName;
 
-			const name = await services.addGameToGroup(getBearerToken(req), groupName, gameName);
+			const name = await services.addGameToGroup(userId, token, groupName, gameName);
 			res.json({ "Added game": name });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}
@@ -219,12 +241,15 @@ module.exports = function (services) {
 	 */
 	async function removeGameFromGroup(req, res) {
 		try {
+			const userId = req.params.userId;
+			const token = getBearerToken(req)
 			const groupName = req.params.groupName;
 			const gameName = req.params.gameName;
 
-			const name = await services.removeGameFromGroup(getBearerToken(req), groupName, gameName);
+			const name = await services.removeGameFromGroup(userId, token, groupName, gameName);
 			res.json({ "Removed game": name });
 		} catch (err) {
+			console.log(err)
 			onError(res, err);
 		}
 	}

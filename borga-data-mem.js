@@ -34,18 +34,18 @@ const tokens = {};
  * @returns an array containing the twenty most popular games
  */
 function getPopularGames() {
-	const games = {};
+	const gameOccurences = {};
 
 	for (const userId in users) {
 		for (const groupName in getUser(userId).groups) {
 			for (const gameName in getGroupFromUser(userId, groupName).games) {
-				const currentCount = games[gameName];
-				games[gameName] = currentCount ? currentCount + 1 : 1;
+				const currentCount = gameOccurences[gameName];
+				gameOccurences[gameName] = currentCount ? currentCount + 1 : 1;
 			}
 		}
 	}
 
-	const sortedGames = Object.entries(games).sort(([, a], [, b]) => b - a);
+	const sortedGames = Object.entries(gameOccurences).sort(([, a], [, b]) => b - a);
 	const popularGames = [];
 
 	for (let i = 0; i < numberOfPopularGames && i < sortedGames.length; i++)
@@ -62,13 +62,18 @@ function getPopularGames() {
  * Creates a new user by its id and name.
  * @param {String} userId 
  * @param {String} userName 
- * @returns userId of the new user
+ * @returns an object with the new user information
  * @throws ALREADY_EXISTS if the user already exists
  */
 function createNewUser(userId, userName) {
 	if (users[userId]) throw errors.ALREADY_EXISTS({ userId });
-	tokens[crypto.randomUUID()] = userId;
-	return addUser(userId, createUserObj(userName));
+
+	const token = crypto.randomUUID()
+	tokens[token] = userId;
+
+	users[userId] = createUserObj(userName);
+
+	return { userId, token, userName }
 }
 
 
@@ -220,7 +225,7 @@ function UserIDtoToken(userId) {
  * @param {String} token 
  * @returns the userId associated with the provided token
  */
-async function tokenToUsername(token) {
+async function tokenToUserID(token) {
 	return tokens[token];
 }
 
@@ -238,18 +243,6 @@ function createUserObj(userName) {
 		name: userName,
 		groups: {}
 	};
-}
-
-
-/**
- * Adds a new user to the users object.
- * @param {String} userId
- * @param {Object} userObj 
- * @returns userId of the added user
- */
-function addUser(userId, userObj) {
-	users[userId] = userObj;
-	return userId;
 }
 
 
@@ -353,7 +346,6 @@ module.exports = {
 
 	//-- Utils --
 	createUserObj,
-	addUser,
 	createGroupObj,
 	addGroupToUser,
 	getUser,
