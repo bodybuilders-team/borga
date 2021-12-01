@@ -7,6 +7,8 @@ const errors = require('../borga-errors.js');
 
 // ----------------------------- Constants used in tests -----------------------------
 const userId1 = "123456";
+const userId2 = "A48309";
+const test_token = '5d389af1-06db-4401-8aef-36d8d6428f31';
 const userName1 = "Paulão";
 const groupName1 = "RPG Games";
 const groupDescription1 = "This is a description";
@@ -61,6 +63,25 @@ function assertThrowsAlreadyExists(func, info) {
     expect(func)
         .toThrow(errors.ALREADY_EXISTS(info));
 }
+
+
+describe("Token tests", () => {
+    test("UserIDtoToken returns correct token", () => {
+       expect(dataMem.UserIDtoToken(userId2)).toEqual(test_token);
+    });
+
+    test("UserIDtoToken returns no token when user is not valid", () => {
+        expect(dataMem.UserIDtoToken("")).toEqual(undefined);
+    });
+
+    test("tokenToUserID returns correct userID", () => {
+        expect(dataMem.tokenToUserID(test_token)).toEqual(userId2);
+    });
+
+    test("tokenToUserID returns no userID when token does not exist", () => {
+        expect(dataMem.tokenToUserID("")).toEqual(undefined);
+    });
+});
 
 
 describe("User tests", () => {

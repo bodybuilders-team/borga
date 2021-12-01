@@ -26,7 +26,11 @@ const games = {};
 /**
  * Object containing the association between user token and userId: "token": "userId".
  */
-const tokens = {};
+let tokens = {
+	'4869fdf7-0e62-46a2-872c-f0dc60fc2c81': "A48280",
+	'3e39bce8-07d1-4c05-9ee3-5587e6b8e2e7': "A48287",
+	'5d389af1-06db-4401-8aef-36d8d6428f31': "A48309"
+};
 
 
 /**
@@ -225,7 +229,7 @@ function UserIDtoToken(userId) {
  * @param {String} token 
  * @returns the userId associated with the provided token
  */
-async function tokenToUserID(token) {
+function tokenToUserID(token) {
 	return tokens[token];
 }
 
@@ -320,7 +324,14 @@ function getGameFromGroup(userId, groupName, gameName) {
  * Resets memory by assigning {} to the object users.
  */
 function resetMem() {
-	users = {}
+	users = {};
+	tokens = {};
+}
+
+function resetAllGroups() {
+	Object.values(users).forEach(user => {
+		user.groups = {};
+	});
 }
 
 
@@ -344,6 +355,10 @@ module.exports = {
 	addGameToGroup,
 	removeGameFromGroup,
 
+	//-- Tokens --
+	UserIDtoToken,
+	tokenToUserID,
+
 	//-- Utils --
 	createUserObj,
 	createGroupObj,
@@ -352,5 +367,6 @@ module.exports = {
 	getGroupFromUser,
 	getGameFromGroup,
 
-	resetMem
+	resetMem,
+	resetAllGroups
 };

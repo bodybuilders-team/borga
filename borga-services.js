@@ -64,8 +64,6 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with the game object response
 	 */
 	async function searchGameByName(gameName) {
-		checkBadRequest({});
-
 		return await data_ext.searchGameByName(gameName);
 	}
 
@@ -133,7 +131,6 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with object containing all group objects
 	 */
 	async function listUserGroups(userId, token) {
-		checkBadRequest({});
 		checkAuthentication(userId, token);
 
 		return await data_int.listUserGroups(userId);
@@ -148,7 +145,6 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with name of the deleted group
 	 */
 	async function deleteGroup(userId, token, groupName) {
-		checkBadRequest({});
 		checkAuthentication(userId, token);
 
 		return await data_int.deleteGroup(userId, groupName);
@@ -163,7 +159,6 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise an object containing the group details
 	 */
 	async function getGroupDetails(userId, token, groupName) {
-		checkBadRequest({});
 		checkAuthentication(userId, token);
 
 		const group = await data_int.getGroupFromUser(userId, groupName);
@@ -181,10 +176,9 @@ module.exports = function (data_ext, data_int) {
 	 * @return promise with name of the added name
 	 */
 	async function addGameToGroup(userId, token, groupName, gameName) {
-		checkBadRequest({});
 		checkAuthentication(userId, token);
 
-		const game = await data_ext.getGameByName(gameName);
+		const game = await data_ext.searchGameByName(gameName);
 
 		return await data_int.addGameToGroup(userId, groupName, game);
 	}
@@ -199,7 +193,6 @@ module.exports = function (data_ext, data_int) {
 	 * @return promise with name of removed game 
 	 */
 	async function removeGameFromGroup(userId, token, groupName, gameName) {
-		checkBadRequest({});
 		checkAuthentication(userId, token);
 
 		return await data_int.removeGameFromGroup(userId, groupName, gameName);
