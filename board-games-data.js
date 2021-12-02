@@ -88,8 +88,28 @@ async function searchGamesByName(gameName) {
 }
 
 
+
+/**
+ * Gets a game by a given id.
+ * @param {String} gameId
+ * @throws error NOT_FOUND if no game was found with the given id
+ * @returns promise with the game object
+ */
+ async function searchGamesById(gameId) {
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&ids=' + gameId;
+
+	const res = await do_fetch(game_uri);
+
+	if (res.games.length == 0 || res.count == 0)
+		throw errors.NOT_FOUND({ gameId: gameId });
+
+	return makeGameObj(res.games[0]);
+}
+
+
 module.exports = {
 	searchGamesByName,
+	searchGamesById,
 	getStatusClass,
 	makeGameObj,
 	do_fetch

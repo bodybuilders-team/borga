@@ -72,7 +72,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response a specific game object given its name
+	 * Sends as response an object containing an array of games obtained by the provided name
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -80,8 +80,8 @@ module.exports = function (services) {
 		try {
 			const gameName = req.query.gameName;
 
-			const game = await services.searchGamesByName(gameName);
-			res.json(game);
+			const games = await services.searchGamesByName(gameName);
+			res.json({ games });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -113,13 +113,14 @@ module.exports = function (services) {
 	 */
 	async function createGroup(req, res) {
 		try {
-			const userId = req.params.userId;
 			const token = getBearerToken(req);
+			const userId = req.params.userId;
+			const groupId = req.body.groupId;
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
 
-			const name = await services.createGroup(userId, token, groupName, groupDescription);
-			res.json({ "Created group": name });
+			const groupInfo = await services.createGroup(userId, token, groupId, groupName, groupDescription);
+			res.json({ "Created group": groupInfo });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -133,14 +134,14 @@ module.exports = function (services) {
 	 */
 	async function editGroup(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
-			const groupId = req.body.groupId;
+			const groupId = req.params.groupId;
 			const newGroupName = req.body.newGroupName;
 			const newGroupDescription = req.body.newGroupDescription;
 
-			const name = await services.editGroup(userId, token, groupId, newGroupName, newGroupDescription);
-			res.json({ "Edited group": name });
+			const groupInfo = await services.editGroup(userId, token, groupId, newGroupName, newGroupDescription);
+			res.json({ "Edited group": groupInfo });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -154,8 +155,8 @@ module.exports = function (services) {
 	 */
 	async function listGroups(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
 
 			const groups = await services.listUserGroups(userId, token);
 			res.json(groups);
@@ -172,12 +173,12 @@ module.exports = function (services) {
 	 */
 	async function deleteGroup(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
 			const groupId = req.params.groupId;
 
-			const name = await services.deleteGroup(userId, token, groupId);
-			res.json({ "Deleted group": name });
+			const groupInfo = await services.deleteGroup(userId, token, groupId);
+			res.json({ "Deleted group": groupInfo });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -189,10 +190,10 @@ module.exports = function (services) {
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
-	async function getDetailsOfGroup(req, res) {
+	async function getGroupDetails(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
 			const groupId = req.params.groupId;
 
 			const details = await services.getGroupDetails(userId, token, groupId);
@@ -210,13 +211,13 @@ module.exports = function (services) {
 	 */
 	async function addGameToGroup(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
 			const groupId = req.params.groupId;
-			const gameName = req.body.gameName;
+			const gameId = req.body.gameId;
 
-			const name = await services.addGameToGroup(userId, token, groupId, gameName);
-			res.json({ "Added game": name });
+			const addedGame = await services.addGameToGroup(userId, token, groupId, gameId);
+			res.json({ "Added game": addedGame });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -230,12 +231,12 @@ module.exports = function (services) {
 	 */
 	async function removeGameFromGroup(req, res) {
 		try {
+			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
 			const groupId = req.params.groupId;
-			const gameName = req.params.gameName;
+			const gameId = req.params.gameId;
 
-			const name = await services.removeGameFromGroup(userId, token, groupId, gameName);
+			const name = await services.removeGameFromGroup(userId, token, groupId, gameId);
 			res.json({ "Removed game": name });
 		} catch (err) {
 			onError(res, err);
@@ -257,31 +258,32 @@ module.exports = function (services) {
 
 
 	// Create new user
-	router.post('/user/create', createNewUser);
+	router.post('/user', createNewUser);
 
 	// Create group providing its name and description
-	router.post('/user/:userId/myGroups/add', createGroup);
+	router.post('/user/:userId/groups', createGroup);
 
 	// Edit group by changing its name and description
-	router.post('/user/:userId/myGroups/edit', editGroup);
+	router.post('/user/:userId/groups/:groupId', editGroup);
 
 	// List all groups
-	router.get('/user/:userId/myGroups/list', listGroups);
+	router.get('/user/:userId/groups', listGroups);
 
 	// Delete a group
-	router.delete('/user/:userId/myGroups/:groupId/delete', deleteGroup);
+	router.delete('/user/:userId/groups/:groupId', deleteGroup);
 
 	// Get the details of a group, with its name, description and names of the included games
-	router.get('/user/:userId/myGroups/:groupId/details', getDetailsOfGroup);
+	router.get('/user/:userId/groups/:groupId', getGroupDetails);
 
 	// Add a game to a group
-	router.post('/user/:userId/myGroups/:groupId/addGame', addGameToGroup);
+	router.post('/user/:userId/groups/:groupId/games', addGameToGroup);
 
 	// Remove a game from a group
-	router.delete('/user/:userId/myGroups/:groupId/removeGame/:gameName', removeGameFromGroup);
+	router.delete('/user/:userId/groups/:groupId/games/:gameId', removeGameFromGroup);
 
-	router.use(function (req, res, next) {
-		res.status(404).send(errors.NOT_FOUND("Cannot find " + req.path))
+
+	router.use(function (req, res) {
+		res.status(404).send(errors.NOT_FOUND(`Cannot do ${req.method} with ${req.path}.`))
 	});
 
 	return router;

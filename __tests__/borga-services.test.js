@@ -30,7 +30,7 @@ const resetAllGroups = async () => dataMem.resetAllGroups();
 /**
  * Creates a new group with the information of the tests constants.
  */
- const CreateGroup1 = async () => dataMem.createGroup(userId1, groupName1, groupDescription1);
+const CreateGroup1 = async () => dataMem.createGroup(userId1, groupName1, groupDescription1);
 
 
 //-- Search tests --
@@ -88,10 +88,10 @@ test("getPopularGames returns names of most popular games", () => {
 //-- User tests --
 describe("User tests", () => {
     test('Create new user without userId', async () => {
-        try{
+        try {
             await defaultServices.createNewUser(undefined, "username");
         }
-        catch(err){
+        catch (err) {
             expect(err.name).toEqual('BAD_REQUEST');
             return;
         }
@@ -99,10 +99,10 @@ describe("User tests", () => {
     });
 
     test('Create new user with an Integer value in username', async () => {
-        try{
+        try {
             await defaultServices.createNewUser("userId", 20);
         }
-        catch(err){
+        catch (err) {
             expect(err.name).toEqual('BAD_REQUEST');
             return;
         }
@@ -128,14 +128,14 @@ describe("Create User groups tests", () => {
         try {
             await defaultServices.createGroup(userId1, token1, 20, groupDescription1);
         }
-        catch(err){
+        catch (err) {
             expect(err.name).toEqual('BAD_REQUEST');
             return;
         }
         throw new Error("shouldn't return from createGroup with an Integer value in groupName");
     });
 
-    
+
     test('Create valid new group', async () => {
         const res = await defaultServices.createGroup(userId1, token1, groupName1, groupDescription1);
         expect(res).toBeDefined();
@@ -151,10 +151,10 @@ describe("User groups operations tests", () => {
     );
 
     test('Edit group with an Integer value in newGroupName', async () => {
-        try{
+        try {
             await defaultServices.editGroup(userId1, token1, groupId1, 12, groupDescription1);
         }
-        catch(err){
+        catch (err) {
             expect(err.name).toEqual('BAD_REQUEST');
             return;
         }
@@ -185,7 +185,7 @@ describe("User groups operations tests", () => {
         expect(res).toEqual({
             name: groupName1,
             description: groupDescription1,
-            games: []
+            games: {}
         });
     });
 

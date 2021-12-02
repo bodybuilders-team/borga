@@ -67,14 +67,6 @@ function assertThrowsAlreadyExists(func, info) {
 
 
 describe("Token tests", () => {
-    test("UserIDtoToken returns correct token", () => {
-        expect(dataMem.userIdToToken(userId2)).toEqual(test_token);
-    });
-
-    test("UserIDtoToken returns no token when user is not valid", () => {
-        expect(dataMem.userIdToToken("")).toEqual(undefined);
-    });
-
     test("tokenToUserID returns correct userID", () => {
         expect(dataMem.tokenToUserId(test_token)).toEqual(userId2);
     });
@@ -123,20 +115,6 @@ describe("User tests", () => {
 
         assertThrowsNotFound(() => dataMem.getUser(userId1), { userId: userId1 });
     });
-
-    test("listUsers returns array containing all user objects", () => {
-        dataMem.createNewUser("A48280", "Andre Jesus");
-        dataMem.createNewUser("A48287", "Nyckollas Brandão");
-        dataMem.createNewUser("A48309", "Andre Santos");
-
-        expect(dataMem.listUsers())
-            .toEqual([
-                { name: "Paulão", groups: {} },
-                { name: "Andre Jesus", groups: {} },
-                { name: "Nyckollas Brandão", groups: {} },
-                { name: "Andre Santos", groups: {} }
-            ]);
-    });
 });
 
 
@@ -154,7 +132,7 @@ describe("Group tests", () => {
             .toEqual({
                 name: groupName1,
                 description: groupDescription1,
-                games: [gameName1]
+                games: { [gameName1]: game1.id }
             });
     });
 
