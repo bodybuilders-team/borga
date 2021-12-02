@@ -3,9 +3,9 @@
 
 const errors = require('../borga-errors.js');
 
-const servicesBuilder = require('../borga-services.js');
-const dataMem = require('../borga-data-mem.js');
 const mockDataExt = require('../__mock__/borga-mock-data-ext.js');
+const dataMem = require('../borga-data-mem.js');
+const servicesBuilder = require('../borga-services.js');
 
 const defaultServices = servicesBuilder(mockDataExt, dataMem);
 
@@ -14,23 +14,25 @@ const userId1 = "A48309";
 const token1 = '5d389af1-06db-4401-8aef-36d8d6428f31';
 const groupName1 = "RPG Games";
 const groupDescription1 = "This is a description";
+const gameId1 = "I9azM1kA6l"
 const gameName1 = "Skyrim";
-const groupId1 = "0";
+const groupId1 = "RPG";
 const groupObj1 = {
     name: groupName1,
     description: groupDescription1,
     games: {}
 };
 
+
 /**
- * Resets memory by assigning {} to the object users.
+ * Resets all users groups by assigning {} to the object groups of each user.
  */
 const resetAllGroups = async () => dataMem.resetAllGroups();
 
 /**
  * Creates a new group with the information of the tests constants.
  */
-const CreateGroup1 = async () => dataMem.createGroup(userId1, groupName1, groupDescription1);
+const CreateGroup1 = async () => dataMem.createGroup(userId1, groupId1, groupName1, groupDescription1);
 
 
 //-- Search tests --
@@ -72,16 +74,16 @@ describe("Search tests", () => {
 
 
     test('Search for existing game', async () => {
-        const res = await defaultServices.searchGamesByName('Catan');
-        expect(res).toBeDefined();
-        expect(res).toEqual(mockDataExt.games['OIXt3DmJU0']);
+        const games = await defaultServices.searchGamesByName("Catan");
+        expect(games).toBeDefined();
+        expect(games[0]).toEqual(mockDataExt.games['OIXt3DmJU0']);
     });
 });
 
 
 test("getPopularGames returns names of most popular games", () => {
     expect(dataMem.getPopularGames())
-        .toEqual([]);
+        .toEqual({});
 });
 
 
@@ -137,9 +139,13 @@ describe("Create User groups tests", () => {
 
 
     test('Create valid new group', async () => {
-        const res = await defaultServices.createGroup(userId1, token1, groupName1, groupDescription1);
+        const res = await defaultServices.createGroup(token1, userId1, groupId1, groupName1, groupDescription1);
         expect(res).toBeDefined();
-        expect(res).toEqual(groupName1);
+        expect(res).toEqual({
+            groupId: groupId1,
+            groupName: groupName1,
+            groupDescription: groupDescription1
+        });
     });
 });
 
@@ -152,7 +158,7 @@ describe("User groups operations tests", () => {
 
     test('Edit group with an Integer value in newGroupName', async () => {
         try {
-            await defaultServices.editGroup(userId1, token1, groupId1, 12, groupDescription1);
+            await defaultServices.editGroup(token1, userId1, groupId1, 12, groupDescription1);
         }
         catch (err) {
             expect(err.name).toEqual('BAD_REQUEST');
@@ -162,43 +168,47 @@ describe("User groups operations tests", () => {
     });
 
     test('Edit group with valid parameters', async () => {
-        const res = await defaultServices.editGroup(userId1, token1, groupId1, "Paulão games", groupDescription1);
+        const res = await defaultServices.editGroup(token1, userId1, groupId1, "Paulão games", groupDescription1);
         expect(res).toBeDefined();
-        expect(res).toEqual("Paulão games");
+        expect(res).toEqual({
+            groupId: groupId1,
+            newGroupName: "Paulão games",
+            newGroupDescription: groupDescription1
+        });
     });
 
     test('List groups with valid parameters', async () => {
-        const res = await defaultServices.listUserGroups(userId1, token1);
+        const res = await defaultServices.listUserGroups(token1, userId1);
         expect(res).toBeDefined();
         expect(res[groupId1]).toEqual(groupObj1);
     });
 
-    test('Delete groups with valid parameters', async () => {
-        const res = await defaultServices.deleteGroup(userId1, token1, groupId1);
-        expect(res).toBeDefined();
-        expect(res).toEqual(groupId1);
-    });
-
-    test('Get group details with valid parameters', async () => {
-        const res = await defaultServices.getGroupDetails(userId1, token1, groupId1);
+    test('Delete group with valid parameters', async () => {
+        const res = await defaultServices.deleteGroup(token1, userId1, groupId1);
         expect(res).toBeDefined();
         expect(res).toEqual({
-            name: groupName1,
-            description: groupDescription1,
-            games: {}
+            groupId: groupId1,
+            groupName: groupName1,
+            groupDescription: groupDescription1,
         });
     });
 
-    test('Add game to group with valid parameters', async () => {
-        const res = await defaultServices.addGameToGroup(userId1, token1, groupId1, gameName1);
+    test('Get group details with valid parameters', async () => {
+        const res = await defaultServices.getGroupDetails(token1, userId1, groupId1);
         expect(res).toBeDefined();
-        expect(res).toEqual(gameName1);
+        expect(res).toEqual(groupObj1);
+    });
+
+    test('Add game to group with valid parameters', async () => {
+        const res = await defaultServices.addGameToGroup(token1, userId1, groupId1, gameId1);
+        expect(res).toBeDefined();
+        expect(res).toEqual(mockDataExt.games[gameId1]);
     });
 
     test('Remove game from group with valid parameters', async () => {
-        await defaultServices.addGameToGroup(userId1, token1, groupId1, gameName1);
-        const res = await defaultServices.removeGameFromGroup(userId1, token1, groupId1, gameName1);
+        await defaultServices.addGameToGroup(token1, userId1, groupId1, gameId1);
+        const res = await defaultServices.removeGameFromGroup(token1, userId1, groupId1, gameId1);
         expect(res).toBeDefined();
-        expect(res).toEqual(gameName1);
+        expect(res).toEqual(mockDataExt.games[gameId1]);
     });
 });

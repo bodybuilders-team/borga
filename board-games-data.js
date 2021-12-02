@@ -71,10 +71,10 @@ function makeGameObj(gameInfo) {
 
 
 /**
- * Gets a list of games by a given name.
+ * Gets an array of games by a given name.
  * @param {String} gameName
  * @throws error NOT_FOUND if no game was found with the given name
- * @returns promise with a list of game objects
+ * @returns promise with an array of game objects
  */
 async function searchGamesByName(gameName) {
 	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + gameName;

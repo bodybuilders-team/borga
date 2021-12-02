@@ -55,6 +55,9 @@ function getPopularGames() {
 	}
 
 	const sortedGames = Object.entries(gameOccurrences).sort(([, a], [, b]) => b - a).slice(0, numberOfPopularGames);
+	console.log(game[0])
+	console.log(games[game[0]])
+	console.log(sortedGames.map(game => {[game[0], games[game[0]]]}))
 	const popularGames = Object.fromEntries(sortedGames.map(game => {[game[0], games[game[0]]]}));
 
 	return popularGames;
@@ -271,7 +274,7 @@ function getGroupFromUser(userId, groupId) {
 /**
  * Gets the game of the specified gameId.
  * @param {String} userId
- * @param {String} groupName
+ * @param {String} groupId
  * @param {String} gameId
  * @returns the game object
  * @throws NOT_FOUND if the game was not found
@@ -279,12 +282,13 @@ function getGroupFromUser(userId, groupId) {
 function getGameFromGroup(userId, groupId, gameId) {
 	const gameName = getGroupFromUser(userId, groupId).games[gameId];
 	const game = games[gameId];
-	if (!game | !gameName) throw errors.NOT_FOUND({ gameId });
+	if (!game || !gameName) throw errors.NOT_FOUND({ gameId });
 	return game;
 }
 
+
 /**
- * Resets memory by assigning {} to the object users.
+ * Resets memory by assigning {} to the object users and the object tokens.
  */
 function resetMem() {
 	users = {};
@@ -293,7 +297,7 @@ function resetMem() {
 
 
 /**
- * Empties all user's groups by assigning {} to the object groups.
+ * Resets all users groups by assigning {} to the object groups of each user.
  */
 function resetAllGroups() {
 	Object.values(users).forEach(user => {

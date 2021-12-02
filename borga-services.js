@@ -32,12 +32,12 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Returns the username associated with the provided token by checking if said token exists.
-	 * @param {String} userId
+	 * Checks if token and userId are associated.
 	 * @param {String} token
+	 * @param {String} userId
 	 * @throws UNAUTHENTICATED if the token is invalid
 	 */
-	function checkAuthentication(userId, token) {
+	function checkAuthentication(token, userId) {
 		if (!token)
 			throw errors.UNAUTHENTICATED('Please insert your user token');
 
@@ -58,7 +58,7 @@ module.exports = function (data_ext, data_int) {
 	/**
 	 * Gets an array of games by a given name.
 	 * @param {String} gameName
-	 * @returns promise with a list of game objects
+	 * @returns promise with an array of game objects
 	 */
 	async function searchGamesByName(gameName) {
 		return await data_ext.searchGamesByName(gameName);
@@ -68,35 +68,35 @@ module.exports = function (data_ext, data_int) {
 	/**
 	 * Creates a new user by its id and name.
 	 * @param {String} userId 
-	 * @param {String} username 
+	 * @param {String} userName 
 	 * @returns a promise with an object with the new user information
 	 */
-	async function createNewUser(userId, username) {
+	async function createNewUser(userId, userName) {
 		checkBadRequest({
 			userId: { value: userId, type: 'string' },
-			username: { value: username, type: 'string' }
+			userName: { value: userName, type: 'string' }
 		});
 
-		return await data_int.createNewUser(userId, username);
+		return await data_int.createNewUser(userId, userName);
 	}
 
 
 	/**
 	 * Creates a new group of the user.
+	 * @param {String} token 
 	 * @param {String} userId
 	 * @param {String} groupId
-	 * @param {String} token 
 	 * @param {String} groupName 
 	 * @param {String} groupDescription 
 	 * @returns promise with an object with the new group information
 	 */
-	async function createGroup(userId, token, groupId, groupName, groupDescription) {
+	async function createGroup(token, userId, groupId, groupName, groupDescription) {
 		checkBadRequest({
 			groupId: { value: groupId, type: 'string' },
 			groupName: { value: groupName, type: 'string' },
 			groupDescription: { value: groupDescription, type: 'string' }
 		});
-		checkAuthentication(userId, token);
+		checkAuthentication(token, userId);
 
 		return await data_int.createGroup(userId, groupId, groupName, groupDescription);
 	}
@@ -104,20 +104,19 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * Edits a group by changing its name and description.
-	 * @param {String} userId
 	 * @param {String} token 
-	 * @param {String} groupName 
+	 * @param {String} userId
+	 * @param {String} groupId
 	 * @param {String} newGroupName 
 	 * @param {String} newGroupDescription 
 	 * @returns promise with an object with the edited group information
 	 */
-	async function editGroup(userId, token, groupId, newGroupName, newGroupDescription) {
+	async function editGroup(token, userId, groupId, newGroupName, newGroupDescription) {
 		checkBadRequest({
-			groupId: { value: groupId, type: 'string' },
 			newGroupName: { value: newGroupName, type: 'string' },
 			newGroupDescription: { value: newGroupDescription, type: 'string' }
 		});
-		checkAuthentication(userId, token);
+		checkAuthentication(token, userId);
 
 		return await data_int.editGroup(userId, groupId, newGroupName, newGroupDescription);
 	}
@@ -125,12 +124,12 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * List all existing groups inside the user.
-	 * @param {String} userId
 	 * @param {String} token 
+	 * @param {String} userId
 	 * @returns promise with object containing all group objects
 	 */
-	async function listUserGroups(userId, token) {
-		checkAuthentication(userId, token);
+	async function listUserGroups(token, userId) {
+		checkAuthentication(token, userId);
 
 		return await data_int.listUserGroups(userId);
 	}
@@ -138,27 +137,27 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * Deletes the group of the specified groupId.
-	 * @param {String} userId
 	 * @param {String} token 
+	 * @param {String} userId
 	 * @param {String} groupId 
 	 * @returns promise with an object with the deleted group information
 	 */
-	async function deleteGroup(userId, token, groupId) {
-		checkAuthentication(userId, token);
+	async function deleteGroup(token, userId, groupId) {
+		checkAuthentication(token, userId);
 
 		return await data_int.deleteGroup(userId, groupId);
 	}
 
 
 	/**
-	 * Creates a new object containing the group details.
-	 * @param {String} userId
+	 * Gets the an object containing the group details.
 	 * @param {String} token
+	 * @param {String} userId
 	 * @param {Object} groupId
 	 * @returns promise an object containing the group details
 	 */
-	async function getGroupDetails(userId, token, groupId) {
-		checkAuthentication(userId, token);
+	async function getGroupDetails(token, userId, groupId) {
+		checkAuthentication(token, userId);
 
 		const group = await data_int.getGroupFromUser(userId, groupId);
 
@@ -168,14 +167,14 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * Adds a new game to a group.
-	 * @param {String} userId
 	 * @param {String} token
+	 * @param {String} userId
 	 * @param {String} groupId 
 	 * @param {Object} gameId
-	 * @return promise with the added name
+	 * @return promise with the added gameo object
 	 */
-	async function addGameToGroup(userId, token, groupId, gameId) {
-		checkAuthentication(userId, token);
+	async function addGameToGroup(token, userId, groupId, gameId) {
+		checkAuthentication(token, userId);
 
 		const game = await data_ext.searchGamesById(gameId);
 
@@ -185,14 +184,14 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * Removes a game from a group providing its name.
-	 * @param {String} userId
 	 * @param {String} token 
+	 * @param {String} userId
 	 * @param {String} groupId 
 	 * @param {String} gameId
-	 * @return promise with the removed game 
+	 * @return promise with the removed game object
 	 */
-	async function removeGameFromGroup(userId, token, groupId, gameId) {
-		checkAuthentication(userId, token);
+	async function removeGameFromGroup(token, userId, groupId, gameId) {
+		checkAuthentication(token, userId);
 
 		return await data_int.removeGameFromGroup(userId, groupId, gameId);
 	}

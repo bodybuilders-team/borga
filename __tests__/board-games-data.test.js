@@ -1,8 +1,8 @@
 'use strict';
 
+const errors = require('../borga-errors.js');
 
 const gamesData = require("../board-games-data.js");
-const errors = require('../borga-errors.js');
 const mockDataExt = require('../__mock__/borga-mock-data-ext.js');
 
 
@@ -57,7 +57,7 @@ test("makeGameObj returns a game obj created from another object", () => {
 
 
 test("getGameByName return correct game object of game with name \"Skyrim\"", async () => {
-	expect(await mockDataExt.searchGamesByName("Skyrim"))
+	expect((await mockDataExt.searchGamesByName("Skyrim"))[0])
 		.toEqual(mockDataExt.games["I9azM1kA6l"]);
 });
 
