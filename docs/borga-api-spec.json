@@ -17,11 +17,6 @@
       "description": "Everything about Users"
     }
   ],
-  "servers": [
-    {
-      "url": "http://localhost:8888/"
-    }
-  ],
   "paths": {
     "/games/popular": {
       "get": {
@@ -43,7 +38,7 @@
         }
       }
     },
-    "/games/search/{gameName}": {
+    "/games/search": {
       "get": {
         "tags": [
           "games"
@@ -52,7 +47,7 @@
         "parameters": [
           {
             "name": "gameName",
-            "in": "path",
+            "in": "query",
             "description": "The name of the game to search",
             "required": true,
             "schema": {
@@ -156,6 +151,11 @@
           "user"
         ],
         "summary": "Creates a group providing its name and description.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -243,6 +243,11 @@
           "user"
         ],
         "summary": "Edits a group by changing its name and description.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -316,6 +321,11 @@
           "user"
         ],
         "summary": "Lists all groups.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -364,6 +374,11 @@
           "user"
         ],
         "summary": "Deletes a group.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -424,6 +439,11 @@
           "user"
         ],
         "summary": "Gets the details of a group, with its name, description and names of the included games.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -490,11 +510,16 @@
       }
     },
     "/user/{userId}/myGroups/{groupName}/addGame": {
-      "put": {
+      "post": {
         "tags": [
           "user"
         ],
         "summary": "Adds a game to a group.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -571,6 +596,11 @@
           "user"
         ],
         "summary": "Removes a game from a group.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -636,6 +666,12 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
     "schemas": {
       "Game": {
         "type": "object",

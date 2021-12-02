@@ -22,6 +22,7 @@ const game1 = {
     amazon_rank: 1,
     price: 420.69
 };
+const groupId1 = "0";
 const groupObj1 = {
     name: groupName1,
     description: groupDescription1,
@@ -67,19 +68,19 @@ function assertThrowsAlreadyExists(func, info) {
 
 describe("Token tests", () => {
     test("UserIDtoToken returns correct token", () => {
-       expect(dataMem.UserIDtoToken(userId2)).toEqual(test_token);
+        expect(dataMem.userIdToToken(userId2)).toEqual(test_token);
     });
 
     test("UserIDtoToken returns no token when user is not valid", () => {
-        expect(dataMem.UserIDtoToken("")).toEqual(undefined);
+        expect(dataMem.userIdToToken("")).toEqual(undefined);
     });
 
     test("tokenToUserID returns correct userID", () => {
-        expect(dataMem.tokenToUserID(test_token)).toEqual(userId2);
+        expect(dataMem.tokenToUserId(test_token)).toEqual(userId2);
     });
 
     test("tokenToUserID returns no userID when token does not exist", () => {
-        expect(dataMem.tokenToUserID("")).toEqual(undefined);
+        expect(dataMem.tokenToUserId("")).toEqual(undefined);
     });
 });
 
@@ -167,18 +168,14 @@ describe("Group tests", () => {
             .toEqual("New group");
     });
 
-    test("createGroup throws if group already exists", () => {
-        assertThrowsAlreadyExists(() => dataMem.createGroup(userId1, groupName1, groupDescription1), { groupName: groupName1 });
-    });
-
     test("editGroup edits a group, returning name of the edited group", () => {
         const newGroupName = "FPS Games";
         const newDescription = "Another description";
 
-        expect(dataMem.editGroup(userId1, groupName1, newGroupName, newDescription))
+        expect(dataMem.editGroup(userId1, groupId1, newGroupName, newDescription))
             .toEqual(newGroupName);
 
-        expect(dataMem.getGroupFromUser(userId1, newGroupName))
+        expect(dataMem.getGroupFromUser(userId1, groupId1))
             .toEqual({
                 name: newGroupName,
                 description: newDescription,
@@ -188,25 +185,25 @@ describe("Group tests", () => {
 
     test("listUserGroups returns array containing all group objects", () => {
         expect(dataMem.listUserGroups(userId1))
-            .toEqual({ [groupName1]: groupObj1 });
+            .toEqual({ [groupId1]: groupObj1 });
     });
 
     test("deleteGroup deletes a group, returning name of the group", () => {
-        expect(dataMem.deleteGroup(userId1, groupName1))
-            .toEqual(groupName1);
+        expect(dataMem.deleteGroup(userId1, groupId1))
+            .toEqual(groupId1);
 
-        assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, groupName1), { groupName: groupName1 });
+        assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, groupId1), { groupId: groupId1 });
     });
 
     test("deleteGroup throws if the group already doesn't exist", () => {
-        assertThrowsNotFound(() => dataMem.deleteGroup(userId1, "undefined"), { groupName: "undefined" });
+        assertThrowsNotFound(() => dataMem.deleteGroup(userId1, "undefined"), { groupId: "undefined" });
     });
 
     test("addGroupToUser adds a group to a user given a group object", () => {
-        expect(dataMem.addGroupToUser(userId1, dataMem.createGroupObj(groupName1, groupDescription1)))
+        expect(dataMem.addGroupToUser(userId1, groupId1, dataMem.createGroupObj(groupName1, groupDescription1)))
             .toEqual(groupName1);
 
-        expect(dataMem.getGroupFromUser(userId1, groupName1))
+        expect(dataMem.getGroupFromUser(userId1, groupId1))
             .toEqual(groupObj1);
     });
 
@@ -219,31 +216,31 @@ describe("Game tests", () => {
     );
 
     test("getPopularGames returns names of most popular games", () => {
-        dataMem.addGameToGroup(userId1, groupName1, game1)
+        dataMem.addGameToGroup(userId1, groupId1, game1)
 
         expect(dataMem.getPopularGames())
             .toEqual([gameName1]);
     });
 
     test("addGameToGroup adds game to a group, returning name of the added game", () => {
-        expect(dataMem.addGameToGroup(userId1, groupName1, game1))
+        expect(dataMem.addGameToGroup(userId1, groupId1, game1))
             .toEqual(gameName1);
 
-        expect(dataMem.getGameFromGroup(userId1, groupName1, gameName1))
+        expect(dataMem.getGameFromGroup(userId1, groupId1, gameName1))
             .toEqual(game1);
     });
 
     test("removeGameFromGroup removes game, returning name of the removed game", () => {
-        dataMem.addGameToGroup(userId1, groupName1, game1)
+        dataMem.addGameToGroup(userId1, groupId1, game1)
 
-        expect(dataMem.removeGameFromGroup(userId1, groupName1, gameName1))
+        expect(dataMem.removeGameFromGroup(userId1, groupId1, gameName1))
             .toEqual(gameName1);
 
-        assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
+        assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupId1, gameName1), { gameName: gameName1 });
     });
 
     test("removeGameFromGroup throws if the game already doesn't exist", () => {
-        assertThrowsNotFound(() => dataMem.removeGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
+        assertThrowsNotFound(() => dataMem.removeGameFromGroup(userId1, groupId1, gameName1), { gameName: gameName1 });
     });
 
 });
@@ -258,26 +255,26 @@ describe('Utils tests', () => {
         expect(dataMem.getUser(userId1))
             .toEqual({
                 name: userName1,
-                groups: { [groupName1] : groupObj1 }
+                groups: { [groupId1]: groupObj1 }
             });
     });
 
     test("getGroupFromUser returns a group object from a user", () => {
-        expect(dataMem.getGroupFromUser(userId1, groupName1))
+        expect(dataMem.getGroupFromUser(userId1, groupId1))
             .toEqual(groupObj1);
     });
 
     test("getGroupFromUser throws if the group doesn't exist", () => {
-        assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, "undefined"), { groupName: "undefined" });
+        assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, "undefined"), { groupId: "undefined" });
     });
 
     test("getGameFromGroup returns a game object from a group", () => {
-        dataMem.addGameToGroup(userId1, groupName1, game1);
-        expect(dataMem.getGameFromGroup(userId1, groupName1, gameName1))
+        dataMem.addGameToGroup(userId1, groupId1, game1);
+        expect(dataMem.getGameFromGroup(userId1, groupId1, gameName1))
             .toEqual(game1);
     });
 
     test("getGameFromGroup throws if the game doesn't exist", () => {
-        assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupName1, gameName1), { gameName: gameName1 });
+        assertThrowsNotFound(() => dataMem.getGameFromGroup(userId1, groupId1, gameName1), { gameName: gameName1 });
     });
 });

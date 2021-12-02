@@ -42,7 +42,7 @@ module.exports = function (data_ext, data_int) {
 			throw errors.UNAUTHENTICATED('Please insert your user token');
 		}
 
-		if (userId != data_int.tokenToUserID(token)) {
+		if (userId != data_int.tokenToUserId(token)) {
 			throw errors.UNAUTHENTICATED('Please insert a valid user token');
 		}
 	}
@@ -111,15 +111,15 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} newGroupDescription 
 	 * @returns promise with the new group name
 	 */
-	async function editGroup(userId, token, groupName, newGroupName, newGroupDescription) {
+	async function editGroup(userId, token, groupId, newGroupName, newGroupDescription) {
 		checkBadRequest({
-			groupName: { value: groupName, type: 'string' },
+			groupId: { value: groupId, type: 'string' },
 			newGroupName: { value: newGroupName, type: 'string' },
 			newGroupDescription: { value: newGroupDescription, type: 'string' }
 		});
 		checkAuthentication(userId, token);
 
-		return await data_int.editGroup(userId, groupName, newGroupName, newGroupDescription);
+		return await data_int.editGroup(userId, groupId, newGroupName, newGroupDescription);
 	}
 
 
@@ -143,10 +143,10 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} groupName 
 	 * @returns promise with name of the deleted group
 	 */
-	async function deleteGroup(userId, token, groupName) {
+	async function deleteGroup(userId, token, groupId) {
 		checkAuthentication(userId, token);
 
-		return await data_int.deleteGroup(userId, groupName);
+		return await data_int.deleteGroup(userId, groupId);
 	}
 
 
@@ -157,10 +157,10 @@ module.exports = function (data_ext, data_int) {
 	 * @param {Object} groupName
 	 * @returns promise an object containing the group details
 	 */
-	async function getGroupDetails(userId, token, groupName) {
+	async function getGroupDetails(userId, token, groupId) {
 		checkAuthentication(userId, token);
 
-		const group = await data_int.getGroupFromUser(userId, groupName);
+		const group = await data_int.getGroupFromUser(userId, groupId);
 
 		return await data_int.getGroupDetails(group);
 	}
@@ -174,12 +174,12 @@ module.exports = function (data_ext, data_int) {
 	 * @param {Object} gameName
 	 * @return promise with name of the added name
 	 */
-	async function addGameToGroup(userId, token, groupName, gameName) {
+	async function addGameToGroup(userId, token, groupId, gameName) {
 		checkAuthentication(userId, token);
 
 		const game = await data_ext.searchGamesByName(gameName);
 
-		return await data_int.addGameToGroup(userId, groupName, game);
+		return await data_int.addGameToGroup(userId, groupId, game);
 	}
 
 
@@ -191,10 +191,10 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} gameName
 	 * @return promise with name of removed game 
 	 */
-	async function removeGameFromGroup(userId, token, groupName, gameName) {
+	async function removeGameFromGroup(userId, token, groupId, gameName) {
 		checkAuthentication(userId, token);
 
-		return await data_int.removeGameFromGroup(userId, groupName, gameName);
+		return await data_int.removeGameFromGroup(userId, groupId, gameName);
 	}
 
 

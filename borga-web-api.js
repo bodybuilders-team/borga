@@ -18,7 +18,7 @@ module.exports = function (services) {
 		const auth = req.header('Authorization');
 		if (auth) {
 			const authData = auth.trim();
-			if (authData.substr(0,6).toLowerCase() === 'bearer') {
+			if (authData.substr(0, 6).toLowerCase() === 'bearer') {
 				return authData.replace(/^bearer\s+/i, '');
 			}
 		}
@@ -38,7 +38,7 @@ module.exports = function (services) {
 				break;
 			case 'UNAUTHENTICATED':
 				res.status(401);
-			break;
+				break;
 			case 'NOT_FOUND':
 				res.status(404);
 				break;
@@ -78,7 +78,7 @@ module.exports = function (services) {
 	 */
 	async function searchGamesByName(req, res) {
 		try {
-			const gameName = req.params.gameName;
+			const gameName = req.query.gameName;
 
 			const game = await services.searchGamesByName(gameName);
 			res.json(game);
@@ -114,7 +114,7 @@ module.exports = function (services) {
 	async function createGroup(req, res) {
 		try {
 			const userId = req.params.userId;
-			const token = getBearerToken(req)
+			const token = getBearerToken(req);
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
 
@@ -135,11 +135,11 @@ module.exports = function (services) {
 		try {
 			const userId = req.params.userId;
 			const token = getBearerToken(req)
-			const groupName = req.body.groupName;
+			const groupId = req.body.groupId;
 			const newGroupName = req.body.newGroupName;
 			const newGroupDescription = req.body.newGroupDescription;
 
-			const name = await services.editGroup(userId, token, groupName, newGroupName, newGroupDescription);
+			const name = await services.editGroup(userId, token, groupId, newGroupName, newGroupDescription);
 			res.json({ "Edited group": name });
 		} catch (err) {
 			onError(res, err);
@@ -174,9 +174,9 @@ module.exports = function (services) {
 		try {
 			const userId = req.params.userId;
 			const token = getBearerToken(req)
-			const groupName = req.params.groupName;
+			const groupId = req.params.groupId;
 
-			const name = await services.deleteGroup(userId, token, groupName);
+			const name = await services.deleteGroup(userId, token, groupId);
 			res.json({ "Deleted group": name });
 		} catch (err) {
 			onError(res, err);
@@ -193,9 +193,9 @@ module.exports = function (services) {
 		try {
 			const userId = req.params.userId;
 			const token = getBearerToken(req)
-			const groupName = req.params.groupName;	
+			const groupId = req.params.groupId;
 
-			const details = await services.getGroupDetails(userId, token, groupName);
+			const details = await services.getGroupDetails(userId, token, groupId);
 			res.json(details);
 		} catch (err) {
 			onError(res, err);
@@ -212,10 +212,10 @@ module.exports = function (services) {
 		try {
 			const userId = req.params.userId;
 			const token = getBearerToken(req)
-			const groupName = req.params.groupName;
+			const groupId = req.params.groupId;
 			const gameName = req.body.gameName;
 
-			const name = await services.addGameToGroup(userId, token, groupName, gameName);
+			const name = await services.addGameToGroup(userId, token, groupId, gameName);
 			res.json({ "Added game": name });
 		} catch (err) {
 			onError(res, err);
@@ -232,10 +232,10 @@ module.exports = function (services) {
 		try {
 			const userId = req.params.userId;
 			const token = getBearerToken(req)
-			const groupName = req.params.groupName;
+			const groupId = req.params.groupId;
 			const gameName = req.params.gameName;
 
-			const name = await services.removeGameFromGroup(userId, token, groupName, gameName);
+			const name = await services.removeGameFromGroup(userId, token, groupId, gameName);
 			res.json({ "Removed game": name });
 		} catch (err) {
 			onError(res, err);
@@ -253,7 +253,7 @@ module.exports = function (services) {
 	router.get('/games/popular', getPopularGames);
 
 	// Search games by name
-	router.get('/games/search/:gameName', searchGamesByName);
+	router.get('/games/search', searchGamesByName);
 
 
 	// Create new user
@@ -269,16 +269,16 @@ module.exports = function (services) {
 	router.get('/user/:userId/myGroups/list', listGroups);
 
 	// Delete a group
-	router.delete('/user/:userId/myGroups/:groupName/delete', deleteGroup);
+	router.delete('/user/:userId/myGroups/:groupId/delete', deleteGroup);
 
 	// Get the details of a group, with its name, description and names of the included games
-	router.get('/user/:userId/myGroups/:groupName/details', getDetailsOfGroup);
+	router.get('/user/:userId/myGroups/:groupId/details', getDetailsOfGroup);
 
 	// Add a game to a group
-	router.put('/user/:userId/myGroups/:groupName/addGame', addGameToGroup);
+	router.post('/user/:userId/myGroups/:groupId/addGame', addGameToGroup);
 
 	// Remove a game from a group
-	router.delete('/user/:userId/myGroups/:groupName/removeGame/:gameName', removeGameFromGroup);
+	router.delete('/user/:userId/myGroups/:groupId/removeGame/:gameName', removeGameFromGroup);
 
 	router.use(function (req, res, next) {
 		res.status(404).send(errors.NOT_FOUND("Cannot find " + req.path))
