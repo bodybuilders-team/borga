@@ -56,12 +56,15 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Gets an array of games by a given name.
+	 * Gets an array of games by a given name and other optional filter params.
 	 * @param {String} gameName
+	 * @param {Number} limit
+	 * @param {String} order_by
+	 * @param {Boolean} ascending
 	 * @returns promise with an array of game objects
 	 */
-	async function searchGamesByName(gameName) {
-		return await data_ext.searchGamesByName(gameName);
+	async function searchGamesByName(gameName, limit, order_by, ascending) {
+		return await data_ext.searchGamesByName(gameName, limit, order_by, ascending);
 	}
 
 

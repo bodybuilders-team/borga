@@ -12,11 +12,11 @@ const defaultServices = servicesBuilder(mockDataExt, dataMem);
 // ----------------------------- Constants used in tests -----------------------------
 const userId1 = "A48309";
 const token1 = '5d389af1-06db-4401-8aef-36d8d6428f31';
-const groupName1 = "RPG Games";
+const groupName1 = "Negotiation Games";
 const groupDescription1 = "This is a description";
 const gameId1 = "I9azM1kA6l"
-const gameName1 = "Skyrim";
-const groupId1 = "RPG";
+const gameName1 = "Monopoly Skyrim";
+const groupId1 = "NegG";
 const groupObj1 = {
     name: groupName1,
     description: groupDescription1,
@@ -74,9 +74,9 @@ describe("Search tests", () => {
 
 
     test('Search for existing game', async () => {
-        const games = await defaultServices.searchGamesByName("Catan");
+        const games = await defaultServices.searchGamesByName(gameName1);
         expect(games).toBeDefined();
-        expect(games[0]).toEqual(mockDataExt.games['OIXt3DmJU0']);
+        expect(games[0]).toEqual(mockDataExt.games[gameId1]);
     });
 });
 

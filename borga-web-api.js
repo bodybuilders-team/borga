@@ -72,15 +72,19 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response an object containing an array of games obtained by the provided name
+	 * Sends as response an object containing an array of games obtained by the provided name 
+	 * and other optional filter params
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
 	async function searchGamesByName(req, res) {
 		try {
 			const gameName = req.query.gameName;
+			const limit = req.query.limit;
+			const order_by = req.query.order_by;
+			const ascending = req.query.ascending;
 
-			const games = await services.searchGamesByName(gameName);
+			const games = await services.searchGamesByName(gameName, limit, order_by, ascending);
 			res.json({ games });
 		} catch (err) {
 			onError(res, err);
@@ -119,7 +123,7 @@ module.exports = function (services) {
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
 
-			const groupInfo = await services.createGroup(userId, token, groupId, groupName, groupDescription);
+			const groupInfo = await services.createGroup(token, userId, groupId, groupName, groupDescription);
 			res.json({ "Created group": groupInfo });
 		} catch (err) {
 			onError(res, err);
@@ -140,7 +144,7 @@ module.exports = function (services) {
 			const newGroupName = req.body.newGroupName;
 			const newGroupDescription = req.body.newGroupDescription;
 
-			const groupInfo = await services.editGroup(userId, token, groupId, newGroupName, newGroupDescription);
+			const groupInfo = await services.editGroup(token, userId, groupId, newGroupName, newGroupDescription);
 			res.json({ "Edited group": groupInfo });
 		} catch (err) {
 			onError(res, err);
@@ -158,7 +162,7 @@ module.exports = function (services) {
 			const token = getBearerToken(req);
 			const userId = req.params.userId;
 
-			const groups = await services.listUserGroups(userId, token);
+			const groups = await services.listUserGroups(token, userId);
 			res.json(groups);
 		} catch (err) {
 			onError(res, err);
@@ -177,7 +181,7 @@ module.exports = function (services) {
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 
-			const groupInfo = await services.deleteGroup(userId, token, groupId);
+			const groupInfo = await services.deleteGroup(token, userId, groupId);
 			res.json({ "Deleted group": groupInfo });
 		} catch (err) {
 			onError(res, err);
@@ -196,7 +200,7 @@ module.exports = function (services) {
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 
-			const details = await services.getGroupDetails(userId, token, groupId);
+			const details = await services.getGroupDetails(token, userId, groupId);
 			res.json(details);
 		} catch (err) {
 			onError(res, err);
@@ -216,7 +220,7 @@ module.exports = function (services) {
 			const groupId = req.params.groupId;
 			const gameId = req.body.gameId;
 
-			const addedGame = await services.addGameToGroup(userId, token, groupId, gameId);
+			const addedGame = await services.addGameToGroup(token, userId, groupId, gameId);
 			res.json({ "Added game": addedGame });
 		} catch (err) {
 			onError(res, err);
@@ -236,7 +240,7 @@ module.exports = function (services) {
 			const groupId = req.params.groupId;
 			const gameId = req.params.gameId;
 
-			const name = await services.removeGameFromGroup(userId, token, groupId, gameId);
+			const name = await services.removeGameFromGroup(token, userId, groupId, gameId);
 			res.json({ "Removed game": name });
 		} catch (err) {
 			onError(res, err);

@@ -71,13 +71,16 @@ function makeGameObj(gameInfo) {
 
 
 /**
- * Gets an array of games by a given name.
+ * Gets an array of games by a given name and other optional filter params.
  * @param {String} gameName
+ * @param {Number} limit
+ * @param {String} order_by
+ * @param {Boolean} ascending
  * @throws error NOT_FOUND if no game was found with the given name
  * @returns promise with an array of game objects
  */
-async function searchGamesByName(gameName) {
-	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + gameName;
+async function searchGamesByName(gameName, limit, order_by, ascending) {
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + `&name=${gameName}&limit=${limit}&order_by=${order_by}&ascending=${ascending}`;
 
 	const res = await do_fetch(game_uri);
 
@@ -95,8 +98,8 @@ async function searchGamesByName(gameName) {
  * @throws error NOT_FOUND if no game was found with the given id
  * @returns promise with the game object
  */
- async function searchGamesById(gameId) {
-	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&ids=' + gameId;
+async function searchGamesById(gameId) {
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + `&ids=${gameId}`;
 
 	const res = await do_fetch(game_uri);
 

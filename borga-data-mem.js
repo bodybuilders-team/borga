@@ -55,10 +55,7 @@ function getPopularGames() {
 	}
 
 	const sortedGames = Object.entries(gameOccurrences).sort(([, a], [, b]) => b - a).slice(0, numberOfPopularGames);
-	console.log(game[0])
-	console.log(games[game[0]])
-	console.log(sortedGames.map(game => {[game[0], games[game[0]]]}))
-	const popularGames = Object.fromEntries(sortedGames.map(game => {[game[0], games[game[0]]]}));
+	const popularGames = Object.fromEntries(sortedGames.map(game => [game[0], games[game[0]]]));
 
 	return popularGames;
 }

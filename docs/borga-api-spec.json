@@ -1,5 +1,4 @@
 {
-  "security": [],
   "openapi": "3.0.1",
   "info": {
     "title": "BORGA",
@@ -30,7 +29,16 @@
             "content": {
               "application/json": {
                 "example": {
-                  "popularGames": []
+                  "popularGames": {
+                    "OIXt3DmJU0": {
+                      "id": "OIXt3DmJU0",
+                      "name": "Catan",
+                      "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
+                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                      "amazon_rank": 133,
+                      "price": "32.97"
+                    }
+                  }
                 }
               }
             }
@@ -48,10 +56,37 @@
           {
             "name": "gameName",
             "in": "query",
-            "description": "The name of the game to search",
+            "description": "The name of the game to search.",
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limits the number of results returned. The max limit is 100. The default is 30.",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Provide the name of another parameter and it will order the results according to it.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ascending",
+            "in": "query",
+            "description": "This determines which direction the list is shown in based on the order_by parameter.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -60,8 +95,36 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Game"
+                "example": {
+                  "games": [
+                    {
+                      "id": "OIXt3DmJU0",
+                      "name": "Catan",
+                      "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
+                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                      "publisher": "KOSMOS",
+                      "amazon_rank": 133,
+                      "price": "32.97"
+                    },
+                    {
+                      "id": "E5TYKwLTf0",
+                      "name": "Catan: Cities & Knights",
+                      "url": "https://www.boardgameatlas.com/game/E5TYKwLTf0/catan-cities-and-knights-expansion",
+                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257359245-51DYsPZcYyL.jpg",
+                      "publisher": "Catan Studio",
+                      "amazon_rank": 4435,
+                      "price": "44.00"
+                    },
+                    {
+                      "id": "EvYzPCnCGG",
+                      "name": "Catan: 5-6 Player Extension",
+                      "url": "https://www.boardgameatlas.com/game/EvYzPCnCGG/catan-56-player-extension",
+                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg",
+                      "publisher": "Catan Studio",
+                      "amazon_rank": 534,
+                      "price": "15.49"
+                    }
+                  ]
                 }
               }
             }
@@ -86,7 +149,7 @@
         }
       }
     },
-    "/user/create": {
+    "/user": {
       "post": {
         "tags": [
           "user"
@@ -116,10 +179,11 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Created user": "A48287"
+                "example": {
+                  "Created user": {
+                    "userId": "12345",
+                    "token": "944716df-96a8-442e-a3e6-834ac0dadde7",
+                    "userName": "Paulão"
                   }
                 }
               }
@@ -145,7 +209,7 @@
         }
       }
     },
-    "/user/{userId}/myGroups/add": {
+    "/user/{userId}/groups": {
       "post": {
         "tags": [
           "user"
@@ -174,6 +238,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "groupId": {
+                    "type": "string"
+                  },
                   "groupName": {
                     "type": "string"
                   },
@@ -191,10 +258,11 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Created group": "FPS Games"
+                "example": {
+                  "Created group": {
+                    "groupId": "NegG",
+                    "groupName": "Negotiation games",
+                    "groupDescription": "This is a group of negotiation games."
                   }
                 }
               }
@@ -235,9 +303,66 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Lists all groups.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "NegG": {
+                    "name": "Negotiation games",
+                    "description": "This is a group of negotiation games.",
+                    "games": {
+                      "OIXt3DmJU0": "Catan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cause": {
+                    "code": 1001,
+                    "name": "NOT_FOUND",
+                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "info": {
+                      "userId": "A4828723"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "/user/{userId}/myGroups/edit": {
+    "/user/{userId}/groups/{groupId}": {
       "post": {
         "tags": [
           "user"
@@ -253,6 +378,15 @@
             "name": "userId",
             "in": "path",
             "description": "The user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The group ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -286,10 +420,11 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Edited group": "First-Person Shooter Games"
+                "example": {
+                  "Edited group": {
+                    "groupId": "NegG",
+                    "newGroupName": "Negotiation and Economic Games",
+                    "newGroupDescription": "This is a group of negotiation and economic games."
                   }
                 }
               }
@@ -313,62 +448,7 @@
             }
           }
         }
-      }
-    },
-    "/user/{userId}/myGroups/list": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Lists all groups.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "The user ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Group"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found",
-            "content": {
-              "application/json": {
-                "example": {
-                  "cause": {
-                    "code": 1001,
-                    "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                    "info": {
-                      "userId": "A4828723"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/{userId}/myGroups/{groupName}/delete": {
+      },
       "delete": {
         "tags": [
           "user"
@@ -390,9 +470,9 @@
             }
           },
           {
-            "name": "groupName",
+            "name": "groupId",
             "in": "path",
-            "description": "The name of the group to delete",
+            "description": "The group ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -404,10 +484,11 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Deleted group": "FPS Games"
+                "example": {
+                  "Deleted group": {
+                    "groupId": "NegG",
+                    "groupName": "Negotiation and Economic Games",
+                    "groupDescription": "This is a group of negotiation and economic games."
                   }
                 }
               }
@@ -431,14 +512,12 @@
             }
           }
         }
-      }
-    },
-    "/user/{userId}/myGroups/{groupName}/details": {
+      },
       "get": {
         "tags": [
           "user"
         ],
-        "summary": "Gets the details of a group, with its name, description and names of the included games.",
+        "summary": "Gets the details of a group.",
         "security": [
           {
             "bearerAuth": []
@@ -455,9 +534,9 @@
             }
           },
           {
-            "name": "groupName",
+            "name": "groupId",
             "in": "path",
-            "description": "The name of the group to delete",
+            "description": "The group ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -469,22 +548,10 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "games": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  }
+                "example": {
+                  "name": "Negotiation games",
+                  "description": "This is a group of negotiation games.",
+                  "games": {}
                 }
               }
             }
@@ -509,7 +576,7 @@
         }
       }
     },
-    "/user/{userId}/myGroups/{groupName}/addGame": {
+    "/user/{userId}/groups/{groupId}/games": {
       "post": {
         "tags": [
           "user"
@@ -531,9 +598,9 @@
             }
           },
           {
-            "name": "groupName",
+            "name": "groupId",
             "in": "path",
-            "description": "The name of the group to delete",
+            "description": "The group ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -547,7 +614,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "gameName": {
+                  "gameId": {
                     "type": "string"
                   }
                 }
@@ -561,10 +628,14 @@
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Added game": "Catan"
+                "example": {
+                  "Added game": {
+                    "id": "OIXt3DmJU0",
+                    "name": "Catan",
+                    "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
+                    "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                    "amazon_rank": 133,
+                    "price": "32.97"
                   }
                 }
               }
@@ -590,7 +661,7 @@
         }
       }
     },
-    "/user/{userId}/myGroups/{groupName}/removeGame/{gameName}": {
+    "/user/{userId}/groups/{groupId}/games/{gameId}": {
       "delete": {
         "tags": [
           "user"
@@ -612,18 +683,18 @@
             }
           },
           {
-            "name": "groupName",
+            "name": "groupId",
             "in": "path",
-            "description": "The name of the group to delete",
+            "description": "The group ID",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "gameName",
+            "name": "gameId",
             "in": "path",
-            "description": "The name of the game to remove from the group",
+            "description": "The ID of the game to remove from the group",
             "required": true,
             "schema": {
               "type": "string"
@@ -634,11 +705,15 @@
           "200": {
             "description": "successful operation",
             "content": {
-              "japplication/jsonson": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "Removed game": "Catan"
+              "application/json": {
+                "example": {
+                  "Removed game": {
+                    "id": "OIXt3DmJU0",
+                    "name": "Catan",
+                    "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
+                    "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                    "amazon_rank": 133,
+                    "price": "32.97"
                   }
                 }
               }
@@ -714,7 +789,10 @@
           "games": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/Game"
+              "type": "string",
+              "example": {
+                "gameId": "gameName"
+              }
             }
           }
         },
@@ -734,7 +812,10 @@
           "groups": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/Group"
+              "type": "string",
+              "example": {
+                "groupId": "groupObj"
+              }
             }
           }
         },

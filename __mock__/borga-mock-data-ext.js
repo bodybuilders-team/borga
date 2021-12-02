@@ -3,6 +3,7 @@
 
 const errors = require('../borga-errors.js');
 
+
 const games = {
     "I9azM1kA6l": {
         id: "I9azM1kA6l",
@@ -25,7 +26,7 @@ const games = {
 }
 
 const requests = {
-    "Skyrim": {
+    "Monopoly Skyrim": {
         "games": [
             {
                 id: "I9azM1kA6l",
@@ -77,8 +78,8 @@ async function searchGamesByName(gameName) {
  * @throws error NOT_FOUND if no game was found with the given id
  * @returns promise with the game object
  */
- async function searchGamesById(gameId) {
-	const game = games[gameId];
+async function searchGamesById(gameId) {
+    const game = games[gameId];
     if (!game) {
         throw errors.NOT_FOUND({ gameId })
     }

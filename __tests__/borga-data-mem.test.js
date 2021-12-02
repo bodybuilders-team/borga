@@ -11,10 +11,10 @@ const userId1 = "123456";
 const userId2 = "A48309";
 const token1 = '5d389af1-06db-4401-8aef-36d8d6428f31';
 const userName1 = "Paulão";
-const groupName1 = "RPG Games";
+const groupName1 = "Paulão Games";
 const groupDescription1 = "This is a description";
 const gameId1 = "I9azM1kA6l";
-const gameName1 = "Skyrim";
+const gameName1 = "Monopoly Skyrim";
 const game1 = {
     id: gameId1,
     name: gameName1,
@@ -24,7 +24,7 @@ const game1 = {
     amazon_rank: 1,
     price: 420.69
 };
-const groupId1 = "RPG";
+const groupId1 = "PG";
 const groupObj1 = {
     name: groupName1,
     description: groupDescription1,
@@ -200,11 +200,11 @@ describe("Game tests", () => {
         await ResetMem().then(CreateUser1()).then(CreateGroup1())
     );
 
-    test.only("getPopularGames returns names of most popular games", () => {
+    test("getPopularGames returns names of most popular games", () => {
         dataMem.addGameToGroup(userId1, groupId1, game1)
 
         expect(dataMem.getPopularGames())
-            .toEqual({ [gameId1] : gameName1 });
+            .toEqual({ [gameId1]: game1 });
     });
 
     test("addGameToGroup adds game to a group, returning name of the added game", () => {

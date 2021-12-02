@@ -6,534 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "webapi-errors-tests",
-			"item": [
-				{
-					"name": "Search game by name-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /games/search/\\\"\",\r",
-									"            \"info\": \"Cannot find /games/search/\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/games/search/:gameName",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"search",
-								":gameName"
-							],
-							"variable": [
-								{
-									"key": "gameName",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create new user-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error bad request information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"cause\": {\r",
-									"                \"code\": 1001,\r",
-									"                \"name\": \"BAD_REQUEST\",\r",
-									"                \"message\": \"The request is bad {\\\"userId\\\":\\\"property missing\\\",\\\"username\\\":\\\"property missing\\\"}\",\r",
-									"                \"info\": {\r",
-									"                    \"userId\": \"property missing\",\r",
-									"                    \"username\": \"property missing\"\r",
-									"                }\r",
-									"            }\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/create",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"create"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create group-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/add\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups/add\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/add",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								"add"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit group-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/edit\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups/edit\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/edit",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								"edit"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List all groups from user-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups/list\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups/list\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/list",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								"list"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete group-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//delete\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups//delete\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								":groupName",
-								"delete"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "groupName",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get group details-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//details\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups//details\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								":groupName",
-								"details"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "groupName",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add game to group-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//addGame\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups//addGame\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								":groupName",
-								"addGame"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "groupName",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Remove game from group-test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"json contains error not found information\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.eql(\r",
-									"        {\r",
-									"            \"code\": 1002,\r",
-									"            \"name\": \"NOT_FOUND\",\r",
-									"            \"message\": \"The item does not exist \\\"Cannot find /user//myGroups//removeGame/\\\"\",\r",
-									"            \"info\": \"Cannot find /user//myGroups//removeGame/\"\r",
-									"        }\r",
-									"    );\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								":userId",
-								"myGroups",
-								":groupName",
-								"removeGame",
-								":gameName"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "groupName",
-									"value": ""
-								},
-								{
-									"key": "gameName",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Get popular games",
 			"event": [
 				{
@@ -560,7 +32,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{baseURL}}/games/popular",
 					"host": [
@@ -577,7 +55,13 @@
 					"name": "Get popular games",
 					"originalRequest": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{baseURL}}/games/popular",
 							"host": [
@@ -603,15 +87,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "26"
+							"value": "250"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1a-8ivtIr1Yczmzu3F6bOvn5uJ2ukk\""
+							"value": "W/\"fa-P6exytjgLKP3/DNOFpO6qBy6zLQ\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:24:38 GMT"
+							"value": "Thu, 02 Dec 2021 19:42:47 GMT"
 						},
 						{
 							"key": "Connection",
@@ -623,12 +107,12 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"popularGames\": [\n        \"Catan\"\n    ]\n}"
+					"body": "{\n    \"popularGames\": {\n        \"OIXt3DmJU0\": {\n            \"id\": \"OIXt3DmJU0\",\n            \"name\": \"Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n            \"amazon_rank\": 133,\n            \"price\": \"32.97\"\n        }\n    }\n}"
 				}
 			]
 		},
 		{
-			"name": "Search game by name",
+			"name": "Search games by name",
 			"event": [
 				{
 					"listen": "test",
@@ -654,43 +138,74 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseURL}}/games/search/:gameName",
+					"raw": "{{baseURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"games",
 						"search",
-						":gameName"
+						""
 					],
-					"variable": [
+					"query": [
 						{
 							"key": "gameName",
 							"value": "Catan"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "order_by",
+							"value": "amazon_rank"
+						},
+						{
+							"key": "ascending",
+							"value": "true"
 						}
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Search game by name",
+					"name": "Search games by name",
 					"originalRequest": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
-							"raw": "{{baseURL}}/games/search/:gameName",
+							"raw": "{{baseURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"games",
 								"search",
-								":gameName"
+								""
 							],
-							"variable": [
+							"query": [
 								{
 									"key": "gameName",
 									"value": "Catan"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "order_by",
+									"value": "amazon_rank"
+								},
+								{
+									"key": "ascending",
+									"value": "true"
 								}
 							]
 						}
@@ -709,15 +224,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "239"
+							"value": "2994"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"ef-QtFfOEHartQuaBpOZpDmwSGzZ7c\""
+							"value": "W/\"bb2-vwNuD7Ia6ZBnOv+jFxlSZen4haE\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:24:48 GMT"
+							"value": "Thu, 02 Dec 2021 22:46:46 GMT"
 						},
 						{
 							"key": "Connection",
@@ -729,7 +244,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"id\": \"OIXt3DmJU0\",\n    \"name\": \"Catan\",\n    \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n    \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n    \"publisher\": \"KOSMOS\",\n    \"amazon_rank\": 133,\n    \"price\": \"22.00\"\n}"
+					"body": "{\n    \"games\": [\n        {\n            \"id\": \"OIXt3DmJU0\",\n            \"name\": \"Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n            \"publisher\": \"KOSMOS\",\n            \"amazon_rank\": 133,\n            \"price\": \"32.97\"\n        },\n        {\n            \"id\": \"EvYzPCnCGG\",\n            \"name\": \"Catan: 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/EvYzPCnCGG/catan-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 534,\n            \"price\": \"15.58\"\n        },\n        {\n            \"id\": \"NoWy3nPYfj\",\n            \"name\": \"Catan: Seafarers Expansion\",\n            \"url\": \"https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 2618,\n            \"price\": \"31.18\"\n        },\n        {\n            \"id\": \"E5TYKwLTf0\",\n            \"name\": \"Catan: Cities & Knights\",\n            \"url\": \"https://www.boardgameatlas.com/game/E5TYKwLTf0/catan-cities-and-knights-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257359245-51DYsPZcYyL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 4435,\n            \"price\": \"44.00\"\n        },\n        {\n            \"id\": \"Wp2pGHZHIO\",\n            \"name\": \"Catan: Seafarers 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/Wp2pGHZHIO/catan-seafarers-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254869479-51XMaRqBcJL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5113,\n            \"price\": \"20.40\"\n        },\n        {\n            \"id\": \"ULWQvi77f5\",\n            \"name\": \"Catan: Junior\",\n            \"url\": \"https://www.boardgameatlas.com/game/ULWQvi77f5/catan-junior\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1635861914971\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5265,\n            \"price\": \"17.99\"\n        },\n        {\n            \"id\": \"qiJzLWCvPB\",\n            \"name\": \"Catan: Explorers & Pirates\",\n            \"url\": \"https://www.boardgameatlas.com/game/qiJzLWCvPB/catan-explorers-and-pirates-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257884176-513ASwyUbTL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 8252,\n            \"price\": \"38.89\"\n        },\n        {\n            \"id\": \"tECB3ktBhP\",\n            \"name\": \"Catan: Cities & Knights 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/tECB3ktBhP/catan-cities-and-knights-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254849801-51V-pZNL3hL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 9375,\n            \"price\": \"24.00\"\n        },\n        {\n            \"id\": \"fz1hSbgUN2\",\n            \"name\": \"A Game of Thrones Catan: Brotherhood of the Watch\",\n            \"url\": \"https://www.boardgameatlas.com/game/fz1hSbgUN2/a-game-of-thrones-catan-brotherhood-of-the-watch\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324720093.jpg\",\n            \"publisher\": \"Fantasy Flight Games\",\n            \"amazon_rank\": 10434,\n            \"price\": \"54.37\"\n        },\n        {\n            \"id\": \"iSVnYdrsZQ\",\n            \"name\": \"Rivals for Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/iSVnYdrsZQ/rivals-for-catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1610427446373\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 16244,\n            \"price\": \"17.00\"\n        }\n    ]\n}"
 				}
 			]
 		},
@@ -743,7 +258,11 @@
 							"pm.test(\"response must be valid and have a body\", function () {\r",
 							"     pm.response.to.be.withBody;\r",
 							"     pm.response.to.be.json;\r",
-							"});"
+							"});\r",
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"if (!jsonData.cause)\r",
+							"    pm.collectionVariables.set(\"token\", jsonData[\"Created user\"][\"token\"]);"
 						],
 						"type": "text/javascript"
 					}
@@ -762,13 +281,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/user/create",
+					"raw": "{{baseURL}}/user",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
-						"user",
-						"create"
+						"user"
 					],
 					"query": [
 						{
@@ -795,13 +313,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/create",
+							"raw": "{{baseURL}}/user",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"user",
-								"create"
+								"user"
 							],
 							"query": [
 								{
@@ -826,15 +343,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "24"
+							"value": "103"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"18-BDuFpB9qgR3VZCVLDgHa4Xu4zPk\""
+							"value": "W/\"67-0ZLXnDa4+4Zd8ZmmBrhEdNY8OU0\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:22:50 GMT"
+							"value": "Thu, 02 Dec 2021 19:42:43 GMT"
 						},
 						{
 							"key": "Connection",
@@ -846,7 +363,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Created user\": \"12345\"\n}"
+					"body": "{\n    \"Created user\": {\n        \"userId\": \"12345\",\n        \"token\": \"944716df-96a8-442e-a3e6-834ac0dadde7\",\n        \"userName\": \"Paulão\"\n    }\n}"
 				}
 			]
 		},
@@ -867,11 +384,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"groupDescription\": \"This is a description.\"\r\n}",
+					"raw": "{\r\n    \"groupId\": \"NegG\",\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -879,15 +406,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/add",
+					"raw": "{{baseURL}}/user/:userId/groups",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						"add"
+						"groups"
 					],
 					"variable": [
 						{
@@ -905,7 +431,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"groupDescription\": \"This is a description.\"\r\n}",
+							"raw": "{\r\n    \"groupId\": \"NegG\",\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -913,15 +439,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/add",
+							"raw": "{{baseURL}}/user/:userId/groups",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								"add"
+								"groups"
 							],
 							"variable": [
 								{
@@ -945,15 +470,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "29"
+							"value": "127"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1d-5qWVehQDRn9STjoAK+mF6c9YiOY\""
+							"value": "W/\"7f-Ai/v8amlvBX+upeLo1D5hC4LRXU\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:23:42 GMT"
+							"value": "Thu, 02 Dec 2021 19:42:44 GMT"
 						},
 						{
 							"key": "Connection",
@@ -965,7 +490,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Created group\": \"FPS Games\"\n}"
+					"body": "{\n    \"Created group\": {\n        \"groupId\": \"NegG\",\n        \"groupName\": \"Negotiation games\",\n        \"groupDescription\": \"This is a group of negotiation games.\"\n    }\n}"
 				}
 			]
 		},
@@ -986,11 +511,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newGroupDescription\": \"This is a new description.\"\r\n}",
+					"raw": "{\r\n    \"newGroupName\": \"Negotiation and Economic Games\",\r\n    \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -998,20 +533,24 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/edit",
+					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						"edit"
+						"groups",
+						":groupId"
 					],
 					"variable": [
 						{
 							"key": "userId",
 							"value": "12345"
+						},
+						{
+							"key": "groupId",
+							"value": "NegG"
 						}
 					]
 				}
@@ -1024,7 +563,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"groupName\": \"FPS Games\",\r\n    \"newGroupName\": \"First-Person Shooter Games\",\r\n    \"newGroupDescription\": \"This is a new description.\"\r\n}",
+							"raw": "{\r\n    \"newGroupName\": \"Negotiation and Economic Games\",\r\n    \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1032,20 +571,24 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/edit",
+							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								"edit"
+								"groups",
+								":groupId"
 							],
 							"variable": [
 								{
 									"key": "userId",
 									"value": "12345"
+								},
+								{
+									"key": "groupId",
+									"value": "NegG"
 								}
 							]
 						}
@@ -1064,15 +607,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "45"
+							"value": "158"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"2d-uaD2eSrFT+fkHZw+lQrdK6cYyTU\""
+							"value": "W/\"9e-hvZBfJFNkC3bVR/CfdDZMk9f/5Q\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:23:50 GMT"
+							"value": "Thu, 02 Dec 2021 19:28:58 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1084,7 +627,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Edited group\": \"First-Person Shooter Games\"\n}"
+					"body": "{\n    \"Edited group\": {\n        \"groupId\": \"NegG\",\n        \"newGroupName\": \"Negotiation and Economic Games\",\n        \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\n    }\n}"
 				}
 			]
 		},
@@ -1105,18 +648,27 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/list",
+					"raw": "{{baseURL}}/user/:userId/groups",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						"list"
+						"groups"
 					],
 					"variable": [
 						{
@@ -1133,15 +685,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/list",
+							"raw": "{{baseURL}}/user/:userId/groups",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								"list"
+								"groups"
 							],
 							"variable": [
 								{
@@ -1165,15 +716,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "205"
+							"value": "122"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"cd-DDw5fBKQbqANDDsOTex3to//tRU\""
+							"value": "W/\"7a-N8/yrfPqoniUxk5jSzKgTWsSLfU\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:24:05 GMT"
+							"value": "Thu, 02 Dec 2021 19:39:26 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1185,7 +736,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"First-Person Shooter Games\": {\n        \"name\": \"First-Person Shooter Games\",\n        \"description\": \"This is a new description.\",\n        \"games\": {}\n    },\n    \"FPS Games\": {\n        \"name\": \"FPS Games\",\n        \"description\": \"This is a description.\",\n        \"games\": {}\n    }\n}"
+					"body": "{\n    \"NegG\": {\n        \"name\": \"Negotiation games\",\n        \"description\": \"This is a group of negotiation games.\",\n        \"games\": {\n            \"OIXt3DmJU0\": \"Catan\"\n        }\n    }\n}"
 				}
 			]
 		},
@@ -1206,19 +757,28 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
+					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						":groupName",
-						"delete"
+						"groups",
+						":groupId"
 					],
 					"variable": [
 						{
@@ -1226,8 +786,8 @@
 							"value": "12345"
 						},
 						{
-							"key": "groupName",
-							"value": "FPS Games"
+							"key": "groupId",
+							"value": "NegG"
 						}
 					]
 				}
@@ -1239,16 +799,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/delete",
+							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								":groupName",
-								"delete"
+								"groups",
+								":groupId"
 							],
 							"variable": [
 								{
@@ -1256,8 +815,8 @@
 									"value": "12345"
 								},
 								{
-									"key": "groupName",
-									"value": "FPS Games"
+									"key": "groupId",
+									"value": "NegG"
 								}
 							]
 						}
@@ -1276,15 +835,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "29"
+							"value": "153"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"1d-dCJd6bzQanMSbLkPKW85W0qh9/g\""
+							"value": "W/\"99-QzW9HZthXoTG3G723ysn98BMveQ\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:30:10 GMT"
+							"value": "Thu, 02 Dec 2021 19:23:28 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1296,7 +855,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Deleted group\": \"FPS Games\"\n}"
+					"body": "{\n    \"Deleted group\": {\n        \"groupId\": \"NegG\",\n        \"groupName\": \"Negotiation and Economic Games\",\n        \"groupDescription\": \"This is a group of negotiation and economic games.\"\n    }\n}"
 				}
 			]
 		},
@@ -1317,19 +876,28 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
+					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						":groupName",
-						"details"
+						"groups",
+						":groupId"
 					],
 					"variable": [
 						{
@@ -1337,8 +905,8 @@
 							"value": "12345"
 						},
 						{
-							"key": "groupName",
-							"value": "FPS Games"
+							"key": "groupId",
+							"value": "NegG"
 						}
 					]
 				}
@@ -1350,16 +918,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/details",
+							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								":groupName",
-								"details"
+								"groups",
+								":groupId"
 							],
 							"variable": [
 								{
@@ -1367,8 +934,8 @@
 									"value": "12345"
 								},
 								{
-									"key": "groupName",
-									"value": "FPS Games"
+									"key": "groupId",
+									"value": "NegG"
 								}
 							]
 						}
@@ -1387,15 +954,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "77"
+							"value": "93"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"4d-fRH41tacJJDPR6ObCh1vx0T5ym4\""
+							"value": "W/\"5d-TFoJv/PVmlnRDK6rT2tqAWffAXs\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:24:24 GMT"
+							"value": "Thu, 02 Dec 2021 19:39:15 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1407,7 +974,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"name\": \"FPS Games\",\n    \"description\": \"This is a description.\",\n    \"games\": [\n        \"Catan\"\n    ]\n}"
+					"body": "{\n    \"name\": \"Negotiation games\",\n    \"description\": \"This is a group of negotiation games.\",\n    \"games\": {}\n}"
 				}
 			]
 		},
@@ -1428,11 +995,21 @@
 				}
 			],
 			"request": {
-				"method": "PUT",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"gameName\": \"Catan\"\r\n}",
+					"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1440,16 +1017,16 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
+					"raw": "{{baseURL}}/user/:userId/groups/:groupId/games",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						":groupName",
-						"addGame"
+						"groups",
+						":groupId",
+						"games"
 					],
 					"variable": [
 						{
@@ -1457,8 +1034,8 @@
 							"value": "12345"
 						},
 						{
-							"key": "groupName",
-							"value": "FPS Games"
+							"key": "groupId",
+							"value": "NegG"
 						}
 					]
 				}
@@ -1467,11 +1044,11 @@
 				{
 					"name": "Add game to group",
 					"originalRequest": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"gameName\": \"Catan\"\r\n}",
+							"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1479,16 +1056,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/addGame",
+							"raw": "{{baseURL}}/user/:userId/groups/:groupId/games",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								":groupName",
-								"addGame"
+								"groups",
+								":groupId",
+								"games"
 							],
 							"variable": [
 								{
@@ -1496,8 +1073,8 @@
 									"value": "12345"
 								},
 								{
-									"key": "groupName",
-									"value": "FPS Games"
+									"key": "groupId",
+									"value": "NegG"
 								}
 							]
 						}
@@ -1516,15 +1093,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "22"
+							"value": "233"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"16-1k9D66VNb+lY4G7nin83WXs7bQg\""
+							"value": "W/\"e9-bWmkcgM/TuSoclaRVhv3fx/wJPw\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:24:18 GMT"
+							"value": "Thu, 02 Dec 2021 19:42:46 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1536,7 +1113,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Added game\": \"Catan\"\n}"
+					"body": "{\n    \"Added game\": {\n        \"id\": \"OIXt3DmJU0\",\n        \"name\": \"Catan\",\n        \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n        \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n        \"amazon_rank\": 133,\n        \"price\": \"32.97\"\n    }\n}"
 				}
 			]
 		},
@@ -1557,20 +1134,30 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
+					"raw": "{{baseURL}}/user/:userId/groups/:groupId/games/:gameId",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"user",
 						":userId",
-						"myGroups",
-						":groupName",
-						"removeGame",
-						":gameName"
+						"groups",
+						":groupId",
+						"games",
+						":gameId"
 					],
 					"variable": [
 						{
@@ -1578,12 +1165,12 @@
 							"value": "12345"
 						},
 						{
-							"key": "groupName",
-							"value": "FPS Games"
+							"key": "groupId",
+							"value": "NegG"
 						},
 						{
-							"key": "gameName",
-							"value": "Catan"
+							"key": "gameId",
+							"value": "OIXt3DmJU0"
 						}
 					]
 				}
@@ -1595,17 +1182,17 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/myGroups/:groupName/removeGame/:gameName",
+							"raw": "{{baseURL}}/user/:userId/groups/:groupId/games/:gameId",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"user",
 								":userId",
-								"myGroups",
-								":groupName",
-								"removeGame",
-								":gameName"
+								"groups",
+								":groupId",
+								"games",
+								":gameId"
 							],
 							"variable": [
 								{
@@ -1613,12 +1200,12 @@
 									"value": "12345"
 								},
 								{
-									"key": "groupName",
-									"value": "FPS Games"
+									"key": "groupId",
+									"value": "NegG"
 								},
 								{
-									"key": "gameName",
-									"value": "Catan"
+									"key": "gameId",
+									"value": "OIXt3DmJU0"
 								}
 							]
 						}
@@ -1637,15 +1224,15 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "24"
+							"value": "235"
 						},
 						{
 							"key": "ETag",
-							"value": "W/\"18-o8wkwY1NSNGxopsdn3cHfEleWLA\""
+							"value": "W/\"eb-ligL3vT0Ciwo1UX9x5NVUSn3hmM\""
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 23 Nov 2021 19:29:58 GMT"
+							"value": "Thu, 02 Dec 2021 19:30:12 GMT"
 						},
 						{
 							"key": "Connection",
@@ -1657,7 +1244,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"Removed game\": \"Catan\"\n}"
+					"body": "{\n    \"Removed game\": {\n        \"id\": \"OIXt3DmJU0\",\n        \"name\": \"Catan\",\n        \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n        \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n        \"amazon_rank\": 133,\n        \"price\": \"32.97\"\n    }\n}"
 				}
 			]
 		}
@@ -1686,6 +1273,10 @@
 		{
 			"key": "baseURL",
 			"value": "http://localhost:8888"
+		},
+		{
+			"key": "token",
+			"value": ""
 		}
 	]
 }
