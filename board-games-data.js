@@ -71,25 +71,25 @@ function makeGameObj(gameInfo) {
 
 
 /**
- * Gets a game by its name.
- * @param {String} name
+ * Gets a list of games by a given name.
+ * @param {String} gameName
  * @throws error NOT_FOUND if no game was found with the given name
- * @returns promise with the game object response
+ * @returns promise with a list of game objects
  */
-async function searchGameByName(name) {
-	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + name;
+async function searchGamesByName(gameName) {
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + '&name=' + gameName;
 
 	const res = await do_fetch(game_uri);
 
 	if (res.games.length == 0 || res.count == 0)
-		throw errors.NOT_FOUND({ name });
+		throw errors.NOT_FOUND({ name: gameName });
 
-	return makeGameObj(res.games[0]);
+	return Object.values(res.games.map(game => makeGameObj(game)));
 }
 
 
 module.exports = {
-	searchGameByName,
+	searchGamesByName,
 	getStatusClass,
 	makeGameObj,
 	do_fetch

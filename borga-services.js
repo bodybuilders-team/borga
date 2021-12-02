@@ -42,7 +42,7 @@ module.exports = function (data_ext, data_int) {
 			throw errors.UNAUTHENTICATED('Please insert your user token');
 		}
 
-		if(userId != data_int.tokenToUserID(token)) {
+		if (userId != data_int.tokenToUserID(token)) {
 			throw errors.UNAUTHENTICATED('Please insert a valid user token');
 		}
 	}
@@ -58,13 +58,12 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Gets a game by its name.
+	 * Gets a list of games by a given name.
 	 * @param {String} gameName
-	 * @throws error NOT_FOUND if no game was found with the given name
-	 * @returns promise with the game object response
+	 * @returns promise with a list of game objects
 	 */
-	async function searchGameByName(gameName) {
-		return await data_ext.searchGameByName(gameName);
+	async function searchGamesByName(gameName) {
+		return await data_ext.searchGamesByName(gameName);
 	}
 
 
@@ -72,7 +71,7 @@ module.exports = function (data_ext, data_int) {
 	 * Creates a new user by its id and name.
 	 * @param {String} userId 
 	 * @param {String} username 
-	 * @returns a promise with the an object with the new user information
+	 * @returns a promise with an object with the new user information
 	 */
 	async function createNewUser(userId, username) {
 		checkBadRequest({
@@ -178,7 +177,7 @@ module.exports = function (data_ext, data_int) {
 	async function addGameToGroup(userId, token, groupName, gameName) {
 		checkAuthentication(userId, token);
 
-		const game = await data_ext.searchGameByName(gameName);
+		const game = await data_ext.searchGamesByName(gameName);
 
 		return await data_int.addGameToGroup(userId, groupName, game);
 	}
@@ -201,7 +200,7 @@ module.exports = function (data_ext, data_int) {
 
 	return {
 		getPopularGames,
-		searchGameByName,
+		searchGamesByName,
 
 		createNewUser,
 		createGroup,

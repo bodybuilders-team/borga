@@ -29,23 +29,16 @@ const requests = {
 };
 
 
-async function searchGameByName(gameName) {
+async function searchGamesByName(gameName) {
     const gameId = requests[gameName];
-    return await getGameById(gameId);
-}
-
-
-async function getGameById(gameId) {
-    const game = gameId && games[gameId];
-    if (!game) {
-        throw errors.NOT_FOUND(gameId);
+    if(!gameId){
+        throw errors.NOT_FOUND({ gameName })
     }
-    return game;
+    return games[gameId];
 }
 
 
 module.exports = {
     games,
-    searchGameByName,
-    getGameById
+    searchGamesByName
 };

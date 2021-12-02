@@ -76,11 +76,11 @@ module.exports = function (services) {
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
-	async function searchGameByName(req, res) {
+	async function searchGamesByName(req, res) {
 		try {
 			const gameName = req.params.gameName;
 
-			const game = await services.searchGameByName(gameName);
+			const game = await services.searchGamesByName(gameName);
 			res.json(game);
 		} catch (err) {
 			onError(res, err);
@@ -253,7 +253,7 @@ module.exports = function (services) {
 	router.get('/games/popular', getPopularGames);
 
 	// Search games by name
-	router.get('/games/search/:gameName', searchGameByName);
+	router.get('/games/search/:gameName', searchGamesByName);
 
 
 	// Create new user

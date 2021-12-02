@@ -42,12 +42,22 @@ test("makeGameObj returns a game obj created from another object", () => {
 			mentions: 1000
 		}
 	))
-		.toEqual(mockDataExt.games["I9azM1kA6l"]);
+		.toEqual(
+			{
+				id: "I9azM1kA6l",
+				name: "Skyrim",
+				url: "games.net/skyrim",
+				image: "skyrim.jpg",
+				publisher: "Bethesda Game Studios",
+				amazon_rank: 1,
+				price: '420.69'
+			}
+		);
 });
 
 
 test("getGameByName return correct game object of game with name \"Skyrim\"", async () => {
-	expect(await mockDataExt.searchGameByName("Skyrim"))
+	expect(await mockDataExt.searchGamesByName("Skyrim"))
 		.toEqual(mockDataExt.games["I9azM1kA6l"]);
 });
 

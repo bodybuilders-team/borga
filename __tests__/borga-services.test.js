@@ -34,39 +34,44 @@ const resetAllGroups = async () => dataMem.resetAllGroups();
 
 //-- Search tests --
 describe("Search tests", () => {
-    test('Search game without param', async () => {
-        const services = servicesBuilder();
+    test('Search games without gameName param', async () => {
+        const services = servicesBuilder({
+            searchGamesByName: async () => {
+                throw errors.NOT_FOUND("No gameName parameter");
+            }
+        });
+
         try {
-            await services.searchGameByName();
+            await services.searchGamesByName();
         }
         catch (err) {
             expect(err.name).toEqual('NOT_FOUND');
             return;
         }
-        throw new Error("shouldn't return from searchGameByName with no params");
+        throw new Error("shouldn't return from searchGamesByName with no params");
     });
 
 
     test('Search for inexistent game', async () => {
         const services = servicesBuilder({
-            searchGameByName: async () => {
-                throw errors.NOT_FOUND("no game found");
+            searchGamesByName: async (gameName) => {
+                throw errors.NOT_FOUND({ gameName });
             }
         });
 
         try {
-            await services.searchGameByName('inexistent game');
+            await services.searchGamesByName('inexistent game');
         }
         catch (err) {
             expect(err.name).toEqual('NOT_FOUND');
             return;
         }
-        throw new Error("shouldn't return from searchGameByName with inexistent game");
+        throw new Error("shouldn't return from searchGamesByName with inexistent game");
     });
 
 
     test('Search for existing game', async () => {
-        const res = await defaultServices.searchGameByName('Catan');
+        const res = await defaultServices.searchGamesByName('Catan');
         expect(res).toBeDefined();
         expect(res).toEqual(mockDataExt.games['OIXt3DmJU0']);
     });
