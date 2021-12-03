@@ -92,7 +92,7 @@ describe("User tests", () => {
             });
     });
 
-    test("createNewUser creates user, returning id of the new user", () => {
+    test("createNewUser creates an user, returning id of the new user", () => {
         const createdUser = dataMem.createNewUser("1234567", userName1);
 
         expect(createdUser.userId).toEqual("1234567");
@@ -127,12 +127,12 @@ describe("Group tests", () => {
             });
     });
 
-    test("createGroupObj creates a group object from a name and a description", () => {
+    test("createGroupObj creates a group object given a name and a description", () => {
         expect(dataMem.createGroupObj(groupName1, groupDescription1))
             .toEqual(groupObj1);
     });
 
-    test("createGroup returns name of the created group", () => {
+    test("createGroup returns the name of the created group", () => {
         expect(dataMem.createGroup(userId1, "ABC", groupName1, groupDescription1))
             .toEqual({
                 groupId: "ABC",
@@ -160,7 +160,7 @@ describe("Group tests", () => {
             });
     });
 
-    test("listUserGroups returns array containing all group objects", () => {
+    test("listUserGroups returns an array containing all group objects", () => {
         expect(dataMem.listUserGroups(userId1))
             .toEqual({ [groupId1]: groupObj1 });
     });
@@ -207,7 +207,7 @@ describe("Game tests", () => {
             .toEqual({ [gameId1]: game1 });
     });
 
-    test("addGameToGroup adds game to a group, returning name of the added game", () => {
+    test("addGameToGroup adds a game to a group, returning the name of the added game", () => {
         expect(dataMem.addGameToGroup(userId1, groupId1, game1))
             .toEqual(game1);
 
@@ -244,7 +244,7 @@ describe('Utils tests', () => {
             });
     });
 
-    test("getGroupFromUser returns a group object from a user", () => {
+    test("getGroupFromUser returns a group object from an user", () => {
         expect(dataMem.getGroupFromUser(userId1, groupId1))
             .toEqual(groupObj1);
     });

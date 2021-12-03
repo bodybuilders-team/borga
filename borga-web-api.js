@@ -10,7 +10,7 @@ const errors = require('./borga-errors');
 module.exports = function (services) {
 
 	/**
-	 * Searches for an identification Bearer token in the request's Authorization Header
+	 * Searches for an identification Bearer token in the request's Authorization Header.
 	 * @param {Object} req 
 	 * @returns the token found if it´s a Bearer Token. 
 	 */
@@ -27,7 +27,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response an object containing the cause of the error
+	 * Sends as response an object containing the cause of the error.
 	 * @param {Object} res 
 	 * @param {Object} err
 	 */
@@ -57,7 +57,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response an object containing the most popular games among all users
+	 * Sends as response an object containing the most popular games among all users.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -72,8 +72,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response an object containing an array of games obtained by the provided name 
-	 * and other optional filter params
+	 * Sends as response an object containing an array of games obtained given a name and other optional filter params.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -93,7 +92,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Creates a new user. In case of success, sends as response an object with the new user's information
+	 * Creates a new user. In case of success, sends as response an object with the new user's information.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -111,7 +110,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Creates a new group. In case of success, sends as response an object with the name of the created group
+	 * Creates a new group. In case of success, sends as response an object with the name of the created group.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -132,7 +131,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Edits a group with the specified parameters. In case of success, sends as response an object with the new name of the edited group
+	 * Edits a group with the specified parameters. In case of success, sends as response an object with the new name of the edited group.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -171,7 +170,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Deletes a group. In case of success, sends as response an object with the name of the deleted group
+	 * Deletes a group. In case of success, sends as response an object with the name of the deleted group.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -190,7 +189,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Sends as response an object containing the details of the specified group 
+	 * Sends as response an object containing the details of the specified group. 
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -209,7 +208,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Adds a game to a group. In case of success, sends as response an object with the name of added game
+	 * Adds a game to a group. In case of success, sends as response an object with the name of the added game.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -229,7 +228,7 @@ module.exports = function (services) {
 
 
 	/**
-	 * Removes a game from a group. In case of success, sends as response an object with the name of the removed game
+	 * Removes a game from a group. In case of success, sends as response an object with the name of the removed game.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -254,38 +253,31 @@ module.exports = function (services) {
 	router.use(express.json());
 
 
-	// Get the list of the most popular games
+	// Games 
 	router.get('/games/popular', getPopularGames);
 
-	// Search games by name
 	router.get('/games/search', searchGamesByName);
 
 
-	// Create new user
+	// User 
 	router.post('/user', createNewUser);
 
-	// Create group providing its name and description
 	router.post('/user/:userId/groups', createGroup);
 
-	// Edit group by changing its name and description
 	router.post('/user/:userId/groups/:groupId', editGroup);
 
-	// List all groups
 	router.get('/user/:userId/groups', listGroups);
 
-	// Delete a group
 	router.delete('/user/:userId/groups/:groupId', deleteGroup);
 
-	// Get the details of a group, with its name, description and names of the included games
 	router.get('/user/:userId/groups/:groupId', getGroupDetails);
 
-	// Add a game to a group
 	router.post('/user/:userId/groups/:groupId/games', addGameToGroup);
 
-	// Remove a game from a group
 	router.delete('/user/:userId/groups/:groupId/games/:gameId', removeGameFromGroup);
 
 
+	// URI Not Found
 	router.use(function (req, res) {
 		res.status(404).send(errors.NOT_FOUND(`Cannot do ${req.method} with ${req.path}.`))
 	});

@@ -30,7 +30,7 @@ function getStatusClass(statusCode) {
  * @returns promise with a json response
  */
 async function do_fetch(uri) {
-	const res = await fetch(uri).catch(err => { throw errors.EXT_SVC_FAIL(err); })
+	const res = await fetch(uri).catch(err => { throw errors.EXT_SVC_FAIL(err); });
 	if (res.ok)
 		return res.json();
 
@@ -44,12 +44,11 @@ async function do_fetch(uri) {
 					case HTTP_CLIENT_ERROR:
 						throw errors.NOT_FOUND(uri);
 					default:
-						throw errors.FAIL(info)
+						throw errors.FAIL(info);
 				}
 			});
 	}
 }
-
 
 
 /**
@@ -76,7 +75,7 @@ function makeGameObj(gameInfo) {
  * @param {Number} limit
  * @param {String} order_by
  * @param {Boolean} ascending
- * @throws error NOT_FOUND if no game was found with the given name
+ * @throws error NOT_FOUND if no game was found with the given query
  * @returns promise with an array of game objects
  */
 async function searchGamesByName(gameName, limit, order_by, ascending) {
@@ -91,9 +90,8 @@ async function searchGamesByName(gameName, limit, order_by, ascending) {
 }
 
 
-
 /**
- * Gets a game by a given id.
+ * Gets a game given an id.
  * @param {String} gameId
  * @throws error NOT_FOUND if no game was found with the given id
  * @returns promise with the game object

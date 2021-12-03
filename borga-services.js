@@ -7,17 +7,22 @@ const errors = require('./borga-errors');
 module.exports = function (data_ext, data_int) {
 
 	/**
-	 * Checks if a bad request is to be thrown, given properties (from body's json).
+	 * Checks if a bad request is to be thrown, given parameters and properties (from body's json).
 	 * Bad request is thrown when:
-	 * - a needed property is missing;
+	 * - a required parameter or property is missing;
 	 * - the type of a property is different from the expected.
-	 * 
-	 * All the information (multiple properties can fail simultaneously) is thrown in a single json.
+	 *
+	 * All the information (multiple parameters or properties can fail simultaneously) is thrown in a single json.
+	 * @param {Object} params
 	 * @param {Object} properties 
-	 * @throws BAD_REQUEST if needed parameters/properties are missing and/or the types of properties are different from the expected
+	 * @throws BAD_REQUEST if required parameters/properties are missing and/or the types of properties are different from the expected.
 	 */
-	function checkBadRequest(properties) {
+	function checkBadRequest(params, properties) {
 		const info = {};
+
+		for (let param in params) {
+			if (!params[param]) info[param] = "parameter missing";
+		}
 
 		for (let property in properties) {
 			const value = properties[property].value;
@@ -32,7 +37,7 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Checks if token and userId are associated.
+	 * Checks if both token and userId are associated.
 	 * @param {String} token
 	 * @param {String} userId
 	 * @throws UNAUTHENTICATED if the token is invalid
@@ -56,7 +61,7 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Gets an array of games by a given name and other optional filter params.
+	 * Gets an array of games given a name and other optional filter params.
 	 * @param {String} gameName
 	 * @param {Number} limit
 	 * @param {String} order_by
@@ -64,18 +69,19 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with an array of game objects
 	 */
 	async function searchGamesByName(gameName, limit, order_by, ascending) {
+		checkBadRequest({ gameName }, {});
 		return await data_ext.searchGamesByName(gameName, limit, order_by, ascending);
 	}
 
 
 	/**
-	 * Creates a new user by its id and name.
+	 * Creates a new user given its id and name.
 	 * @param {String} userId 
 	 * @param {String} userName 
 	 * @returns a promise with an object with the new user information
 	 */
 	async function createNewUser(userId, userName) {
-		checkBadRequest({
+		checkBadRequest({}, {
 			userId: { value: userId, type: 'string' },
 			userName: { value: userName, type: 'string' }
 		});
@@ -85,16 +91,16 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Creates a new group of the user.
+	 * Adds a new group to the user.
 	 * @param {String} token 
 	 * @param {String} userId
 	 * @param {String} groupId
 	 * @param {String} groupName 
 	 * @param {String} groupDescription 
-	 * @returns promise with an object with the new group information
+	 * @returns promise with an object containing the new group information
 	 */
 	async function createGroup(token, userId, groupId, groupName, groupDescription) {
-		checkBadRequest({
+		checkBadRequest({}, {
 			groupId: { value: groupId, type: 'string' },
 			groupName: { value: groupName, type: 'string' },
 			groupDescription: { value: groupDescription, type: 'string' }
@@ -115,7 +121,7 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with an object with the edited group information
 	 */
 	async function editGroup(token, userId, groupId, newGroupName, newGroupDescription) {
-		checkBadRequest({
+		checkBadRequest({}, {
 			newGroupName: { value: newGroupName, type: 'string' },
 			newGroupDescription: { value: newGroupDescription, type: 'string' }
 		});
@@ -126,7 +132,7 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * List all existing groups inside the user.
+	 * Lists all existing user groups.
 	 * @param {String} token 
 	 * @param {String} userId
 	 * @returns promise with object containing all group objects
@@ -139,7 +145,7 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Deletes the group of the specified groupId.
+	 * Deletes the group with the given groupId.
 	 * @param {String} token 
 	 * @param {String} userId
 	 * @param {String} groupId 
@@ -153,10 +159,10 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Gets the an object containing the group details.
+	 * Gets an object containing the group details.
 	 * @param {String} token
 	 * @param {String} userId
-	 * @param {Object} groupId
+	 * @param {String} groupId
 	 * @returns promise an object containing the group details
 	 */
 	async function getGroupDetails(token, userId, groupId) {
@@ -173,8 +179,8 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} token
 	 * @param {String} userId
 	 * @param {String} groupId 
-	 * @param {Object} gameId
-	 * @return promise with the added gameo object
+	 * @param {String} gameId
+	 * @return a promise with the added game object
 	 */
 	async function addGameToGroup(token, userId, groupId, gameId) {
 		checkAuthentication(token, userId);
@@ -186,7 +192,7 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Removes a game from a group providing its name.
+	 * Removes a game from a group given its name.
 	 * @param {String} token 
 	 * @param {String} userId
 	 * @param {String} groupId 
@@ -213,4 +219,4 @@ module.exports = function (data_ext, data_int) {
 		addGameToGroup,
 		removeGameFromGroup,
 	};
-}
+};

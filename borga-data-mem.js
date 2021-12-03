@@ -24,7 +24,6 @@ let users = {
  */
 const games = {};
 
-
 /**
  * Object containing the association between user token and userId: "token": "userId".
  */
@@ -33,7 +32,6 @@ let tokens = {
 	'3e39bce8-07d1-4c05-9ee3-5587e6b8e2e7': "A48287",
 	'5d389af1-06db-4401-8aef-36d8d6428f31': "A48309"
 };
-
 
 const numberOfPopularGames = 20;
 
@@ -65,21 +63,21 @@ function getPopularGames() {
 
 
 /**
- * Creates a new user by its id and name.
+ * Creates a new user given its id and name.
  * @param {String} userId 
  * @param {String} userName 
  * @returns an object with the new user information
- * @throws ALREADY_EXISTS if the userId already exists
+ * @throws ALREADY_EXISTS if the user with userId already exists
  */
 function createNewUser(userId, userName) {
 	if (users[userId]) throw errors.ALREADY_EXISTS({ userId });
 
-	const token = crypto.randomUUID()
+	const token = crypto.randomUUID();
 	tokens[token] = userId;
 
 	users[userId] = createUserObj(userName);
 
-	return { userId, token, userName }
+	return { userId, token, userName };
 }
 
 
@@ -87,16 +85,17 @@ function createNewUser(userId, userName) {
 
 
 /**
- * Creates a new group of the user.
+ * Adds a new group to the user.
  * @param {String} userId 
  * @param {String} groupId 
  * @param {String} groupName 
  * @param {String} groupDescription 
  * @returns an object with the new group information
- * @throws ALREADY_EXISTS if the group already exists
+ * @throws ALREADY_EXISTS if the user already has a group with the given groupId
  */
 function createGroup(userId, groupId, groupName, groupDescription) {
-	if (getUser(userId).groups[groupId]) throw errors.ALREADY_EXISTS({ groupId })
+	if (getUser(userId).groups[groupId]) throw errors.ALREADY_EXISTS({ groupId });
+
 	return addGroupToUser(userId, groupId, createGroupObj(groupName, groupDescription));
 }
 
@@ -119,7 +118,7 @@ function editGroup(userId, groupId, newGroupName, newGroupDescription) {
 
 
 /**
- * List all existing groups inside the user.
+ * Lists all user groups.
  * @param {String} userId 
  * @returns object containing all group objects
  */
@@ -129,7 +128,7 @@ function listUserGroups(userId) {
 
 
 /**
- * Deletes the group of the specified groupId.
+ * Deletes the group with the specified groupId.
  * @param {String} userId 
  * @param {String} groupId 
  * @returns an object with the deleted group information
@@ -159,7 +158,7 @@ function getGroupDetails(groupObj) {
  * @param {String} userId 
  * @param {String} groupId 
  * @param {Object} gameObj
- * @return the added name
+ * @return the added game object
  */
 function addGameToGroup(userId, groupId, gameObj) {
 	const gameId = gameObj.id;
@@ -170,11 +169,11 @@ function addGameToGroup(userId, groupId, gameObj) {
 
 
 /**
- * Removes a game from a group providing its id.
+ * Removes a game from a group given its id.
  * @param {String} userId 
  * @param {String} groupId 
  * @param {String} gameId
- * @return the removed game 
+ * @return the removed game object
  */
 function removeGameFromGroup(userId, groupId, gameId) {
 	const game = getGameFromGroup(userId, groupId, gameId);
@@ -188,9 +187,9 @@ function removeGameFromGroup(userId, groupId, gameId) {
 
 
 /**
- * Return the userId associated with the provided token.
+ * Return the userId associated with the given token.
  * @param {String} token 
- * @returns the userId associated with the provided token
+ * @returns the userId associated with the given token
  */
 function tokenToUserId(token) {
 	return tokens[token];
@@ -201,7 +200,7 @@ function tokenToUserId(token) {
 
 
 /**
- * Creates a new user object providing its name.
+ * Creates a new user object given its name.
  * @param {String} userName 
  * @returns the user object 
  */
@@ -214,7 +213,7 @@ function createUserObj(userName) {
 
 
 /**
- * Creates a new group providing its name and description.
+ * Creates a new group given its name and description.
  * @param {String} groupName 
  * @param {String} groupDescription 
  * @returns the group object 
@@ -229,7 +228,7 @@ function createGroupObj(groupName, groupDescription) {
 
 
 /**
- * Adds a new group to the groups object list inside the user.
+ * Adds a new group to the user.
  * @param {String} userId
  * @param {String} groupId
  * @param {Object} groupObj 
@@ -242,7 +241,7 @@ function addGroupToUser(userId, groupId, groupObj) {
 
 
 /**
- * Gets the user of the specified userId.
+ * Gets the user with the given userId.
  * @param {String} userId
  * @returns the user object
  * @throws NOT_FOUND if the user was not found
@@ -255,7 +254,7 @@ function getUser(userId) {
 
 
 /**
- * Gets the group of the specified groupId and userId.
+ * Gets the group with the given groupId and userId.
  * @param {String} userId
  * @param {String} groupId 
  * @returns the group object
@@ -269,7 +268,7 @@ function getGroupFromUser(userId, groupId) {
 
 
 /**
- * Gets the game of the specified gameId.
+ * Gets the game with the given gameId.
  * @param {String} userId
  * @param {String} groupId
  * @param {String} gameId
