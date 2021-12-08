@@ -7,28 +7,28 @@ const errors = require('./borga-errors');
 module.exports = function (data_ext, data_int) {
 
 	/**
-	 * Checks if a bad request is to be thrown, given parameters and properties (from body's json).
+	 * Checks if a bad request is to be thrown, given query parameters and properties (from body's json).
 	 * Bad request is thrown when:
 	 * - a required parameter or property is missing;
 	 * - the type of a property is different from the expected.
 	 *
 	 * All the information (multiple parameters or properties can fail simultaneously) is thrown in a single json.
-	 * @param {Object} params
+	 * @param {Object} query_params
 	 * @param {Object} properties 
 	 * @throws BAD_REQUEST if required parameters/properties are missing and/or the types of properties are different from the expected.
 	 */
-	function checkBadRequest(params, properties) {
+	function checkBadRequest(query_params, properties) {
 		const info = {};
 
-		for (let param in params) {
-			if (!params[param]) info[param] = "parameter missing";
+		for (const param in query_params) {
+			if (!query_params[param]) info[param] = "required parameter missing";
 		}
 
-		for (let property in properties) {
+		for (const property in properties) {
 			const value = properties[property].value;
 			const type = properties[property].type;
 
-			if (!value) info[property] = "property missing";
+			if (!value) info[property] = "required property missing";
 			else if (typeof value !== type) info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
 		}
 

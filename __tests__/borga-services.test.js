@@ -38,16 +38,17 @@ const CreateGroup1 = async () => dataMem.createGroup(userId1, groupId1, groupNam
 //-- Search tests --
 describe("Search tests", () => {
     test('Search games without gameName param', async () => {
-        const services = servicesBuilder({
+        const services = {
             searchGamesByName: async () => {
                 throw errors.NOT_FOUND("No gameName parameter");
             }
-        });
+        };
 
         try {
             await services.searchGamesByName();
         }
         catch (err) {
+            console.log(err.message)
             expect(err.name).toEqual('NOT_FOUND');
             return;
         }
@@ -56,11 +57,11 @@ describe("Search tests", () => {
 
 
     test('Search for inexistent game', async () => {
-        const services = servicesBuilder({
+        const services = {
             searchGamesByName: async (gameName) => {
                 throw errors.NOT_FOUND({ gameName });
             }
-        });
+        };
 
         try {
             await services.searchGamesByName('inexistent game');

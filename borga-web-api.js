@@ -57,6 +57,54 @@ module.exports = function (services) {
 
 
 	/**
+	 * Validates a request, checking its query parameters and/or body properties, given a schema.
+	 * @param {Object} schema 
+	 * @returns middleware function
+	 */
+	function validateRequest(schema) {
+		return (req, res, next) => {
+			try {
+				const info = {};
+
+				if (schema.query) {
+					for (const i in schema.query.required) {
+						const param = schema.query.required[i];
+						if (!req.query[param]) info[param] = "required parameter missing";
+					}
+
+					for (const param in req.query) {
+						if (!schema.query.params.includes(param)) info[param] = "unknown query parameter";
+					}
+				}
+
+				if (schema.body) {
+					for (const property in schema.body.properties) {
+						const value = req.body[property]
+						const type = schema.body.properties[property].type
+						const required = schema.body.properties[property].required
+
+						if (required && !value) info[property] = "required property missing";
+						else if (value && typeof value !== type) info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
+					}
+
+					for (const property in req.body) {
+						if (!schema.body.properties[property]) info[property] = "unknown body property";
+					}
+				}
+
+
+				if (Object.keys(info).length > 0) throw errors.BAD_REQUEST(info);
+
+				next();
+			}
+			catch (err) {
+				onError(res, err)
+			}
+		}
+	}
+
+
+	/**
 	 * Sends as response an object containing the most popular games among all users.
 	 * @param {Object} req 
 	 * @param {Object} res 
@@ -99,9 +147,9 @@ module.exports = function (services) {
 	async function createNewUser(req, res) {
 		try {
 			const userId = req.body.userId;
-			const username = req.body.username;
+			const userName = req.body.userName;
 
-			const userInfo = await services.createNewUser(userId, username);
+			const userInfo = await services.createNewUser(userId, userName);
 			res.json({ "Created user": userInfo });
 		} catch (err) {
 			onError(res, err);
@@ -256,15 +304,41 @@ module.exports = function (services) {
 	// Games 
 	router.get('/games/popular', getPopularGames);
 
-	router.get('/games/search', searchGamesByName);
-
+	router.get('/games/search', validateRequest({
+		query: {
+			params: ["gameName", "limit", "order_by", "ascending"],
+			required: ["gameName"]
+		}
+	}), searchGamesByName);
 
 	// User 
-	router.post('/user', createNewUser);
+	router.post('/user', validateRequest({
+		body: {
+			properties: {
+				userId: { type: "string", required: true },
+				userName: { type: "string", required: true }
+			}
+		}
+	}), createNewUser);
 
-	router.post('/user/:userId/groups', createGroup);
+	router.post('/user/:userId/groups', validateRequest({
+		body: {
+			properties: {
+				groupId: { type: "string", required: true },
+				groupName: { type: "string", required: true },
+				groupDescription: { type: "string", required: true }
+			}
+		}
+	}), createGroup);
 
-	router.post('/user/:userId/groups/:groupId', editGroup);
+	router.post('/user/:userId/groups/:groupId', validateRequest({
+		body: {
+			properties: {
+				newGroupName: { type: "string", required: true },
+				newGroupDescription: { type: "string", required: true }
+			}
+		}
+	}), editGroup);
 
 	router.get('/user/:userId/groups', listGroups);
 
@@ -272,7 +346,13 @@ module.exports = function (services) {
 
 	router.get('/user/:userId/groups/:groupId', getGroupDetails);
 
-	router.post('/user/:userId/groups/:groupId/games', addGameToGroup);
+	router.post('/user/:userId/groups/:groupId/games', validateRequest({
+		body: {
+			properties: {
+				gameId: { type: "string", required: true }
+			}
+		}
+	}), addGameToGroup);
 
 	router.delete('/user/:userId/groups/:groupId/games/:gameId', removeGameFromGroup);
 
