@@ -165,7 +165,7 @@
                   "userId": {
                     "type": "string"
                   },
-                  "username": {
+                  "userName": {
                     "type": "string"
                   }
                 }

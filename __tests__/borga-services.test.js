@@ -48,7 +48,6 @@ describe("Search tests", () => {
             await services.searchGamesByName();
         }
         catch (err) {
-            console.log(err.message)
             expect(err.name).toEqual('NOT_FOUND');
             return;
         }

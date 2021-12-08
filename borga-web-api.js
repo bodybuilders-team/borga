@@ -49,7 +49,7 @@ module.exports = function (services) {
 				res.status(502);
 				break;
 			default:
-				console.log(err)
+				console.log(err);
 				res.status(500);
 		}
 		res.json({ cause: err });
@@ -79,9 +79,9 @@ module.exports = function (services) {
 
 				if (schema.body) {
 					for (const property in schema.body.properties) {
-						const value = req.body[property]
-						const type = schema.body.properties[property].type
-						const required = schema.body.properties[property].required
+						const value = req.body[property];
+						const type = schema.body.properties[property].type;
+						const required = schema.body.properties[property].required;
 
 						if (required && !value) info[property] = "required property missing";
 						else if (value && typeof value !== type) info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
@@ -98,7 +98,7 @@ module.exports = function (services) {
 				next();
 			}
 			catch (err) {
-				onError(res, err)
+				onError(res, err);
 			}
 		}
 	}
