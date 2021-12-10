@@ -1,0 +1,9 @@
+h1::before {
+	content: '';
+	padding-right: 48px;
+	background-image: url(/public/table-games.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+body {margin:10px;padding: 10px;}

@@ -1,0 +1,36 @@
+<h1>{{header}}</h1>
+
+{{#if query}}
+<p>Query: {{query}}</p>
+{{/if}}
+
+{{#if game}}
+<table class="table table-bordered">
+    <tr>
+        <td>Name:</td>
+        <td><a href={{game.url}}>{{game.name}}</a></td>
+    </tr>
+    <tr>
+        <td>ID:</td>
+        <td>{{game.id}}</td>
+    </tr>
+    <tr>
+        <td>Publisher:</td>
+        <td>{{game.publisher}}</td>
+    </tr>
+    <tr>
+        <td>Amazon Rank:</td>
+        <td>{{game.amazon_rank}}</td>
+    </tr>
+    <tr>
+        <td>Price:</td>
+        <td>{{game.price}}</td>
+    </tr>
+</table>
+<img src={{game.image}} alt="Game Image">
+
+{{/if}}
+
+{{#if error}}
+<p><strong>ERROR:</strong> {{error}}</p>
+{{/if}}
