@@ -1,6 +1,9 @@
 <h1>Find a Game</h1>
 <form action="/game" method="GET">
-    <label for="txtQuery">Query:</label>
-    <input type="text" id="txtQuery" name="gameName">
-    <input type="submit" value="Search">
+    <div class="form-group">
+        <label for="txtQuery">Game Name:</label>
+        <input type="text" id="txtQuery" name="gameName" placeholder="Enter Game Name">
+        <small id="emailHelp" class="form-text text-muted">Example: Catan, Monopoly, etc</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>

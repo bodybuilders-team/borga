@@ -6,4 +6,23 @@ h1::before {
 	background-repeat: no-repeat;
 }
 
-body {margin:10px;padding: 10px;}
+body {
+	margin:10px;
+	padding: 10px;
+}
+
+.game-image{
+	max-width: 200px;
+  	height: auto;
+}
+
+table {
+    table-layout: auto;
+    max-width: 600px;
+}
+
+.vertical-center {
+	display: table-cell;
+	margin: auto;
+	vertical-align: middle;
+}

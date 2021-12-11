@@ -16,7 +16,8 @@ const crypto = require('crypto');
 let users = {
 	"A48280": createUserObj("André Jesus"),
 	"A48287": createUserObj("Nyckollas Brandão"),
-	"A48309": createUserObj("André Santos")
+	"A48309": createUserObj("André Santos"),
+	"guestId": createUserObj("guest")
 };
 
 /**
@@ -30,7 +31,8 @@ const games = {};
 let tokens = {
 	'4869fdf7-0e62-46a2-872c-f0dc60fc2c81': "A48280",
 	'3e39bce8-07d1-4c05-9ee3-5587e6b8e2e7': "A48287",
-	'5d389af1-06db-4401-8aef-36d8d6428f31': "A48309"
+	'5d389af1-06db-4401-8aef-36d8d6428f31': "A48309",
+	'asasfscdf1-06db-4537-8aef-38845dfgd8': "guestId"
 };
 
 const numberOfPopularGames = 20;

@@ -1,35 +1,35 @@
-<h1>{{header}}</h1>
+<h1>
+    {{header}} - 
+    {{#if gameName}}
+    "{{gameName}}"
+    {{/if}}
+</h1>
 
-{{#if query}}
-<p>Query: {{query}}</p>
-{{/if}}
-
-{{#if game}}
+{{#each games}}
 <table class="table table-bordered">
     <tr>
         <td>Name:</td>
-        <td><a href={{game.url}}>{{game.name}}</a></td>
+        <td><a href={{this.url}}>{{this.name}}</a></td>
+        <td rowspan="5" width="200px"><img src={{this.image}} class="game-image vertical-center" alt="Game Image"></td>
     </tr>
     <tr>
         <td>ID:</td>
-        <td>{{game.id}}</td>
+        <td>{{this.id}}</td>
     </tr>
     <tr>
         <td>Publisher:</td>
-        <td>{{game.publisher}}</td>
+        <td>{{this.publisher}}</td>
     </tr>
     <tr>
         <td>Amazon Rank:</td>
-        <td>{{game.amazon_rank}}</td>
+        <td>{{this.amazon_rank}}</td>
     </tr>
     <tr>
         <td>Price:</td>
-        <td>{{game.price}}</td>
+        <td>{{this.price}}</td>
     </tr>
 </table>
-<img src={{game.image}} alt="Game Image">
-
-{{/if}}
+{{/each}}
 
 {{#if error}}
 <p><strong>ERROR:</strong> {{error}}</p>

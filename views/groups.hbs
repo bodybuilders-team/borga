@@ -1,0 +1,22 @@
+<h1>{{header}}</h1>
+
+{{#each userGroups}}
+<table class="table table-bordered">
+    <tr>
+        <td>Name:</td>
+        <td>{{this.name}}</td>
+    </tr>
+    <tr>
+        <td>Description:</td>
+        <td>{{this.description}}</td>
+    </tr>
+    <tr>
+        <td>Games:</td>
+        <td>
+            {{#each this.games}}
+            <p>{{this}}</p>
+            {{/each}}
+        </td>
+    </tr>
+</table>
+{{/each}}
