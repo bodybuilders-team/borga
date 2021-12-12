@@ -37,27 +37,44 @@ module.exports = function (services, guest_token) {
 
 
     /**
-     * Shows the game details.
+     * Shows the twenty most popular games.
      * @param {Object} req 
      * @param {Object} res 
      */
-    async function showGameDetails(req, res) {
+    async function showPopularGames(req, res) {
+        const header = 'Popular Games';
+        try {
+            const games = Object.values(await services.getPopularGames());
+            res.render('games', { header, games });
+        } catch (err) {
+            console.log(err);
+            res.status(500).render('games', { header, error: JSON.stringify(err) });
+        }
+    }
+
+
+    /**
+     * Shows the details of the searched games.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showSearchedGames(req, res) {
         const header = 'Game Details';
         const gameName = req.query.gameName;
         try {
             const games = await services.searchGamesByName(gameName);
-            res.render('game', { header, gameName, games });
+            res.render('games', { header, gameName, games });
         } catch (err) {
             switch (err.name) {
                 case 'BAD_REQUEST':
-                    res.status(400).render('game', { header, error: 'no gameName provided' });
+                    res.status(400).render('games', { header, error: 'no gameName provided' });
                     break;
                 case 'NOT_FOUND':
-                    res.status(404).render('game', { header, error: `no game found with name ${gameName}` });
+                    res.status(404).render('games', { header, error: `no game found with name ${gameName}` });
                     break;
                 default:
                     console.log(err);
-                    res.status(500).render('game', { header, error: JSON.stringify(err) });
+                    res.status(500).render('games', { header, error: JSON.stringify(err) });
                     break;
             }
         }
@@ -65,7 +82,7 @@ module.exports = function (services, guest_token) {
 
 
     /**
-     * Shows the user groups
+     * Shows the user groups.
      * @param {Object} req 
      * @param {Object} res 
      */
@@ -92,6 +109,17 @@ module.exports = function (services, guest_token) {
         }
     }
 
+
+    /**
+     * Shows the register page.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showRegisterPage(req, res) {
+        res.render('register');
+    }
+
+
     const router = express.Router();
     router.use(express.urlencoded({ extended: true }));
 
@@ -101,8 +129,14 @@ module.exports = function (services, guest_token) {
     // Search page
     router.get('/search', getSearchPage);
 
-    // Show game
-    router.get('/game', showGameDetails);
+    // Show popular games
+    router.get('/popularGames', showPopularGames);
+
+    // Show games searched
+    router.get('/games', showSearchedGames);
+
+    // Register new user
+    router.get('/user', showRegisterPage);
 
     // Show groups
     router.get('/user/:userId/groups', showUserGroups);

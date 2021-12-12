@@ -1,7 +1,7 @@
 <h1>
-    {{header}} - 
+    {{header}} 
     {{#if gameName}}
-    "{{gameName}}"
+    - "{{gameName}}"
     {{/if}}
 </h1>
 
@@ -11,6 +11,7 @@
         <td>Name:</td>
         <td><a href={{this.url}}>{{this.name}}</a></td>
         <td rowspan="5" width="200px"><img src={{this.image}} class="game-image vertical-center" alt="Game Image"></td>
+        <td rowspan="5"><input type="button" value="Add To Group"></td>
     </tr>
     <tr>
         <td>ID:</td>
