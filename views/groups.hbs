@@ -1,10 +1,22 @@
 <h1>{{header}}</h1>
+<h3>You can search for a group by its name or view all your groups.</h3>
 
-{{#each userGroups}}
+<form action="#" method="GET">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" ame="groupName" placeholder="Enter Group Name" aria-label="Enter Group Name" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+    </div>
+</form>
+
+{{#each groups}}
 <table class="table table-bordered">
     <tr>
         <td>Name:</td>
         <td>{{this.name}}</td>
+        <td rowspan="3">
+            <input type="button" value="Show Details">
+            <input type="button" value="Delete Group">
+        </td>
     </tr>
     <tr>
         <td>Description:</td>

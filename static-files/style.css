@@ -11,6 +11,11 @@ body {
 	padding: 20px;
 }
 
+.dark-mode {
+	background-color: #252526;
+	color: white;
+}
+
 .game-image{
 	max-width: 200px;
   	height: auto;
@@ -25,4 +30,10 @@ table {
 	display: table-cell;
 	margin: auto;
 	vertical-align: middle;
+}
+
+.top-right {
+	position: absolute; 
+	top: 15px; 
+	right: 15px;
 }

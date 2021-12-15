@@ -91,8 +91,8 @@ module.exports = function (services, guest_token) {
         const token = getToken(req);
         const userId = req.params.userId;
         try {
-            const userGroups = await services.listUserGroups(token, userId);
-            res.render('groups', { header, userGroups });
+            const groups = await services.listUserGroups(token, userId);
+            res.render('groups', { header, groups });
         } catch (err) {
             switch (err.name) {
                 case 'BAD_REQUEST':
@@ -108,6 +108,36 @@ module.exports = function (services, guest_token) {
             }
         }
     }
+    
+
+    /**
+     * Shows group details.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+     async function showGroupDetails(req, res) {
+        const header = 'Group Details';
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+        try {
+            const group = await services.getGroupDetails(token, userId, groupId);
+            res.render('group', { header, group });
+        } catch (err) {
+            switch (err.name) {
+                case 'BAD_REQUEST':
+                    res.status(400).render('group', { header, error: 'no userId provided' });
+                    break;
+                case 'UNAUTHENTICATED':
+                    res.status(401).render('group', { header, error: 'login required' });
+                    break;
+                default:
+                    console.log(err);
+                    res.status(500).render('group', { header, error: JSON.stringify(err) });
+                    break;
+            }
+        }
+    }
 
 
     /**
@@ -118,10 +148,11 @@ module.exports = function (services, guest_token) {
     async function showRegisterPage(req, res) {
         res.render('register');
     }
-
+    
 
     const router = express.Router();
     router.use(express.urlencoded({ extended: true }));
+
 
     // Homepage
     router.get('/', getHomepage);
@@ -140,6 +171,9 @@ module.exports = function (services, guest_token) {
 
     // Show groups
     router.get('/user/:userId/groups', showUserGroups);
+
+    // Show group details
+    router.get('/user/:userId/groups/:groupId', showGroupDetails);
 
     return router;
 };

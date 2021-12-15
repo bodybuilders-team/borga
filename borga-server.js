@@ -12,7 +12,7 @@ const data_int = require('./borga-data-mem.js');
 const services = require('./borga-services.js')(data_ext_games, data_int);
 
 const webapi = require('./borga-web-api.js')(services);
-const webui = require('./borga-web-ui.js')(services, guest_token);
+const webui = require('./borga-web-site.js')(services, guest_token);
 
 const express = require('express');
 const app = express();

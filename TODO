@@ -1,0 +1,4 @@
+- Changes in web-api
+- Make web-site
+- Integration tests with supertest module
+- borga-db with elasticsearch
