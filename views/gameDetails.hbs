@@ -1,0 +1,67 @@
+<h1>
+    {{header}}
+    {{#with game}}
+    - "{{name}}"
+    {{/with}}
+</h1>
+
+{{#with game}}
+<table class="table game-details-table table-bordered">
+    <tr>
+        <td>Name</td>
+        <td><a href={{url}}>{{name}}</a></td>
+        <td rowspan="8" width="500px">
+            <img src={{image_url}} class="game-image vertical-center" alt="Game Image">
+        </td>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td>{{id}}</td>
+    </tr>
+    <tr>
+        <td>Description</td>
+        <td>
+            <p align="center">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#description"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Show Description
+                </button>
+            </p>
+            <div class="collapse" id="description">
+                <div class="card card-body">
+                    {{description}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>Publisher</td>
+        <td>{{publisher}}</td>
+    </tr>
+    <tr>
+        <td>Amazon Rank</td>
+        <td>{{amazon_rank}}</td>
+    </tr>
+    <tr>
+        <td>Price</td>
+        <td>{{price}}</td>
+    </tr>
+    <tr>
+        <td>Mechanics</td>
+        <td>
+            {{#each mechanics}}
+            {{this}}{{#unless @last}}, {{/unless}}
+            {{/each}}
+        </td>
+    </tr>
+    <tr>
+        <td>Categories</td>
+        <td>
+            {{#each categories}}
+            {{this}}{{#unless @last}}, {{/unless}}
+            {{/each}}
+        </td>
+    </tr>
+</table>
+<input type="button" class="btn btn-primary" value="Add To Group">
+{{/with}}

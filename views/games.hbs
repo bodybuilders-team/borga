@@ -6,28 +6,26 @@
 </h1>
 
 {{#each games}}
-<table class="table table-bordered">
-    <tr>
-        <td>Name:</td>
-        <td><a href={{this.url}}>{{this.name}}</a></td>
-        <td rowspan="5" width="200px"><img src={{this.image}} class="game-image vertical-center" alt="Game Image"></td>
-        <td rowspan="5"><input type="button" value="Add To Group"></td>
+<table class="table games-table table-bordered">
+    <tr height="10px">
+        <td>Name</td>
+        <td><a href={{url}}>{{name}}</a></td>
+        <td rowspan="3" class="image-column">
+            <img src={{image_url}} class="vertical-center game-image" alt="Game Image">
+        </td>
+    </tr>
+    <tr height="10px">
+        <td>ID</td>
+        <td>{{id}}</td>
     </tr>
     <tr>
-        <td>ID:</td>
-        <td>{{this.id}}</td>
-    </tr>
-    <tr>
-        <td>Publisher:</td>
-        <td>{{this.publisher}}</td>
-    </tr>
-    <tr>
-        <td>Amazon Rank:</td>
-        <td>{{this.amazon_rank}}</td>
-    </tr>
-    <tr>
-        <td>Price:</td>
-        <td>{{this.price}}</td>
+        <td align="center" colspan="2">
+            <input type="button" class="btn btn-outline-primary w-100" value="Add To Group">
+            <hr>
+            <form action="/games/{{id}}" method="GET">
+                <button type="submit" class="btn btn-outline-primary w-100">Details</button>
+            </form>
+        </td>
     </tr>
 </table>
 {{/each}}

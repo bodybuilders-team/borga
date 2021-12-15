@@ -59,7 +59,7 @@ module.exports = function (services, guest_token) {
      * @param {Object} res 
      */
     async function showSearchedGames(req, res) {
-        const header = 'Game Details';
+        const header = 'Games';
         const gameName = req.query.gameName;
         try {
             const games = await services.searchGamesByName(gameName);
@@ -139,6 +139,30 @@ module.exports = function (services, guest_token) {
         }
     }
 
+    /**
+     * Shows game details.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+     async function showGameDetails(req, res) {
+        const header = 'Game Details';
+        const gameId = req.params.gameId;
+        try {
+            const game = await services.getGameDetails(gameId);
+            res.render('gameDetails', { header, game });
+        } catch (err) {
+            switch (err.name) {
+                case 'BAD_REQUEST':
+                    res.status(400).render('gameDetails', { header, error: 'no gameId provided' });
+                    break;
+                default:
+                    console.log(err);
+                    res.status(500).render('gameDetails', { header, error: JSON.stringify(err) });
+                    break;
+            }
+        }
+    }
+
 
     /**
      * Shows the register page.
@@ -165,6 +189,9 @@ module.exports = function (services, guest_token) {
 
     // Show games searched
     router.get('/games', showSearchedGames);
+
+    // Show game details
+    router.get('/games/:gameId', showGameDetails);
 
     // Register new user
     router.get('/user', showRegisterPage);

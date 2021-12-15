@@ -1,6 +1,7 @@
 h1::before {
 	content: '';
 	padding-right: 48px;
+	padding-left: 18px;
 	background-image: url(/public/table-games.png);
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -17,19 +18,29 @@ body {
 }
 
 .game-image{
-	max-width: 200px;
-  	height: auto;
+	width: 100%;
+  	display: block;
 }
 
-table {
+.games-table {
     table-layout: auto;
-    max-width: 600px;
+    max-width: 550px;
+}
+
+.game-details-table {
+    table-layout: auto;
+    max-width: 1000px;
 }
 
 .vertical-center {
 	display: table-cell;
 	margin: auto;
 	vertical-align: middle;
+}
+
+.image-column {
+	height:200px;
+	width:200px;
 }
 
 .top-right {

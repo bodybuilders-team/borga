@@ -7,8 +7,32 @@ const errors = require('./borga-errors');
 const fetch = require('node-fetch');
 
 const BOARD_GAME_ATLAS_BASE_URI = 'https://api.boardgameatlas.com/api/search?' + 'client_id=' + process.env['ATLAS_CLIENT_ID'];
+const BOARD_GAME_ATLAS_MECHANICS_URI = 'https://api.boardgameatlas.com/api/game/mechanics?client_id=' + process.env['ATLAS_CLIENT_ID'];
+const BOARD_GAME_ATLAS_CATEGORIES_URI = 'https://api.boardgameatlas.com/api/game/categories?client_id=' + process.env['ATLAS_CLIENT_ID'];
+
 const HTTP_SERVER_ERROR = 5;
 const HTTP_CLIENT_ERROR = 4;
+
+const mechanics = {};
+const categories = {};
+
+
+/**
+ * Gets the id:name map for mechanics and categories from Board Game Atlas.
+ */
+(async function () {
+	const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
+	for (const i in mechanicsRes.mechanics) {
+		const mechanic = mechanicsRes.mechanics[i];
+		mechanics[mechanic.id] = mechanic.name;
+	}
+
+	const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
+	for (const i in categoriesRes.categories) {
+		const category = categoriesRes.categories[i];
+		categories[category.id] = category.name;
+	}
+})();
 
 
 /**
@@ -56,16 +80,39 @@ async function do_fetch(uri) {
  * @param {Object} gameInfo 
  * @returns object with game information
  */
-function makeGameObj(gameInfo) {
+async function makeGameObj(gameInfo) {
 	return {
 		id: gameInfo.id,
 		name: gameInfo.name,
+		description: gameInfo.description.replace(/<\/?p>/ig, '\n'),
 		url: gameInfo.url,
-		image: gameInfo.image_url,
+		image_url: gameInfo.image_url,
 		publisher: gameInfo.publisher,
 		amazon_rank: gameInfo.amazon_rank,
-		price: gameInfo.price
+		price: gameInfo.price,
+		mechanics: await getGameMechanics(gameInfo),
+		categories: await getGameCategories(gameInfo)
 	};
+}
+
+
+/**
+ * Gets the name for each mechanic of the given game.
+ * @param {Object} game 
+ * @returns array with mechanic names
+ */
+async function getGameMechanics(game) {
+	return game.mechanics.map(mechanic => mechanics[mechanic.id]);
+}
+
+
+/**
+ * Gets the name for each category of the given game.
+ * @param {Object} game 
+ * @returns array with categories names
+ */
+ async function getGameCategories(game) {
+	return game.categories.map(category => categories[category.id]);
 }
 
 
@@ -86,7 +133,7 @@ async function searchGamesByName(gameName, limit, order_by, ascending) {
 	if (res.games.length == 0 || res.count == 0)
 		throw errors.NOT_FOUND({ name: gameName });
 
-	return Object.values(res.games.map(game => makeGameObj(game)));
+	return Promise.all(Object.values(res.games.map(async (game) => await makeGameObj(game))));
 }
 
 
@@ -104,7 +151,7 @@ async function searchGamesById(gameId) {
 	if (res.games.length == 0 || res.count == 0)
 		throw errors.NOT_FOUND({ gameId: gameId });
 
-	return makeGameObj(res.games[0]);
+	return await makeGameObj(res.games[0]);
 }
 
 

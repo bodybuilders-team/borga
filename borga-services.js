@@ -175,6 +175,16 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
+	 * Gets an object containing the game details.
+	 * @param {String} gameId
+	 * @returns promise an object containing the game details
+	 */
+	 async function getGameDetails(gameId) {
+		return await data_ext.searchGamesById(gameId);
+	}
+
+
+	/**
 	 * Adds a new game to a group.
 	 * @param {String} token
 	 * @param {String} userId
@@ -216,6 +226,7 @@ module.exports = function (data_ext, data_int) {
 		listUserGroups,
 		deleteGroup,
 		getGroupDetails,
+		getGameDetails,
 		addGameToGroup,
 		removeGameFromGroup,
 	};
