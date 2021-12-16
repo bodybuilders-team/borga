@@ -31,14 +31,27 @@ describe("getStatusClass tests", () => {
 
 
 describe("games-data methods tests", () => {
-	test("makeGameObj returns a game obj created from another object", () => {
-		expect(gamesData.makeGameObj(
+	test("makeGameObj returns a game obj created from another object", async () => {
+		expect(await gamesData.makeGameObj(
 			{
 				id: "I9azM1kA6l",
 				name: "Skyrim",
 				url: "games.net/skyrim",
 				image_url: "skyrim.jpg",
 				publisher: "Bethesda Game Studios",
+				description: "Skyrim description",
+				mechanics: [],
+				categories: [
+					{
+						"id": "buDTYyPw4D"
+					},
+					{
+						"id": "djokexoK0U"
+					},
+					{
+						"id": "jX8asGGR6o"
+					}
+				],
 				amazon_rank: 1,
 				price: '420.69',
 				min_age: 8,
@@ -51,7 +64,9 @@ describe("games-data methods tests", () => {
 					id: "I9azM1kA6l",
 					name: "Skyrim",
 					url: "games.net/skyrim",
-					image: "skyrim.jpg",
+					description: "Skyrim description",
+					image_url: "skyrim.jpg",
+					mechanics: [],
 					publisher: "Bethesda Game Studios",
 					amazon_rank: 1,
 					price: '420.69'

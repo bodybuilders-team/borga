@@ -1,22 +1,47 @@
 <h1>
-    {{header}}
-    {{#with game}}
-    - "{{name}}"
-    {{/with}}
+    {{header}}{{#with game}} - "{{name}}"{{/with}}
 </h1>
 
 {{#with game}}
 <table class="table game-details-table table-bordered">
-    <tr>
-        <td>Name</td>
+    <tr class="common-row">
+        <td class="first-col">Name</td>
         <td><a href={{url}}>{{name}}</a></td>
-        <td rowspan="8" width="500px">
+        <td rowspan="9" width="500px">
             <img src={{image_url}} class="game-image vertical-center" alt="Game Image">
         </td>
     </tr>
-    <tr>
+    <tr class="common-row">
         <td>ID</td>
         <td>{{id}}</td>
+    </tr>
+    <tr class="common-row">
+        <td>Publisher</td>
+        <td>{{publisher}}</td>
+    </tr>
+    <tr class="common-row">
+        <td>Amazon Rank</td>
+        <td>{{amazon_rank}}</td>
+    </tr>
+    <tr class="common-row">
+        <td>Price</td>
+        <td>{{price}}</td>
+    </tr>
+    <tr class="common-row">
+        <td>Mechanics</td>
+        <td>
+            {{#each mechanics}}
+            {{this}}{{#unless @last}}, {{/unless}}
+            {{/each}}
+        </td>
+    </tr>
+    <tr class="common-row">
+        <td>Categories</td>
+        <td>
+            {{#each categories}}
+            {{this}}{{#unless @last}}, {{/unless}}
+            {{/each}}
+        </td>
     </tr>
     <tr>
         <td>Description</td>
@@ -34,34 +59,10 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <td>Publisher</td>
-        <td>{{publisher}}</td>
-    </tr>
-    <tr>
-        <td>Amazon Rank</td>
-        <td>{{amazon_rank}}</td>
-    </tr>
-    <tr>
-        <td>Price</td>
-        <td>{{price}}</td>
-    </tr>
-    <tr>
-        <td>Mechanics</td>
-        <td>
-            {{#each mechanics}}
-            {{this}}{{#unless @last}}, {{/unless}}
-            {{/each}}
-        </td>
-    </tr>
-    <tr>
-        <td>Categories</td>
-        <td>
-            {{#each categories}}
-            {{this}}{{#unless @last}}, {{/unless}}
-            {{/each}}
+    <tr class="common-row">
+        <td align="center" colspan="2">
+            <input type="button" class="btn btn-outline-primary w-100" value="Add To Group">
         </td>
     </tr>
 </table>
-<input type="button" class="btn btn-primary" value="Add To Group">
 {{/with}}

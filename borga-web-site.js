@@ -34,31 +34,14 @@ module.exports = function (services, guest_token) {
     function getSearchPage(req, res) {
         res.render('search');
     }
-
-
-    /**
-     * Shows the twenty most popular games.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-    async function showPopularGames(req, res) {
-        const header = 'Popular Games';
-        try {
-            const games = Object.values(await services.getPopularGames());
-            res.render('games', { header, games });
-        } catch (err) {
-            console.log(err);
-            res.status(500).render('games', { header, error: JSON.stringify(err) });
-        }
-    }
-
+    
 
     /**
      * Shows the details of the searched games.
      * @param {Object} req 
      * @param {Object} res 
      */
-    async function showSearchedGames(req, res) {
+     async function showSearchedGames(req, res) {
         const header = 'Games';
         const gameName = req.query.gameName;
         try {
@@ -77,6 +60,48 @@ module.exports = function (services, guest_token) {
                     res.status(500).render('games', { header, error: JSON.stringify(err) });
                     break;
             }
+        }
+    }
+
+
+    /**
+     * Shows game details.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+     async function showGameDetails(req, res) {
+        const header = 'Game Details';
+        const gameId = req.params.gameId;
+        try {
+            const game = await services.getGameDetails(gameId);
+            res.render('gameDetails', { header, game });
+        } catch (err) {
+            switch (err.name) {
+                case 'BAD_REQUEST':
+                    res.status(400).render('gameDetails', { header, error: 'no gameId provided' });
+                    break;
+                default:
+                    console.log(err);
+                    res.status(500).render('gameDetails', { header, error: JSON.stringify(err) });
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * Shows the twenty most popular games.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showPopularGames(req, res) {
+        const header = 'Popular Games';
+        try {
+            const games = Object.values(await services.getPopularGames());
+            res.render('games', { header, games });
+        } catch (err) {
+            console.log(err);
+            res.status(500).render('games', { header, error: JSON.stringify(err) });
         }
     }
 
@@ -139,30 +164,6 @@ module.exports = function (services, guest_token) {
         }
     }
 
-    /**
-     * Shows game details.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-     async function showGameDetails(req, res) {
-        const header = 'Game Details';
-        const gameId = req.params.gameId;
-        try {
-            const game = await services.getGameDetails(gameId);
-            res.render('gameDetails', { header, game });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('gameDetails', { header, error: 'no gameId provided' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('gameDetails', { header, error: JSON.stringify(err) });
-                    break;
-            }
-        }
-    }
-
 
     /**
      * Shows the register page.
@@ -193,14 +194,14 @@ module.exports = function (services, guest_token) {
     // Show game details
     router.get('/games/:gameId', showGameDetails);
 
-    // Register new user
-    router.get('/user', showRegisterPage);
-
     // Show groups
     router.get('/user/:userId/groups', showUserGroups);
 
     // Show group details
     router.get('/user/:userId/groups/:groupId', showGroupDetails);
+
+    // Register new user
+    router.get('/user', showRegisterPage);
 
     return router;
 };

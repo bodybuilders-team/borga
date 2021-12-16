@@ -2,18 +2,18 @@
 
 {{#if group}}
 <table class="table table-bordered">
-    <tr>
+    <tr class="common-row">
         <td>Name:</td>
-        <td>{{this.name}}</td>
+        <td>{{name}}</td>
     </tr>
     <tr>
         <td>Description:</td>
-        <td>{{this.description}}</td>
+        <td>{{description}}</td>
     </tr>
-    <tr>
+    <tr class="common-row">
         <td>Games:</td>
         <td>
-            {{#each this.games}}
+            {{#each games}}
             <p>{{this}}</p>
             {{/each}}
         </td>

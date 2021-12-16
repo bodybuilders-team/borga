@@ -1,23 +1,26 @@
 <h1>Find a Game</h1>
 <form action="/games" method="GET">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="gameName" placeholder="Enter Game Name" aria-label="Enter Game Name" aria-describedby="button-addon2">
+        <input type="text" class="form-control" name="gameName" placeholder="Enter Game Name"
+            aria-label="Enter Game Name" aria-describedby="button-addon2">
         <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
     </div>
     <small id="emailHelp" class="form-text text-muted">Example: Catan, Monopoly, etc</small>
 </form>
 
 <br>
+
 <h3>Example of a Game:</h3>
 <table class="table games-table table-bordered">
-    <tr height="10px">
-        <td>Name</td>
+    <tr class="common-row">
+        <td class="first-col">Name</td>
         <td><a href="https://www.boardgameatlas.com/game/OIXt3DmJU0/catan">Catan</a></td>
         <td rowspan="3" class="image-column">
-            <img src="https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg"  class="vertical-center game-image" alt="Game Image">
+            <img src="https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg"
+                class="vertical-center game-image" alt="Game Image">
         </td>
     </tr>
-    <tr height="10px">
+    <tr class="common-row">
         <td>ID</td>
         <td>OIXt3DmJU0</td>
     </tr>
