@@ -1,10 +1,9 @@
-<h1>{{header}}</h1>
+<h1>My Groups</h1>
 <h3>You can search for a group by its name or view all your groups.</h3>
 
 <form action="#" method="GET">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" ame="groupName" placeholder="Enter Group Name"
-            aria-label="Enter Group Name" aria-describedby="button-addon2">
+        <input type="text" class="form-control" ame="groupName" placeholder="Enter Group Name" aria-label="Enter Group Name" aria-describedby="button-addon2">
         <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
     </div>
 </form>
@@ -33,3 +32,7 @@
     </tr>
 </table>
 {{/each}}
+
+{{#if error}}
+<p><strong>ERROR:</strong> {{error}}</p>
+{{/if}}

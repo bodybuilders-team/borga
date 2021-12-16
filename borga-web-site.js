@@ -34,14 +34,31 @@ module.exports = function (services, guest_token) {
     function getSearchPage(req, res) {
         res.render('search');
     }
-    
+
+
+    /**
+     * Shows the twenty most popular games.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showPopularGames(req, res) {
+        const header = 'Popular Games';
+        try {
+            const games = Object.values(await services.getPopularGames());
+            res.render('games', { header, games });
+        } catch (err) {
+            console.log(err);
+            res.status(500).render('games', {header, error: JSON.stringify(err) });
+        }
+    } 
+
 
     /**
      * Shows the details of the searched games.
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function showSearchedGames(req, res) {
+    async function showSearchedGames(req, res) {
         const header = 'Games';
         const gameName = req.query.gameName;
         try {
@@ -65,6 +82,62 @@ module.exports = function (services, guest_token) {
 
 
     /**
+     * Shows the user groups.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showUserGroups(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        try {
+            const groups = await services.listUserGroups(token, userId);
+            res.render('groups', { groups });
+        } catch (err) {
+            switch (err.name) {
+                case 'BAD_REQUEST':
+                    res.status(400).render('groups', { error: 'no userId provided' });
+                    break;
+                case 'UNAUTHENTICATED':
+                    res.status(401).render('groups', { error: 'login required' });
+                    break;
+                default:
+                    console.log(err);
+                    res.status(500).render('groups', { error: JSON.stringify(err) });
+                    break;
+            }
+        }
+    } 
+    
+
+    /**
+     * Shows group details.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+     async function showGroupDetails(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+        try {
+            const group = await services.getGroupDetails(token, userId, groupId);
+            res.render('group', { header, group });
+        } catch (err) {
+            switch (err.name) {
+                case 'BAD_REQUEST':
+                    res.status(400).render('group', { error: 'no userId provided' });
+                    break;
+                case 'UNAUTHENTICATED':
+                    res.status(401).render('group', { error: 'login required' });
+                    break;
+                default:
+                    console.log(err);
+                    res.status(500).render('group', { error: JSON.stringify(err) });
+                    break;
+            }
+        }
+    }
+
+    /**
      * Shows game details.
      * @param {Object} req 
      * @param {Object} res 
@@ -83,82 +156,6 @@ module.exports = function (services, guest_token) {
                 default:
                     console.log(err);
                     res.status(500).render('gameDetails', { header, error: JSON.stringify(err) });
-                    break;
-            }
-        }
-    }
-
-
-    /**
-     * Shows the twenty most popular games.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-    async function showPopularGames(req, res) {
-        const header = 'Popular Games';
-        try {
-            const games = Object.values(await services.getPopularGames());
-            res.render('games', { header, games });
-        } catch (err) {
-            console.log(err);
-            res.status(500).render('games', { header, error: JSON.stringify(err) });
-        }
-    }
-
-
-    /**
-     * Shows the user groups.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-    async function showUserGroups(req, res) {
-        const header = 'Groups';
-        const token = getToken(req);
-        const userId = req.params.userId;
-        try {
-            const groups = await services.listUserGroups(token, userId);
-            res.render('groups', { header, groups });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('groups', { header, error: 'no userId provided' });
-                    break;
-                case 'UNAUTHENTICATED':
-                    res.status(401).render('groups', { header, error: 'login required' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('groups', { header, error: JSON.stringify(err) });
-                    break;
-            }
-        }
-    }
-    
-
-    /**
-     * Shows group details.
-     * @param {Object} req 
-     * @param {Object} res 
-     */
-     async function showGroupDetails(req, res) {
-        const header = 'Group Details';
-        const token = getToken(req);
-        const userId = req.params.userId;
-        const groupId = req.params.groupId;
-        try {
-            const group = await services.getGroupDetails(token, userId, groupId);
-            res.render('group', { header, group });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('group', { header, error: 'no userId provided' });
-                    break;
-                case 'UNAUTHENTICATED':
-                    res.status(401).render('group', { header, error: 'login required' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('group', { header, error: JSON.stringify(err) });
                     break;
             }
         }
@@ -194,14 +191,14 @@ module.exports = function (services, guest_token) {
     // Show game details
     router.get('/games/:gameId', showGameDetails);
 
+    // Register new user
+    router.get('/user', showRegisterPage);
+
     // Show groups
     router.get('/user/:userId/groups', showUserGroups);
 
     // Show group details
     router.get('/user/:userId/groups/:groupId', showGroupDetails);
-
-    // Register new user
-    router.get('/user', showRegisterPage);
 
     return router;
 };

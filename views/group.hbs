@@ -1,22 +1,26 @@
-<h1>{{header}}</h1>
+<h1>Group Details</h1>
 
 {{#if group}}
 <table class="table table-bordered">
-    <tr class="common-row">
+    <tr>
         <td>Name:</td>
-        <td>{{name}}</td>
+        <td>{{this.name}}</td>
     </tr>
     <tr>
         <td>Description:</td>
-        <td>{{description}}</td>
+        <td>{{this.description}}</td>
     </tr>
-    <tr class="common-row">
+    <tr>
         <td>Games:</td>
         <td>
-            {{#each games}}
+            {{#each this.games}}
             <p>{{this}}</p>
             {{/each}}
         </td>
     </tr>
 </table>
+{{/if}}
+
+{{#if error}}
+<p><strong>ERROR:</strong> {{error}}</p>
 {{/if}}
