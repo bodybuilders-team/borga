@@ -18,21 +18,34 @@ const categories = {};
 
 
 /**
- * Gets the id:name map for mechanics and categories from Board Game Atlas.
+ * Gets the id:name map for mechanics from Board Game Atlas.
  */
-(async function () {
-	const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
-	for (const i in mechanicsRes.mechanics) {
-		const mechanic = mechanicsRes.mechanics[i];
-		mechanics[mechanic.id] = mechanic.name;
+async function getGlobalMechanics() {
+	if (Object.keys(mechanics).length === 0) {
+		const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
+		for (const i in mechanicsRes.mechanics) {
+			const mechanic = mechanicsRes.mechanics[i];
+			mechanics[mechanic.id] = mechanic.name;
+		}
 	}
 
-	const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
-	for (const i in categoriesRes.categories) {
-		const category = categoriesRes.categories[i];
-		categories[category.id] = category.name;
+	return mechanics
+}
+
+/**
+ * Gets the id:name map for categories from Board Game Atlas.
+ */
+async function getGlobalCategories() {
+	if (Object.keys(categories).length === 0) {
+		const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
+		for (const i in categoriesRes.categories) {
+			const category = categoriesRes.categories[i];
+			categories[category.id] = category.name;
+		}
 	}
-})();
+
+	return categories
+}
 
 
 /**
@@ -99,10 +112,11 @@ async function makeGameObj(gameInfo) {
 /**
  * Gets the name for each mechanic of the given game.
  * @param {Object} game 
- * @returns array with mechanic names
+ * @returns array with mechanics names
  */
 async function getGameMechanics(game) {
-	return game.mechanics.map(mechanic => mechanics[mechanic.id]);
+	const globalMechanics = await getGlobalMechanics()
+	return game.mechanics.map(mechanic => globalMechanics[mechanic.id]);
 }
 
 
@@ -111,8 +125,9 @@ async function getGameMechanics(game) {
  * @param {Object} game 
  * @returns array with categories names
  */
- async function getGameCategories(game) {
-	return game.categories.map(category => categories[category.id]);
+async function getGameCategories(game) {
+	const globalCategories = await getGlobalCategories()
+	return game.categories.map(category => globalCategories[category.id]);
 }
 
 

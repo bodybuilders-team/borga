@@ -4,7 +4,6 @@
 const errors = require('../borga-errors.js');
 
 const gamesData = require("../board-games-data.js");
-const mockDataExt = require('../__mock__/borga-mock-data-ext.js');
 
 
 describe("getStatusClass tests", () => {
@@ -26,57 +25,6 @@ describe("getStatusClass tests", () => {
 
 	test("getStatusClass returns correct class from a statusCode 100", () => {
 		expect(gamesData.getStatusClass(100)).toEqual(1);
-	});
-});
-
-
-describe("games-data methods tests", () => {
-	test("makeGameObj returns a game obj created from another object", async () => {
-		expect(await gamesData.makeGameObj(
-			{
-				id: "I9azM1kA6l",
-				name: "Skyrim",
-				url: "games.net/skyrim",
-				image_url: "skyrim.jpg",
-				publisher: "Bethesda Game Studios",
-				description: "Skyrim description",
-				mechanics: [],
-				categories: [
-					{
-						"id": "buDTYyPw4D"
-					},
-					{
-						"id": "djokexoK0U"
-					},
-					{
-						"id": "jX8asGGR6o"
-					}
-				],
-				amazon_rank: 1,
-				price: '420.69',
-				min_age: 8,
-				discount: 0,
-				mentions: 1000
-			}
-		))
-			.toEqual(
-				{
-					id: "I9azM1kA6l",
-					name: "Skyrim",
-					url: "games.net/skyrim",
-					description: "Skyrim description",
-					image_url: "skyrim.jpg",
-					mechanics: [],
-					publisher: "Bethesda Game Studios",
-					amazon_rank: 1,
-					price: '420.69'
-				}
-			);
-	});
-
-	test("getGameByName return correct game object of game with name \"Monopoly Skyrim\"", async () => {
-		expect((await mockDataExt.searchGamesByName("Monopoly Skyrim"))[0])
-			.toEqual(mockDataExt.games["I9azM1kA6l"]);
 	});
 });
 

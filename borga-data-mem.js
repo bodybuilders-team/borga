@@ -96,9 +96,13 @@ function createNewUser(userId, userName) {
  * @throws ALREADY_EXISTS if the user already has a group with the given groupId
  */
 function createGroup(userId, groupId, groupName, groupDescription) {
-	if (getUser(userId).groups[groupId]) throw errors.ALREADY_EXISTS({ groupId });
+	const user = getUser(userId)
+	if (user.groups[groupId]) throw errors.ALREADY_EXISTS({ groupId });
 
-	return addGroupToUser(userId, groupId, createGroupObj(groupName, groupDescription));
+	const groupObj = createGroupObj(groupName, groupDescription)
+	user.groups[groupId] = groupObj;
+
+	return { groupId, groupName: groupObj.name, groupDescription: groupObj.description };
 }
 
 
@@ -230,19 +234,6 @@ function createGroupObj(groupName, groupDescription) {
 
 
 /**
- * Adds a new group to the user.
- * @param {String} userId
- * @param {String} groupId
- * @param {Object} groupObj 
- * @returns an object with the added group information
- */
-function addGroupToUser(userId, groupId, groupObj) {
-	getUser(userId).groups[groupId] = groupObj;
-	return { groupId, groupName: groupObj.name, groupDescription: groupObj.description };
-}
-
-
-/**
  * Gets the user with the given userId.
  * @param {String} userId
  * @returns the user object
@@ -328,7 +319,6 @@ module.exports = {
 	//-- Utils --
 	createUserObj,
 	createGroupObj,
-	addGroupToUser,
 	getUser,
 	getGroupFromUser,
 	getGameFromGroup,

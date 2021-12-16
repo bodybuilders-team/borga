@@ -179,19 +179,6 @@ describe("Group tests", () => {
     test("deleteGroup throws if the group already doesn't exist", () => {
         assertThrowsNotFound(() => dataMem.deleteGroup(userId1, "undefined"), { groupId: "undefined" });
     });
-
-    test("addGroupToUser adds a group to a user given a group object", () => {
-        expect(dataMem.addGroupToUser(userId1, groupId1, dataMem.createGroupObj(groupName1, groupDescription1)))
-            .toEqual({
-                groupId: groupId1,
-                groupName: groupName1,
-                groupDescription: groupDescription1
-            });
-
-        expect(dataMem.getGroupFromUser(userId1, groupId1))
-            .toEqual(groupObj1);
-    });
-
 });
 
 
