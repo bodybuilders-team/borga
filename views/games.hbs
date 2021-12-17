@@ -29,13 +29,12 @@
 
                         <hr>
 
-                        <!--Not working-->
-                        <form action="/user/guestId/groups/" method="POST"
-                            onsubmit="this.action = this.action + this.groupId.value + /games/{{id}};">
-                            <select class="form-select inline w-50" aria-label="Group selection" name="groupId">
-                                <option selected>Select a group</option>
-                                {{#each groups}}
-                                <option name="groupId" value="{{id}}">{{name}}</option>
+                        <form method="POST"
+                            onsubmit="this.action = '/user/guestId/groups/' + this.groupId.value + '/games/{{id}}';">
+                            <select class="form-select inline w-50" aria-label="Group selection" id="groupId" required>
+                                <option value="" selected>Select a group</option>
+                                {{#each ../groups}}
+                                <option value="{{id}}">{{name}}</option>
                                 {{/each}}
                             </select>
                             <input type="submit" class="btn btn-primary inline" value="Add To Group"

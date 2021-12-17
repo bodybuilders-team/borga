@@ -47,7 +47,8 @@ module.exports = function (services, guest_token) {
         const gameId = req.params.gameId;
         try {
             const game = await services.getGameDetails(gameId);
-            res.render('gameDetails', { header: 'Game Details', game });
+            const groups = Object.values(await services.listUserGroups(getToken(req), "guestId")); // To be improved
+            res.render('gameDetails', { header: 'Game Details', game, groups });
         } catch (error) {
             console.log(error);
             res.render('error', { error });
@@ -80,7 +81,8 @@ module.exports = function (services, guest_token) {
         const gameName = req.query.gameName;
         try {
             const games = await services.searchGamesByName(gameName);
-            res.render('games', { header: 'Games', gameName, games });
+            const groups = Object.values(await services.listUserGroups(getToken(req), "guestId")); // To be improved
+            res.render('games', { header: 'Games', gameName, games, groups });
         } catch (error) {
             console.log(error);
             res.render('error', { error });
@@ -118,6 +120,7 @@ module.exports = function (services, guest_token) {
         try {
             const group = await services.getGroupDetails(token, userId, groupId);
             group.id = groupId;
+            // TODO - mandar game com url para poder meter hiperligação
             res.render('groupDetails', { header: 'Group Details', group });
         } catch (error) {
             console.log(error);
@@ -232,13 +235,37 @@ module.exports = function (services, guest_token) {
     }
 
 
+    // NOT YET IMPLEMENTED
     /**
      * Shows the register page.
      * @param {Object} req 
      * @param {Object} res 
      */
-    async function showRegisterPage(req, res) {
-        res.render('register');
+    async function showUserPage(req, res) {
+        const userId = req.params.userId;
+        //const user = await services.getUser(userId);
+
+        res.render('user');//, { user } );
+    }
+
+    // NOT YET IMPLEMENTED
+    /**
+     * Register new user
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function registerUser(req, res) {
+        const userName = req.body.userName;
+        const userId = req.body.userId;
+        const password = req.body.password;
+
+        try {
+            const userInfo = await services.createNewUser(userId, userName);
+            res.redirect('/user');
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
     }
 
 
@@ -262,8 +289,15 @@ module.exports = function (services, guest_token) {
     // Show game details
     router.get('/games/:gameId', showGameDetails);
 
-    // Register new user
-    router.get('/user', showRegisterPage);
+
+    // Show register/login - NOT YET IMPLEMENTED
+    router.get('/user', showUserPage);
+
+    // Show user page - NOT YET IMPLEMENTED
+    router.get('/user/:userId', showUserPage);
+
+    // Register new user - NOT YET IMPLEMENTED
+    router.post('/user', registerUser);
 
 
     // Show groups

@@ -61,14 +61,15 @@
     </tr>
     <tr class="common-row">
         <td align="center" colspan="2">
-            <form>
-                <select class="form-select inline w-50" aria-label="Group selection">
-                    <option selected>Select a group</option>
-                    {{#each groups}}
+            <form method="POST"
+                onsubmit="this.action = '/user/guestId/groups/' + this.groupId.value + '/games/{{id}}';">
+                <select class="form-select inline w-50" aria-label="Group selection" id="groupId" required>
+                    <option value="" selected>Select a group</option>
+                    {{#each ../groups}}
                     <option value="{{id}}">{{name}}</option>
                     {{/each}}
                 </select>
-                <input type="button" class="btn btn-primary inline w-25" value="Add To Group">
+                <input type="submit" class="btn btn-primary inline" value="Add To Group" style="width: 45%!important;">
             </form>
         </td>
     </tr>

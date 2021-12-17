@@ -16,7 +16,7 @@
         <td>Games</td>
         <td>
             {{#each games}}
-            {{this}}
+            {{this}}{{#unless @last}}, {{/unless}}
             {{/each}}
         </td>
     </tr>
@@ -64,6 +64,20 @@
                     </form>
                 </div>
             </div>
+
+            <hr>
+
+            <form method="POST"
+                onsubmit="this.action = '/user/guestId/groups/{{id}}/games/' + this.game.value + '/remove';">
+                <select class="form-select inline w-50" aria-label="Game selection" id="game" required>
+                    <option value="" selected>Select a game</option>
+                    {{#each games}}
+                    <option value="{{@key}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <input type="submit" class="btn btn-primary inline" value="Remove From Group"
+                    style="width: 45%!important;">
+            </form>
         </td>
     </tr>
 </table>

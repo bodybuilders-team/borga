@@ -6,7 +6,7 @@ require('dotenv').config();
 const errors = require('./borga-errors');
 const fetch = require('node-fetch');
 
-const BOARD_GAME_ATLAS_BASE_URI = 'https://api.boardgameatlas.com/api/search?' + 'client_id=' + process.env['ATLAS_CLIENT_ID'];
+const BOARD_GAME_ATLAS_BASE_URI = 'https://api.boardgameatlas.com/api/search?client_id=' + process.env['ATLAS_CLIENT_ID'];
 const BOARD_GAME_ATLAS_MECHANICS_URI = 'https://api.boardgameatlas.com/api/game/mechanics?client_id=' + process.env['ATLAS_CLIENT_ID'];
 const BOARD_GAME_ATLAS_CATEGORIES_URI = 'https://api.boardgameatlas.com/api/game/categories?client_id=' + process.env['ATLAS_CLIENT_ID'];
 
@@ -29,7 +29,7 @@ async function getGlobalMechanics() {
 		}
 	}
 
-	return mechanics
+	return mechanics;
 }
 
 /**
@@ -44,7 +44,7 @@ async function getGlobalCategories() {
 		}
 	}
 
-	return categories
+	return categories;
 }
 
 
@@ -115,7 +115,7 @@ async function makeGameObj(gameInfo) {
  * @returns array with mechanics names
  */
 async function getGameMechanics(game) {
-	const globalMechanics = await getGlobalMechanics()
+	const globalMechanics = await getGlobalMechanics();
 	return game.mechanics.map(mechanic => globalMechanics[mechanic.id]);
 }
 
@@ -126,7 +126,7 @@ async function getGameMechanics(game) {
  * @returns array with categories names
  */
 async function getGameCategories(game) {
-	const globalCategories = await getGlobalCategories()
+	const globalCategories = await getGlobalCategories();
 	return game.categories.map(category => globalCategories[category.id]);
 }
 

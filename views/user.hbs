@@ -1,0 +1,72 @@
+{{#with user}}
+<div class="container">
+	<div class="row justify-content-evenly">
+		<div class="col-5 card m-1 inline">
+			<div class="card-body">
+				<h1 class="card-title">{{userName}}</h1>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{else}}
+<div class="container">
+	<div class="row justify-content-evenly">
+		<div class="col-5 card m-1 inline">
+			<div class="card-body">
+				<h1 class="card-title">Register</h1>
+
+				<form>
+					<div class="mb-3">
+						<label for="userName" class="form-label">User Name:</label>
+						<input type="text" class="form-control" id="userName" aria-describedby="userName"
+							placeholder="Enter User Name">
+					</div>
+
+					<div class="mb-3">
+						<label for="userName" class="form-label">User Id:</label>
+						<input type="text" class="form-control" id="userName" placeholder="Enter User Id">
+						<small id="idHelp" class="form-text text-muted">
+							User Id is recommended to be some short and easy to remember.
+						</small>
+					</div>
+
+					<div class="mb-3">
+						<label for="password" class="form-label">Password:</label>
+						<input type="password" class="form-control" id="password" placeholder="Enter Your Password">
+						<small id="passwordHelp" class="form-text text-muted">
+							Don't share your password with anyone.
+						</small>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Register</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="col-5 card m-1 inline">
+			<div class="card-body">
+				<h1 class="card-title">Login</h1>
+
+				<form>
+					<div class="mb-3">
+						<label for="userId" class="form-label">User Id:</label>
+						<input type="text" class="form-control" id="userId" aria-describedby="userId"
+							placeholder="Enter Your User Id">
+					</div>
+
+					<div class="mb-3">
+						<label for="password" class="form-label">Password:</label>
+						<input type="password" class="form-control" id="password" placeholder="Enter Your Password">
+						<small id="passwordHelp" class="form-text text-muted">
+							Don't share your password with anyone.
+						</small>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Login</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{/with}}
