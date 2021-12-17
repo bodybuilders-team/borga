@@ -3,13 +3,15 @@
 
 const express = require('express');
 const async = require('hbs/lib/async');
+const crypto = require('crypto');
+
 
 module.exports = function (services, guest_token) {
 
     /**
      * Gets the token.
      * @param {Object} req 
-     * @returns 
+     * @returns the token from the request
      */
     function getToken(req) {
         return guest_token; // to be improved...
@@ -37,20 +39,36 @@ module.exports = function (services, guest_token) {
 
 
     /**
+     * Shows game details.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function showGameDetails(req, res) {
+        const gameId = req.params.gameId;
+        try {
+            const game = await services.getGameDetails(gameId);
+            res.render('gameDetails', { header: 'Game Details', game });
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
+    }
+
+
+    /**
      * Shows the twenty most popular games.
      * @param {Object} req 
      * @param {Object} res 
      */
     async function showPopularGames(req, res) {
-        const header = 'Popular Games';
         try {
             const games = Object.values(await services.getPopularGames());
-            res.render('games', { header, games });
-        } catch (err) {
-            console.log(err);
-            res.status(500).render('games', {header, error: JSON.stringify(err) });
+            res.render('games', { header: 'Popular Games', games });
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
         }
-    } 
+    }
 
 
     /**
@@ -59,24 +77,13 @@ module.exports = function (services, guest_token) {
      * @param {Object} res 
      */
     async function showSearchedGames(req, res) {
-        const header = 'Games';
         const gameName = req.query.gameName;
         try {
             const games = await services.searchGamesByName(gameName);
-            res.render('games', { header, gameName, games });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('games', { header, error: 'no gameName provided' });
-                    break;
-                case 'NOT_FOUND':
-                    res.status(404).render('games', { header, error: `no game found with name ${gameName}` });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('games', { header, error: JSON.stringify(err) });
-                    break;
-            }
+            res.render('games', { header: 'Games', gameName, games });
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
         }
     }
 
@@ -92,72 +99,135 @@ module.exports = function (services, guest_token) {
         try {
             const groups = await services.listUserGroups(token, userId);
             res.render('groups', { groups });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('groups', { error: 'no userId provided' });
-                    break;
-                case 'UNAUTHENTICATED':
-                    res.status(401).render('groups', { error: 'login required' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('groups', { error: JSON.stringify(err) });
-                    break;
-            }
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
         }
-    } 
-    
+    }
+
 
     /**
      * Shows group details.
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function showGroupDetails(req, res) {
+    async function showGroupDetails(req, res) {
         const token = getToken(req);
         const userId = req.params.userId;
         const groupId = req.params.groupId;
         try {
             const group = await services.getGroupDetails(token, userId, groupId);
-            res.render('group', { header, group });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('group', { error: 'no userId provided' });
-                    break;
-                case 'UNAUTHENTICATED':
-                    res.status(401).render('group', { error: 'login required' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('group', { error: JSON.stringify(err) });
-                    break;
-            }
+            group.id = groupId;
+            res.render('groupDetails', { header: 'Group Details', group });
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
         }
     }
 
+
     /**
-     * Shows game details.
+     * Creates a group.
      * @param {Object} req 
      * @param {Object} res 
      */
-     async function showGameDetails(req, res) {
-        const header = 'Game Details';
-        const gameId = req.params.gameId;
+    async function createGroup(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupName = req.body.groupName;
+        const groupDescription = req.body.groupDescription;
+        const groupId = crypto.randomUUID();
+
         try {
-            const game = await services.getGameDetails(gameId);
-            res.render('gameDetails', { header, game });
-        } catch (err) {
-            switch (err.name) {
-                case 'BAD_REQUEST':
-                    res.status(400).render('gameDetails', { header, error: 'no gameId provided' });
-                    break;
-                default:
-                    console.log(err);
-                    res.status(500).render('gameDetails', { header, error: JSON.stringify(err) });
-                    break;
-            }
+            await services.createGroup(token, userId, groupId, groupName, groupDescription);
+            res.redirect(`/user/${userId}/groups/${groupId}`);
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
+    }
+
+
+    /**
+     * Edits a group.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function editGroup(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+        const newGroupName = req.body.newGroupName;
+        const newGroupDescription = req.body.newGroupDescription;
+
+        try {
+            await services.editGroup(token, userId, groupId, newGroupName, newGroupDescription);
+            res.redirect(`/user/${userId}/groups/${groupId}`);
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
+    }
+
+
+    /**
+     * Deletes a group.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function deleteGroup(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+
+        try {
+            await services.deleteGroup(token, userId, groupId);
+            res.redirect(`/user/${userId}/groups`);
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
+    }
+
+
+    /**
+     * Adds a game to a group.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function addGameToGroup(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+        const gameId = req.params.gameId;
+
+        try {
+            await services.addGameToGroup(token, userId, groupId, gameId);
+            res.redirect(`/user/${userId}/groups/${groupId}`);
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
+        }
+    }
+
+
+    /**
+     * Removes a game from a group.
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    async function removeGameFromGroup(req, res) {
+        const token = getToken(req);
+        const userId = req.params.userId;
+        const groupId = req.params.groupId;
+        const gameId = req.params.gameId;
+
+        try {
+            await services.removeGameFromGroup(token, userId, groupId, gameId);
+            res.redirect(`/user/${userId}/groups/${groupId}`);
+        } catch (error) {
+            console.log(error);
+            res.render('error', { error });
         }
     }
 
@@ -170,7 +240,7 @@ module.exports = function (services, guest_token) {
     async function showRegisterPage(req, res) {
         res.render('register');
     }
-    
+
 
     const router = express.Router();
     router.use(express.urlencoded({ extended: true }));
@@ -181,6 +251,7 @@ module.exports = function (services, guest_token) {
 
     // Search page
     router.get('/search', getSearchPage);
+
 
     // Show popular games
     router.get('/popularGames', showPopularGames);
@@ -194,11 +265,28 @@ module.exports = function (services, guest_token) {
     // Register new user
     router.get('/user', showRegisterPage);
 
+
     // Show groups
     router.get('/user/:userId/groups', showUserGroups);
 
+    // Create group
+    router.post('/user/:userId/groups', createGroup);
+
     // Show group details
     router.get('/user/:userId/groups/:groupId', showGroupDetails);
+
+    // Show group details
+    router.post('/user/:userId/groups/:groupId', editGroup);
+
+    // Deletes a group -> To be replaced
+    router.post('/user/:userId/groups/:groupId/delete', deleteGroup);
+
+
+    // Adds a game to a group
+    router.post('/user/:userId/groups/:groupId/games/:gameId', addGameToGroup);
+
+    // Removes a game from a group -> To be replaced
+    router.post('/user/:userId/groups/:groupId/games/:gameId/remove', removeGameFromGroup);
 
     return router;
 };

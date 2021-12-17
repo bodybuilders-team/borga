@@ -1,0 +1,9 @@
+<h1>Something went wrong :(</h1>
+
+{{#with error}}
+<h4><strong>ERROR:</strong></h4>
+<h6>Code: {{code}}</h6>
+<h6>Name: {{name}}</h6>
+<h6>Message: {{message}}</h6>
+<h6>Information: {{#each info}}{ {{@key}}: {{this}} }{{/each}}</h6>
+{{/with}}

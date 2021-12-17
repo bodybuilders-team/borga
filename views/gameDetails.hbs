@@ -3,7 +3,7 @@
 </h1>
 
 {{#with game}}
-<table class="table game-details-table table-bordered">
+<table class="table game-details-table table-bordered center">
     <tr class="common-row">
         <td class="first-col">Name</td>
         <td><a href={{url}}>{{name}}</a></td>
@@ -43,7 +43,7 @@
             {{/each}}
         </td>
     </tr>
-    <tr>
+    <tr class="common-row">
         <td>Description</td>
         <td>
             <p align="center">
@@ -61,7 +61,15 @@
     </tr>
     <tr class="common-row">
         <td align="center" colspan="2">
-            <input type="button" class="btn btn-outline-primary w-100" value="Add To Group">
+            <form>
+                <select class="form-select inline w-50" aria-label="Group selection">
+                    <option selected>Select a group</option>
+                    {{#each groups}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <input type="button" class="btn btn-primary inline w-25" value="Add To Group">
+            </form>
         </td>
     </tr>
 </table>

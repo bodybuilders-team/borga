@@ -5,31 +5,46 @@
     {{/if}}
 </h1>
 
-{{#each games}}
-<table class="table games-table table-bordered">
-    <tr height="10px">
-        <td>Name</td>
-        <td><a href={{url}}>{{name}}</a></td>
-        <td rowspan="3" class="image-column">
-            <img src={{image_url}} class="vertical-center game-image" alt="Game Image">
-        </td>
-    </tr>
-    <tr height="10px">
-        <td>ID</td>
-        <td>{{id}}</td>
-    </tr>
-    <tr>
-        <td align="center" colspan="2">
-            <input type="button" class="btn btn-outline-primary w-100" value="Add To Group">
-            <hr>
-            <form action="/games/{{id}}" method="GET">
-                <button type="submit" class="btn btn-outline-primary w-100">Details</button>
-            </form>
-        </td>
-    </tr>
-</table>
-{{/each}}
+<div class="container">
+    <div class="row justify-content-evenly">
+        {{#each games}}
+        <div class="col-6">
+            <table class="table games-table table-bordered">
+                <tr class="common-row">
+                    <td class="first-col">Name</td>
+                    <td><a href={{url}}>{{name}}</a></td>
+                    <td align="center" rowspan="3" class="image-column">
+                        <img src={{image_url}} class="game-image" alt="Game Image">
+                    </td>
+                </tr>
+                <tr class="common-row">
+                    <td>ID</td>
+                    <td>{{id}}</td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <form action="/games/{{id}}" method="GET">
+                            <button type="submit" class="btn btn-outline-primary w-100">Details</button>
+                        </form>
 
-{{#if error}}
-<p><strong>ERROR:</strong> {{error}}</p>
-{{/if}}
+                        <hr>
+
+                        <!--Not working-->
+                        <form action="/user/guestId/groups/" method="POST"
+                            onsubmit="this.action = this.action + this.groupId.value + /games/{{id}};">
+                            <select class="form-select inline w-50" aria-label="Group selection" name="groupId">
+                                <option selected>Select a group</option>
+                                {{#each groups}}
+                                <option name="groupId" value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                            <input type="submit" class="btn btn-primary inline" value="Add To Group"
+                                style="width: 45%!important;">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {{/each}}
+    </div>
+</div>

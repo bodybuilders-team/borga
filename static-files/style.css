@@ -12,6 +12,10 @@ body {
 	padding: 20px;
 }
 
+td {
+	vertical-align: middle;
+}
+
 .dark-mode {
 	background-color: #252526;
 	color: white;
@@ -30,7 +34,13 @@ body {
 
 .games-table {
     table-layout: auto;
-    max-width: 550px;
+    max-width: 900px;
+	max-height: 200px;
+}
+
+.groups-table {
+	table-layout: auto;
+	max-width: 550px;
 	max-height: 200px;
 }
 
@@ -53,3 +63,10 @@ body {
 	right: 15px;
 }
 
+.center {
+	margin: auto;
+}
+
+.inline {
+	display:inline-block!important;
+}
