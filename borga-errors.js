@@ -19,7 +19,7 @@ function buildErrorList() {
 			return {
 				code,
 				name,
-				message: message + " " + JSON.stringify(info),
+				message,
 				info
 			};
 		};

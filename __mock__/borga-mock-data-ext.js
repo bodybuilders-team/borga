@@ -5,55 +5,55 @@ const errors = require('../borga-errors.js');
 
 
 const games = {
-    "I9azM1kA6l": {
-        id: "I9azM1kA6l",
-        name: "Skyrim",
-        url: "games.net/skyrim",
-        image: "skyrim.jpg",
-        publisher: "Bethesda Game Studios",
-        amazon_rank: 1,
-        price: '420.69'
-    },
-    "OIXt3DmJU0": {
-        id: 'OIXt3DmJU0',
-        name: 'Catan',
-        url: 'https://www.boardgameatlas.com/game/OIXt3DmJU0/catan',
-        image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
-        publisher: 'KOSMOS',
-        amazon_rank: 133,
-        price: '22.00'
-    }
+	"I9azM1kA6l": {
+		id: "I9azM1kA6l",
+		name: "Skyrim",
+		url: "games.net/skyrim",
+		image: "skyrim.jpg",
+		publisher: "Bethesda Game Studios",
+		amazon_rank: 1,
+		price: '420.69'
+	},
+	"OIXt3DmJU0": {
+		id: 'OIXt3DmJU0',
+		name: 'Catan',
+		url: 'https://www.boardgameatlas.com/game/OIXt3DmJU0/catan',
+		image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
+		publisher: 'KOSMOS',
+		amazon_rank: 133,
+		price: '22.00'
+	}
 }
 
 const requests = {
-    "Monopoly Skyrim": {
-        "games": [
-            {
-                id: "I9azM1kA6l",
-                name: "Skyrim",
-                url: "games.net/skyrim",
-                image: "skyrim.jpg",
-                publisher: "Bethesda Game Studios",
-                amazon_rank: 1,
-                price: '420.69'
-            }
-        ],
-        "count": 1
-    },
-    "Catan": {
-        "games": [
-            {
-                id: 'OIXt3DmJU0',
-                name: 'Catan',
-                url: 'https://www.boardgameatlas.com/game/OIXt3DmJU0/catan',
-                image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
-                publisher: 'KOSMOS',
-                amazon_rank: 133,
-                price: '22.00'
-            }
-        ],
-        "count": 1
-    }
+	"Monopoly Skyrim": {
+		"games": [
+			{
+				id: "I9azM1kA6l",
+				name: "Skyrim",
+				url: "games.net/skyrim",
+				image: "skyrim.jpg",
+				publisher: "Bethesda Game Studios",
+				amazon_rank: 1,
+				price: '420.69'
+			}
+		],
+		"count": 1
+	},
+	"Catan": {
+		"games": [
+			{
+				id: 'OIXt3DmJU0',
+				name: 'Catan',
+				url: 'https://www.boardgameatlas.com/game/OIXt3DmJU0/catan',
+				image: 'https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg',
+				publisher: 'KOSMOS',
+				amazon_rank: 133,
+				price: '22.00'
+			}
+		],
+		"count": 1
+	}
 }
 
 
@@ -64,11 +64,11 @@ const requests = {
  * @returns promise with a list of game objects
  */
 async function searchGamesByName(gameName) {
-    const res = requests[gameName];
-    if (!res || res.games.length == 0 || res.count == 0) {
-        throw errors.NOT_FOUND({ gameName })
-    }
-    return res.games;
+	const res = requests[gameName];
+	if (!res || res.games.length == 0 || res.count == 0) {
+		throw errors.NOT_FOUND({ gameName })
+	}
+	return res.games;
 }
 
 
@@ -79,16 +79,16 @@ async function searchGamesByName(gameName) {
  * @returns promise with the game object
  */
 async function searchGamesById(gameId) {
-    const game = games[gameId];
-    if (!game) {
-        throw errors.NOT_FOUND({ gameId })
-    }
-    return game;
+	const game = games[gameId];
+	if (!game) {
+		throw errors.NOT_FOUND({ gameId })
+	}
+	return game;
 }
 
 
 module.exports = {
-    games,
-    searchGamesByName,
-    searchGamesById
+	games,
+	searchGamesByName,
+	searchGamesById
 };

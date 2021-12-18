@@ -14,10 +14,10 @@ const crypto = require('crypto');
  * Contains 3 starting users.
  */
 let users = {
-	"A48280": createUserObj("André Jesus"),
-	"A48287": createUserObj("Nyckollas Brandão"),
-	"A48309": createUserObj("André Santos"),
-	"guestId": createUserObj("guest")
+	"a48280": createUserObj("André Jesus"),
+	"a48287": createUserObj("Nyckollas Brandão"),
+	"a48309": createUserObj("André Santos"),
+	"guestid": createUserObj("guest")
 };
 
 /**
@@ -29,10 +29,10 @@ const games = {};
  * Object containing the association between user token and userId: "token": "userId".
  */
 let tokens = {
-	'4869fdf7-0e62-46a2-872c-f0dc60fc2c81': "A48280",
-	'3e39bce8-07d1-4c05-9ee3-5587e6b8e2e7': "A48287",
-	'5d389af1-06db-4401-8aef-36d8d6428f31': "A48309",
-	'asasfscdf1-06db-4537-8aef-38845dfgd8': "guestId"
+	'4869fdf7-0e62-46a2-872c-f0dc60fc2c81': "a48280",
+	'3e39bce8-07d1-4c05-9ee3-5587e6b8e2e7': "a48287",
+	'5d389af1-06db-4401-8aef-36d8d6428f31': "a48309",
+	'asasfscdf1-06db-4537-8aef-38845dfgd8': "guestid"
 };
 
 const numberOfPopularGames = 20;
@@ -147,12 +147,19 @@ function deleteGroup(userId, groupId) {
 
 
 /**
- * Creates a new object containing the group details.
- * @param {Object} groupObj 
- * @returns an object containing the group details
+ * Gets the details of a group, including a list of game ids.
+ * @param {Object} userId 
+ * @param {Object} groupId 
+ * @returns an object containing the details of a group
  */
-function getGroupDetails(groupObj) {
-	return groupObj;
+function getGroupDetails(userId, groupId) {
+	const group = getGroupFromUser(userId, groupId);
+	return {
+		id: groupId,
+		name: group.name,
+		description: group.description,
+		games: group.games
+	};
 }
 
 

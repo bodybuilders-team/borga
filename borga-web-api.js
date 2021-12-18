@@ -48,6 +48,10 @@ module.exports = function (services) {
 			case 'EXT_SVC_FAIL':
 				res.status(502);
 				break;
+			case 'FAIL':
+				console.log(err);
+				res.status(500);
+				break;
 			default:
 				console.log(err);
 				res.status(500);
@@ -166,11 +170,10 @@ module.exports = function (services) {
 		try {
 			const token = getBearerToken(req);
 			const userId = req.params.userId;
-			const groupId = req.body.groupId;
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
 
-			const groupInfo = await services.createGroup(token, userId, groupId, groupName, groupDescription);
+			const groupInfo = await services.createGroup(token, userId, groupName, groupDescription);
 			res.json({ "Created group": groupInfo });
 		} catch (err) {
 			onError(res, err);
@@ -324,7 +327,6 @@ module.exports = function (services) {
 	router.post('/user/:userId/groups', validateRequest({
 		body: {
 			properties: {
-				groupId: { type: "string", required: true },
 				groupName: { type: "string", required: true },
 				groupDescription: { type: "string", required: true }
 			}

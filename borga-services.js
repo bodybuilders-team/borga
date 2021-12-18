@@ -2,6 +2,7 @@
 
 
 const errors = require('./borga-errors');
+const crypto = require('crypto');
 
 
 module.exports = function (data_ext, data_int) {
@@ -42,11 +43,11 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} userId
 	 * @throws UNAUTHENTICATED if the token is invalid
 	 */
-	function checkAuthentication(token, userId) {
+	async function checkAuthentication(token, userId) {
 		if (!token)
 			throw errors.UNAUTHENTICATED('Please insert your user token');
 
-		if (userId != data_int.tokenToUserId(token))
+		if (userId != await data_int.tokenToUserId(token))
 			throw errors.UNAUTHENTICATED('Please insert a valid user token');
 	}
 
@@ -85,6 +86,7 @@ module.exports = function (data_ext, data_int) {
 			userId: { value: userId, type: 'string' },
 			userName: { value: userName, type: 'string' }
 		});
+		if (userId != userId.toLowerCase()) throw errors.BAD_REQUEST({ userId: "User id has to be lowercase!" });
 
 		return await data_int.createNewUser(userId, userName);
 	}
@@ -94,18 +96,18 @@ module.exports = function (data_ext, data_int) {
 	 * Adds a new group to the user.
 	 * @param {String} token 
 	 * @param {String} userId
-	 * @param {String} groupId
 	 * @param {String} groupName 
 	 * @param {String} groupDescription 
 	 * @returns promise with an object containing the new group information
 	 */
-	async function createGroup(token, userId, groupId, groupName, groupDescription) {
+	async function createGroup(token, userId, groupName, groupDescription) {
 		checkBadRequest({}, {
-			groupId: { value: groupId, type: 'string' },
 			groupName: { value: groupName, type: 'string' },
 			groupDescription: { value: groupDescription, type: 'string' }
 		});
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
+
+		const groupId = crypto.randomUUID();
 
 		return await data_int.createGroup(userId, groupId, groupName, groupDescription);
 	}
@@ -125,7 +127,7 @@ module.exports = function (data_ext, data_int) {
 			newGroupName: { value: newGroupName, type: 'string' },
 			newGroupDescription: { value: newGroupDescription, type: 'string' }
 		});
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
 		return await data_int.editGroup(userId, groupId, newGroupName, newGroupDescription);
 	}
@@ -138,7 +140,7 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with object containing all group objects
 	 */
 	async function listUserGroups(token, userId) {
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
 		return await data_int.listUserGroups(userId);
 	}
@@ -152,7 +154,7 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise with an object with the deleted group information
 	 */
 	async function deleteGroup(token, userId, groupId) {
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
 		return await data_int.deleteGroup(userId, groupId);
 	}
@@ -166,11 +168,9 @@ module.exports = function (data_ext, data_int) {
 	 * @returns promise an object containing the group details
 	 */
 	async function getGroupDetails(token, userId, groupId) {
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
-		const group = await data_int.getGroupFromUser(userId, groupId);
-
-		return await data_int.getGroupDetails(group);
+		return await data_int.getGroupDetails(userId, groupId);
 	}
 
 
@@ -179,7 +179,7 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} gameId
 	 * @returns promise an object containing the game details
 	 */
-	 async function getGameDetails(gameId) {
+	async function getGameDetails(gameId) {
 		return await data_ext.searchGamesById(gameId);
 	}
 
@@ -193,7 +193,7 @@ module.exports = function (data_ext, data_int) {
 	 * @return a promise with the added game object
 	 */
 	async function addGameToGroup(token, userId, groupId, gameId) {
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
 		const game = await data_ext.searchGamesById(gameId);
 
@@ -210,7 +210,7 @@ module.exports = function (data_ext, data_int) {
 	 * @return promise with the removed game object
 	 */
 	async function removeGameFromGroup(token, userId, groupId, gameId) {
-		checkAuthentication(token, userId);
+		await checkAuthentication(token, userId);
 
 		return await data_int.removeGameFromGroup(userId, groupId, gameId);
 	}
