@@ -21,7 +21,7 @@ const categories = {};
  * Gets the id:name map for mechanics from Board Game Atlas.
  */
 async function getGlobalMechanics() {
-	if (Object.keys(mechanics).length === 0) {
+	if (Object.keys(mechanics).length == 0) {
 		const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
 		for (const i in mechanicsRes.mechanics) {
 			const mechanic = mechanicsRes.mechanics[i];
@@ -36,7 +36,7 @@ async function getGlobalMechanics() {
  * Gets the id:name map for categories from Board Game Atlas.
  */
 async function getGlobalCategories() {
-	if (Object.keys(categories).length === 0) {
+	if (Object.keys(categories).length == 0) {
 		const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
 		for (const i in categoriesRes.categories) {
 			const category = categoriesRes.categories[i];
@@ -68,9 +68,9 @@ function getStatusClass(statusCode) {
  */
 async function do_fetch(uri) {
 	const res = await fetch(uri).catch(err => { throw errors.EXT_SVC_FAIL(err); });
+
 	if (res.ok)
 		return res.json();
-
 	else {
 		return res.json()
 			.catch(err => err)

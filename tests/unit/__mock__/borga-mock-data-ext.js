@@ -1,7 +1,7 @@
 'use strict';
 
 
-const errors = require('../borga-errors.js');
+const errors = require('../../../borga-errors.js');
 
 
 const games = {

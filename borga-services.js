@@ -54,7 +54,7 @@ module.exports = function (data_ext, data_int) {
 
 	/**
 	 * Gets the most popular games.
-	 * @returns a promise with an object containing the ids and names of the twenty most popular games
+	 * @returns a promise with an object containing the ids and information of the twenty most popular games
 	 */
 	async function getPopularGames() {
 		return await data_int.getPopularGames();

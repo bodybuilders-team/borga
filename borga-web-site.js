@@ -2,19 +2,17 @@
 
 
 const express = require('express');
-const async = require('hbs/lib/async');
-const crypto = require('crypto');
 
 
-module.exports = function (services, guest_token) {
+module.exports = function (services, guest) {
 
 	/**
-	 * Gets the token.
+	 * Gets the token from the request.
 	 * @param {Object} req 
 	 * @returns the token from the request
 	 */
-	function getToken(req) {
-		return guest_token; // to be improved...
+	function getBearerToken(req) {
+		return guest.token; // to be improved...
 	}
 
 
@@ -45,9 +43,11 @@ module.exports = function (services, guest_token) {
 	 */
 	async function showGameDetails(req, res) {
 		const gameId = req.params.gameId;
+
 		try {
 			const game = await services.getGameDetails(gameId);
-			const groups = Object.values(await services.listUserGroups(getToken(req), "guestId")); // To be improved
+			const groups = Object.values(await services.listUserGroups(getBearerToken(req), guest.id)); // To be improved
+
 			res.render('gameDetails', { header: 'Game Details', game, groups });
 		} catch (error) {
 			console.log(error);
@@ -64,7 +64,9 @@ module.exports = function (services, guest_token) {
 	async function showPopularGames(req, res) {
 		try {
 			const games = Object.values(await services.getPopularGames());
-			res.render('games', { header: 'Popular Games', games });
+			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
+
+			res.render('games', { header: 'Popular Games', games, groups });
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -79,9 +81,11 @@ module.exports = function (services, guest_token) {
 	 */
 	async function showSearchedGames(req, res) {
 		const gameName = req.query.gameName;
+
 		try {
 			const games = await services.searchGamesByName(gameName);
-			const groups = Object.values(await services.listUserGroups(getToken(req), "guestId")); // To be improved
+			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
+
 			res.render('games', { header: 'Games', gameName, games, groups });
 		} catch (error) {
 			console.log(error);
@@ -96,8 +100,9 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function showUserGroups(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
+
 		try {
 			const groups = await services.listUserGroups(token, userId);
 			res.render('groups', { groups });
@@ -114,13 +119,15 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function showGroupDetails(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupId = req.params.groupId;
+
 		try {
 			const group = await services.getGroupDetails(token, userId, groupId);
 			group.id = groupId;
 			// TODO - mandar game com url para poder meter hiperligação
+
 			res.render('groupDetails', { header: 'Group Details', group });
 		} catch (error) {
 			console.log(error);
@@ -135,15 +142,14 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function createGroup(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupName = req.body.groupName;
 		const groupDescription = req.body.groupDescription;
-		const groupId = crypto.randomUUID();
 
 		try {
-			await services.createGroup(token, userId, groupId, groupName, groupDescription);
-			res.redirect(`/user/${userId}/groups/${groupId}`);
+			const group = await services.createGroup(token, userId, groupName, groupDescription);
+			res.redirect(`/user/${userId}/groups/${group.id}`);
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -157,7 +163,7 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function editGroup(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupId = req.params.groupId;
 		const newGroupName = req.body.newGroupName;
@@ -179,7 +185,7 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function deleteGroup(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupId = req.params.groupId;
 
@@ -199,7 +205,7 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function addGameToGroup(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupId = req.params.groupId;
 		const gameId = req.params.gameId;
@@ -220,7 +226,7 @@ module.exports = function (services, guest_token) {
 	 * @param {Object} res 
 	 */
 	async function removeGameFromGroup(req, res) {
-		const token = getToken(req);
+		const token = getBearerToken(req);
 		const userId = req.params.userId;
 		const groupId = req.params.groupId;
 		const gameId = req.params.gameId;
@@ -260,7 +266,7 @@ module.exports = function (services, guest_token) {
 		const password = req.body.password;
 
 		try {
-			const userInfo = await services.createNewUser(userId, userName);
+			//const userInfo = await services.createNewUser(userId, userName);
 			res.redirect('/user');
 		} catch (error) {
 			console.log(error);

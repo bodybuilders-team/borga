@@ -1,39 +1,31 @@
 'use strict';
 
 
-const default_port = 8888;
-const port = process.argv[2] || default_port;
+module.exports = function (es_spec, guest) {
 
-const es_host = 'localhost';
-const es_port = 9200;
+    const data_ext_games = require('./board-games-data.js');
+    //const data_int = require('./borga-data-mem.js')(guest);
+    const data_int =
+        require('./borga-data-db')(
+            es_spec.url,
+            es_spec.prefix
+        );
 
-const es_prefix = 'prod';
+    const services = require('./borga-services.js')(data_ext_games, data_int);
 
-const guest_user = 'guest'
-const guest_token = '6df9657a-e012-4fbd-9193-af5fe832bcf6';
+    const web_api = require('./borga-web-api.js')(services);
+    const web_site = require('./borga-web-site.js')(services, guest);
 
-const data_ext_games = require('./board-games-data.js');
-//const data_int = require('./borga-data-mem.js');
-const data_int =
-	require('./borga-data-db')(
-		es_host, es_port,
-		es_prefix
-	)
+    const express = require('express');
+    const app = express();
 
-const services = require('./borga-services.js')(data_ext_games, data_int);
+    app.set('view engine', 'hbs');
 
-const webapi = require('./borga-web-api.js')(services);
-const webui = require('./borga-web-site.js')(services, guest_token);
+    app.use('/favicon.ico', express.static('static-files/favicon.ico'));
+    app.use('/public', express.static('static-files'));
 
-const express = require('express');
-const app = express();
+    app.use('/api', web_api);
+    app.use('/', web_site);
 
-app.set('view engine', 'hbs');
-
-app.use('/favicon.ico', express.static('static-files/favicon.ico'));
-app.use('/public', express.static('static-files'));
-
-app.use('/api', webapi);
-app.use('/', webui);
-
-app.listen(port);
+    return app;
+};

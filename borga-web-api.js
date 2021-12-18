@@ -18,9 +18,8 @@ module.exports = function (services) {
 		const auth = req.header('Authorization');
 		if (auth) {
 			const authData = auth.trim();
-			if (authData.substr(0, 6).toLowerCase() === 'bearer') {
+			if (authData.substr(0, 6).toLowerCase() === 'bearer')
 				return authData.replace(/^bearer\s+/i, '');
-			}
 		}
 		return null;
 	}
@@ -97,7 +96,8 @@ module.exports = function (services) {
 				}
 
 
-				if (Object.keys(info).length > 0) throw errors.BAD_REQUEST(info);
+				if (Object.keys(info).length > 0)
+					throw errors.BAD_REQUEST(info);
 
 				next();
 			}
@@ -115,8 +115,8 @@ module.exports = function (services) {
 	 */
 	async function getPopularGames(req, res) {
 		try {
-			const popularGames = await services.getPopularGames();
-			res.json({ popularGames });
+			const popularGames = Object.values(await services.getPopularGames());
+			res.json({ popularGames: Object.fromEntries(popularGames.map(game => [game.id, game.name])) });
 		} catch (err) {
 			onError(res, err);
 		}

@@ -1,9 +1,12 @@
 'use strict';
 
 
-const errors = require('../borga-errors.js');
+const config = require('../../../borga-config');
+const errors = require('../../../borga-errors.js');
 
-const dataMem = require("../borga-data-mem.js");
+const test_user = config.guest;
+
+const dataMem = require("../../../borga-data-mem.js")(test_user);
 
 
 // ----------------------------- Constants used in tests -----------------------------

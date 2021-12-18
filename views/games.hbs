@@ -30,11 +30,11 @@
                         <hr>
 
                         <form method="POST"
-                            onsubmit="this.action = '/user/guestId/groups/' + this.groupId.value + '/games/{{id}}';">
+                            onsubmit="this.action = '/user/guestid/groups/' + this.groupId.value + '/games/{{id}}';">
                             <select class="form-select inline w-50" aria-label="Group selection" id="groupId" required>
                                 <option value="" selected>Select a group</option>
                                 {{#each ../groups}}
-                                <option value="{{id}}">{{name}}</option>
+                                <option value="{{@key}}">{{name}}</option>
                                 {{/each}}
                             </select>
                             <input type="submit" class="btn btn-primary inline" value="Add To Group"

@@ -1,11 +1,14 @@
 'use strict';
 
 
-const errors = require('../borga-errors.js');
+const config = require('../../../borga-config');
+const errors = require('../../../borga-errors.js');
+
+const test_user = config.guest;
 
 const mockDataExt = require('../__mock__/borga-mock-data-ext.js');
-const dataMem = require('../borga-data-mem.js');
-const servicesBuilder = require('../borga-services.js');
+const dataMem = require('../../../borga-data-mem.js')(test_user);
+const servicesBuilder = require('../../../borga-services.js');
 
 const defaultServices = servicesBuilder(mockDataExt, dataMem);
 

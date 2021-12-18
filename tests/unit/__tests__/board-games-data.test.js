@@ -1,9 +1,8 @@
 'use strict';
 
 
-const errors = require('../borga-errors.js');
-
-const gamesData = require("../board-games-data.js");
+const errors = require('../../../borga-errors.js');
+const gamesData = require("../../../board-games-data.js");
 
 
 describe("getStatusClass tests", () => {

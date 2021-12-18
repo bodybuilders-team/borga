@@ -2,18 +2,17 @@
 
 
 const errors = require('./borga-errors');
-
 const crypto = require('crypto');
 const fetch = require('node-fetch')
 
+
 module.exports = function (
-	es_host, es_port,
+	es_url,
 	idx_prefix
 ) {
-	const BASE_URL = `http://${es_host}:${es_port}`
-	const tokensUri = `${BASE_URL}/${idx_prefix}_tokens`;
-	const usersUri = `${BASE_URL}/${idx_prefix}_users`
-	const gamesUri = `${BASE_URL}/${idx_prefix}_games`
+	const tokensUri = `${es_url}/${idx_prefix}_tokens`;
+	const usersUri = `${es_url}/${idx_prefix}_users`;
+	const gamesUri = `${es_url}/${idx_prefix}_games`;
 	const userGroupsUri = (userId) => `${usersUri}_${userId}_groups`;
 	const groupGamesUri = (userId, groupId) => `${userGroupsUri(userId)}_${groupId}_games`;
 
@@ -22,7 +21,7 @@ module.exports = function (
 
 	/**
 	 * Gets the most popular games.
-	 * @returns an array containing the ids of the twenty most popular games
+	 * @returns an object containing the ids and information of the twenty most popular games
 	 */
 	async function getPopularGames() {
 		const gameOccurrences = {};
@@ -51,7 +50,7 @@ module.exports = function (
 									if (!foundGamesInUser.includes(game._id)) {
 										if (!gameOccurrences[game._id]) {
 											gameOccurrences[game._id] = {
-												name: game._source.name,
+												game: (await (await fetch(`${gamesUri}/_doc/${game._id}`)).json())._source,
 												count: 1
 											};
 										}
@@ -72,7 +71,7 @@ module.exports = function (
 		}
 
 		const sortedGames = Object.entries(gameOccurrences).sort(([, a], [, b]) => b.count - a.count).slice(0, numberOfPopularGames);
-		const popularGames = Object.fromEntries(sortedGames.map(game => [game[0], game[1].name]));
+		const popularGames = Object.fromEntries(sortedGames.map(game => [game[0], game[1].game]));
 
 		return popularGames;
 	}
@@ -101,6 +100,7 @@ module.exports = function (
 		return null
 	}
 
+
 	/**
 	 * Creates a token, associating it to a userId.
 	 * @param {String} token 
@@ -111,7 +111,7 @@ module.exports = function (
 
 		try {
 			const response = await fetch(
-				`${tokensUri}/_doc/${token}`,
+				`${tokensUri}/_doc/${token}?refresh=wait_for`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -150,7 +150,7 @@ module.exports = function (
 
 		try {
 			const response = await fetch(
-				`${usersUri}/_doc/${userId}`,
+				`${usersUri}/_doc/${userId}?refresh=wait_for`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -159,6 +159,9 @@ module.exports = function (
 					})
 				}
 			);
+
+			if (response.status != 201)
+				throw (await response.json()).error;
 
 			const token = await createToken(userId);
 
@@ -169,6 +172,7 @@ module.exports = function (
 			throw errors.FAIL(err);
 		}
 	}
+
 
 	/**
 	 * Gets an user.
@@ -183,6 +187,9 @@ module.exports = function (
 			);
 			if (response.status == 200)
 				return (await response.json())._source;
+
+			if (response.status == 400)
+				throw (await response.json()).error;
 		}
 		catch (err) {
 			console.log(err);
@@ -207,7 +214,7 @@ module.exports = function (
 
 		try {
 			const response = await fetch(
-				`${userGroupsUri(userId)}/_doc/${groupId}`,
+				`${userGroupsUri(userId)}/_doc/${groupId}?refresh=wait_for`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -222,7 +229,7 @@ module.exports = function (
 				id: groupId,
 				name: groupName,
 				description: groupDescription
-			}
+			};
 		}
 		catch (err) {
 			throw errors.FAIL(err);
@@ -263,7 +270,6 @@ module.exports = function (
 			);
 			if (response.status == 200)
 				return (await response.json())._source;
-
 		}
 		catch (err) {
 			console.log(err);
@@ -287,7 +293,6 @@ module.exports = function (
 			);
 			if (response.status == 200) {
 				const answer = await response.json();
-
 				return Object.fromEntries(answer.hits.hits.map(hit => [hit._id, hit._source]));
 			}
 		}
@@ -311,14 +316,14 @@ module.exports = function (
 
 		try {
 			await fetch(
-				`${userGroupsUri(userId)}/_doc/${groupId}`,
+				`${userGroupsUri(userId)}/_doc/${groupId}?refresh=wait_for`,
 				{
 					method: 'DELETE'
 				}
 			);
 
 			await fetch(
-				`${groupGamesUri(userId, groupId)}`,
+				`${groupGamesUri(userId, groupId)}?refresh=wait_for`,
 				{
 					method: 'DELETE'
 				}
@@ -356,7 +361,6 @@ module.exports = function (
 			);
 			if (response.status == 200) {
 				const answer = await response.json();
-
 				games = Object.fromEntries(answer.hits.hits.map(hit => [hit._id, hit._source.name]));
 			}
 		}
@@ -364,7 +368,6 @@ module.exports = function (
 			console.log(err);
 			throw errors.FAIL(err);
 		}
-
 
 		return {
 			id: groupId,
@@ -386,7 +389,7 @@ module.exports = function (
 
 		try {
 			const response1 = await fetch(
-				`${gamesUri}/_doc/${gameObj.id}`,
+				`${gamesUri}/_doc/${gameObj.id}?refresh=wait_for`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -395,7 +398,7 @@ module.exports = function (
 			);
 
 			const response2 = await fetch(
-				`${groupGamesUri(userId, groupId)}/_doc/${gameObj.id}`,
+				`${groupGamesUri(userId, groupId)}/_doc/${gameObj.id}?refresh=wait_for`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
@@ -431,15 +434,14 @@ module.exports = function (
 			const answer = await gamesResponse.json();
 
 			const groupGamesResponse = await fetch(
-				`${groupGamesUri(userId, groupId)}/_doc/${gameId}`,
+				`${groupGamesUri(userId, groupId)}/_doc/${gameId}?refresh=wait_for`,
 				{
 					method: 'DELETE'
 				}
 			);
 
-			if (groupGamesResponse.status == 200) {
+			if (groupGamesResponse.status == 200)
 				return answer._source;
-			}
 		}
 		catch (err) {
 			console.log(err);
@@ -449,14 +451,13 @@ module.exports = function (
 		throw errors.NOT_FOUND({ gameId });
 	}
 
-	// ------------------------- Utils -------------------------
 
 	return {
 		getPopularGames,
 
 		//-- User --
 		createNewUser,
-		tokenToUserId,
+		getUser,
 
 		//-- Group --
 		createGroup,
@@ -470,9 +471,6 @@ module.exports = function (
 		removeGameFromGroup,
 
 		//-- Tokens --
-		tokenToUserId,
-
-		//-- Utils --
-		getUser
+		tokenToUserId
 	};
 }
