@@ -81,9 +81,11 @@ module.exports = function (services, guest) {
 	 */
 	async function showSearchedGames(req, res) {
 		const gameName = req.query.gameName;
+		const limit = req.query.limit;
+		const order_by = req.query.order_by;
 
 		try {
-			const games = await services.searchGamesByName(gameName);
+			const games = await services.searchGamesByName(gameName, limit, order_by);
 			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
 
 			res.render('games', { header: 'Games', gameName, games, groups });

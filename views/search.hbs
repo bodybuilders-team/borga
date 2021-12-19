@@ -1,10 +1,31 @@
 <h1>Find a Game</h1>
 
-<form action="/games" method="GET">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="gameName" placeholder="Enter Game Name"
-            aria-label="Enter Game Name" aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-    </div>
-    <small id="emailHelp" class="form-text text-muted">Example: Catan, Monopoly, etc</small>
-</form>
+<div class="card card-body w-50 center">
+    <form action="/games" method="GET">
+        <div class="mb-3">
+            <label for="gameName" class="form-label">Game Name</label>
+            <input type="text" class="form-control" id="gameName" name="gameName" placeholder="Enter game name"
+                required>
+            <small id="gameNameHelp" class="form-text text-muted">Example: Catan, Monopoly, etc</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="order" class="form-label">Order by</label>
+            <select class="form-select inline w-50" aria-label="order" id="order_by" name="order_by">
+                <option value="" selected>Select a order to display the results</option>
+                <option value="rank">Rank</option>
+                <option value="price">Price</option>
+                <option value="name">Name</option>
+            </select>
+
+            <label for="limit" class="form-label">Number of results</label>
+            <input type="number" id="limit" name="limit" min="1" max="100">
+        </div>
+
+
+
+
+
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>

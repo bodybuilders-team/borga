@@ -85,19 +85,17 @@ module.exports = function (
 	 */
 	async function tokenToUserId(token) {
 		try {
-			const response = await fetch(
-				`${tokensUri}/_doc/${token}`
-			);
-			if (response.status == 200) {
+			const response = await fetch(`${tokensUri}/_doc/${token}`);
+
+			if (response.status == 200)
 				return (await response.json())._source.userId;
-			}
 		}
 		catch (err) {
 			console.log(err);
 			throw errors.FAIL(err);
 		}
 
-		return null
+		return null;
 	}
 
 
@@ -126,7 +124,7 @@ module.exports = function (
 			throw errors.FAIL(err);
 		}
 
-		return token
+		return token;
 	}
 
 	// ------------------------- Users Functions -------------------------
@@ -165,7 +163,7 @@ module.exports = function (
 
 			const token = await createToken(userId);
 
-			return { userId, token, userName }
+			return { userId, token, userName };
 		}
 		catch (err) {
 			console.log(err);
@@ -182,9 +180,8 @@ module.exports = function (
 	 */
 	async function getUser(userId) {
 		try {
-			const response = await fetch(
-				`${usersUri}/_doc/${userId}`
-			);
+			const response = await fetch(`${usersUri}/_doc/${userId}`);
+
 			if (response.status == 200)
 				return (await response.json())._source;
 
@@ -248,9 +245,12 @@ module.exports = function (
 	async function editGroup(userId, groupId, newGroupName, newGroupDescription) {
 		const group = await getGroup(userId, groupId);
 
-		return await createGroup(userId, groupId,
+		return await createGroup(
+			userId,
+			groupId,
 			newGroupName ? newGroupName : group.groupName,
-			newGroupDescription ? newGroupDescription : group.groupDescription);
+			newGroupDescription ? newGroupDescription : group.groupDescription
+		);
 	}
 
 
@@ -265,9 +265,8 @@ module.exports = function (
 		await getUser(userId);
 
 		try {
-			const response = await fetch(
-				`${userGroupsUri(userId)}/_doc/${groupId}`
-			);
+			const response = await fetch(`${userGroupsUri(userId)}/_doc/${groupId}`);
+
 			if (response.status == 200)
 				return (await response.json())._source;
 		}
@@ -288,9 +287,8 @@ module.exports = function (
 		await getUser(userId);
 
 		try {
-			const response = await fetch(
-				`${userGroupsUri(userId)}/_search`
-			);
+			const response = await fetch(`${userGroupsUri(userId)}/_search`);
+
 			if (response.status == 200) {
 				const answer = await response.json();
 				return Object.fromEntries(answer.hits.hits.map(hit => [hit._id, hit._source]));
@@ -356,9 +354,8 @@ module.exports = function (
 		let games = [];
 
 		try {
-			const response = await fetch(
-				`${groupGamesUri(userId, groupId)}/_search`
-			);
+			const response = await fetch(`${groupGamesUri(userId, groupId)}/_search`);
+
 			if (response.status == 200) {
 				const answer = await response.json();
 				games = Object.fromEntries(answer.hits.hits.map(hit => [hit._id, hit._source.name]));
@@ -428,9 +425,7 @@ module.exports = function (
 		await getGroup(userId, groupId);
 
 		try {
-			const gamesResponse = await fetch(
-				`${gamesUri}/_doc/${gameId}`
-			);
+			const gamesResponse = await fetch(`${gamesUri}/_doc/${gameId}`);
 			const answer = await gamesResponse.json();
 
 			const groupGamesResponse = await fetch(
