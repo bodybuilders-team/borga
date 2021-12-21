@@ -321,7 +321,7 @@ module.exports = function (
 			);
 
 			await fetch(
-				`${groupGamesUri(userId, groupId)}?refresh=wait_for`,
+				`${groupGamesUri(userId, groupId)}`,
 				{
 					method: 'DELETE'
 				}

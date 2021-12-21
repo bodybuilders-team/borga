@@ -216,11 +216,22 @@ module.exports = function (data_ext, data_int) {
 	}
 
 
+	/**
+	 * Gets an user by its id
+	 * @param {String} userId 
+	 * @returns the user object
+	 */
+	async function getUser(userId) {
+		return await data_int.getUser(userId);
+	}
+
+
 	return {
 		getPopularGames,
 		searchGamesByName,
 
 		createNewUser,
+		getUser,
 		createGroup,
 		editGroup,
 		listUserGroups,

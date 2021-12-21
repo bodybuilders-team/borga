@@ -43,7 +43,6 @@ module.exports = function (services, guest) {
 	 */
 	async function showGameDetails(req, res) {
 		const gameId = req.params.gameId;
-
 		try {
 			const game = await services.getGameDetails(gameId);
 			const groups = Object.values(await services.listUserGroups(getBearerToken(req), guest.id)); // To be improved
@@ -243,7 +242,6 @@ module.exports = function (services, guest) {
 	}
 
 
-	// NOT YET IMPLEMENTED
 	/**
 	 * Shows the register page.
 	 * @param {Object} req 
@@ -251,9 +249,13 @@ module.exports = function (services, guest) {
 	 */
 	async function showUserPage(req, res) {
 		const userId = req.params.userId;
-		//const user = await services.getUser(userId);
-
-		res.render('user');//, { user } );
+		try {
+			res.render('user', { user: userId ?  await services.getUser(userId) : undefined });
+		}
+		catch (error) {
+			console.log(error);
+			res.render('error', { error });
+		}
 	}
 
 	// NOT YET IMPLEMENTED
@@ -266,7 +268,6 @@ module.exports = function (services, guest) {
 		const userName = req.body.userName;
 		const userId = req.body.userId;
 		const password = req.body.password;
-
 		try {
 			//const userInfo = await services.createNewUser(userId, userName);
 			res.redirect('/user');
@@ -298,13 +299,13 @@ module.exports = function (services, guest) {
 	router.get('/games/:gameId', showGameDetails);
 
 
-	// Show register/login - NOT YET IMPLEMENTED
+	// Show register/login 
 	router.get('/user', showUserPage);
 
-	// Show user page - NOT YET IMPLEMENTED
+	// Show user page 
 	router.get('/user/:userId', showUserPage);
 
-	// Register new user - NOT YET IMPLEMENTED
+	// Register/Login new user - NOT YET IMPLEMENTED
 	router.post('/user', registerUser);
 
 
