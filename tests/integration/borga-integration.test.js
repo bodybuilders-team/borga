@@ -21,8 +21,14 @@ test('Confirm database is running', async () => {
 
 
 describe("Games integration tests", () => {
-    // TODO: popularGames tests
 
+    afterAll(async () => {
+		await fetch(
+			`${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
+			{ method: 'DELETE' }
+		);
+	});
+    
     test('Search games with gameName="Catan" with limit=1 works', async () => {
         const response = await request(app)
             .get('/api/games/search?gameName=Catan&limit=1')
@@ -118,4 +124,50 @@ describe("Games integration tests", () => {
             }
         );
     });
+
+    // popularGames tests
+    test('Popular games without any created groups returns {}', async () => {
+        const response = await request(app)
+            .get('/api/games/popular')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200);
+    
+        expect(response.body).toBeTruthy();
+        expect(response.body).toEqual({
+               "popularGames": {},
+            });
+    });
+    
+    test('Popular games with created groups works', async () => {
+        const userId = config.guest.id;
+        const groupName = 'TestGroup';
+        const groupDescription = 'TestDescription';
+        const gameId = 'OIXt3DmJU0';
+        
+        const group = await request(app)
+        .post(`/api/user/${userId}/groups`)
+        .set('Authorization', `Bearer ${config.guest.token}`)
+        .set('Accept', 'application/json')
+        .send({ groupName, groupDescription });
+        
+        await request(app)
+        .post(`/api/user/${userId}/groups/${group.body['Created group'].id}/games`)
+        .set('Authorization', `Bearer ${config.guest.token}`)
+        .set('Accept', 'application/json')
+        .send({ gameId });
+
+        const response = await request(app)
+            .get('/api/games/popular')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200);
+        
+        expect(response.body).toBeTruthy();
+        expect(response.body).toEqual({
+               "popularGames": {
+                'OIXt3DmJU0': 'Catan'
+               },
+            });
+        });
 });
