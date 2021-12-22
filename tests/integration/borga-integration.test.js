@@ -22,7 +22,7 @@ test('Confirm database is running', async () => {
 
 describe("Games integration tests", () => {
 
-    afterAll(async () => {
+    afterEach(async () => {
 		await fetch(
 			`${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
 			{ method: 'DELETE' }
@@ -170,4 +170,87 @@ describe("Games integration tests", () => {
                },
             });
         });
+
+        test('Create new user works', async () => {
+            const userId = 'testguestid';
+            const userName = 'TestGuest';
+
+            const response = await request(app)
+                .post('/api/user')
+                .set('Accept', 'application/json')
+                .send({ userId, userName })
+                .expect('Content-Type', /json/)
+                .expect(200);
+        
+            expect(response.body).toBeTruthy();
+            expect(response.body).toEqual({
+                "Created user": {
+                    "userId": userId,
+                    "token": `${response.body['Created user'].token}`,
+                    "userName": userName
+                }
+                });
+        });
+
+        test('Create new user without userId or userName replies with code 400 BAD REQUEST', async () => {
+            const response = await request(app)
+                .post('/api/user')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(400);
+        
+            expect(response.body).toBeTruthy();
+            expect(response.body).toEqual(
+              {
+                "cause":
+                {
+                    "code": 1001,
+                    "info": { "userId": "required property missing",
+                              "userName": "required property missing" },
+                    "message": "The request is bad",
+                    "name": "BAD_REQUEST"
+                }
+            });
+        });
+
+        test('List Groups without any groups works', async () => {
+            
+            const response = await request(app)
+                .get(`/api/user/${config.guest.id}/groups`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${config.guest.token}`)
+                .expect('Content-Type', /json/)
+                .expect(200);
+        
+            expect(response.body).toBeTruthy();
+            expect(response.body).toEqual({ });
+        });
+
+        test('List Groups with groups works', async () => {
+            
+            const groupName = 'TestGroup';
+            const groupDescription = 'TestDescription';
+            const group = await request(app)
+                .post(`/api/user/${config.guest.id}/groups`)
+                .set('Authorization', `Bearer ${config.guest.token}`)
+                .set('Accept', 'application/json')
+                .send({ groupName, groupDescription });
+
+            const response = await request(app)
+                .get(`/api/user/${config.guest.id}/groups`)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${config.guest.token}`)
+                .expect('Content-Type', /json/)
+                .expect(200);
+        
+            expect(response.body).toBeTruthy();
+            expect(response.body).toEqual({  
+                [group.body['Created group'].id] : {
+                "description": groupDescription,
+                "name": groupName
+                }
+            });
+        });
+
+        //TODO: addGametogroup, groupDetails, deletar o user pa n repetir
 });
