@@ -1,5 +1,6 @@
 'use strict';
 
+
 const fetch = require('node-fetch');
 const request = require('supertest');
 
@@ -14,8 +15,6 @@ const es_spec = {
 const app = server(es_spec, config.guest);
 
 
-// NOTA!!!!!: afterEach foi apagado pq neste momento n existe repetição de deletes, possivelmente tem de se voltar a adicionar
-
 test('Confirm database is running', async () => {
     const response = await fetch(`${es_spec.url}/_cat/health`);
     expect(response.status).toBe(200);
@@ -25,6 +24,7 @@ test('Confirm database is running', async () => {
 describe("Explore Games integration tests", () => {
 
     // ----- searchGames tests -----
+
     test('Search games with gameName="Catan" with limit=1 works', async () => {
         const response = await request(app)
             .get('/api/games/search?gameName=Catan&limit=1')
@@ -123,6 +123,7 @@ describe("Explore Games integration tests", () => {
 
 
     // ----- popularGames tests -----
+
     test('Popular games without any created groups returns {}', async () => {
         const response = await request(app)
             .get('/api/games/popular')
@@ -251,9 +252,11 @@ describe('User integration tests', () => {
 
 });
 
+
 describe("Groups integration tests", () => {
-    
+
     // ----- createGroup tests -----
+
     test('Create Group works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
@@ -269,13 +272,13 @@ describe("Groups integration tests", () => {
 
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
-               "Created group":  {
-                 "description": groupDescription,
-                 "id": groupId,
-                 "name": groupName,
+            "Created group": {
+                "description": groupDescription,
+                "id": groupId,
+                "name": groupName,
             }
         });
-        
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
@@ -305,7 +308,9 @@ describe("Groups integration tests", () => {
         });
     });
 
+
     // ----- deleteGroup tests -----
+
     test('Delete Group works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
@@ -328,15 +333,15 @@ describe("Groups integration tests", () => {
 
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
-               "Deleted group":  {
-                 "description": groupDescription,
-                 "id": groupId,
-                 "name": groupName,
+            "Deleted group": {
+                "description": groupDescription,
+                "id": groupId,
+                "name": groupName,
             }
         });
     });
 
-    test('Delete Group without valid groupId relpies with 404 NOT_FOUND', async () => {
+    test('Delete Group without valid groupId replies with 404 NOT_FOUND', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
         await request(app)
@@ -366,14 +371,16 @@ describe("Groups integration tests", () => {
                 "name": "NOT_FOUND"
             }
         });
-        
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
         );
     });
 
+
     // ----- listUserGroups tests -----
+
     test('List Groups without any groups works', async () => {
         const response = await request(app)
             .get(`/api/user/${config.guest.id}/groups`)
@@ -419,7 +426,9 @@ describe("Groups integration tests", () => {
 
     });
 
+
     // ----- groupDetails tests -----
+
     test('Group Details works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
@@ -442,12 +451,12 @@ describe("Groups integration tests", () => {
 
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
-               "description": groupDescription,
-               "games": [],
-               "id": groupId,
-               "name": groupName,
-             });
-        
+            "description": groupDescription,
+            "games": [],
+            "id": groupId,
+            "name": groupName,
+        });
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
@@ -484,19 +493,21 @@ describe("Groups integration tests", () => {
                 "name": "NOT_FOUND"
             }
         });
-        
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
         );
     });
 
+
     // ----- editGroup tests -----
+
     test('Edit Group works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
-        const groupName2 = 'TestGroup2';
-        const groupDescription2 = 'TestDescription2';
+        const newGroupName = 'TestGroup2';
+        const newGroupDescription = 'TestDescription2';
         const group = await request(app)
             .post(`/api/user/${config.guest.id}/groups`)
             .set('Authorization', `Bearer ${config.guest.token}`)
@@ -511,20 +522,19 @@ describe("Groups integration tests", () => {
             .post(`/api/user/${config.guest.id}/groups/${groupId}`)
             .set('Authorization', `Bearer ${config.guest.token}`)
             .set('Accept', 'application/json')
-            .send({ groupName2, groupDescription2 })
+            .send({ newGroupName, newGroupDescription })
             .expect('Content-Type', /json/)
             .expect(200);
 
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
             'Edited group': {
-               "description": groupDescription2,
-               "games": [],
-               "id": groupId,
-               "name": groupName2
+                "description": newGroupDescription,
+                "id": groupId,
+                "name": newGroupName
             }
         });
-        
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
@@ -563,8 +573,8 @@ describe("Groups integration tests", () => {
                 "message": "The request is bad",
                 "name": "BAD_REQUEST"
             }
-    });
-        
+        });
+
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
             { method: 'DELETE' }
@@ -572,9 +582,11 @@ describe("Groups integration tests", () => {
     });
 });
 
+
 describe("Games integration tests", () => {
 
     // ----- addGameToGroup tests -----
+
     test('Add game to group works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
@@ -586,7 +598,7 @@ describe("Games integration tests", () => {
             .send({ groupName, groupDescription });
 
         const groupId = group.body['Created group'].id;
-        
+
         const response = await request(app)
             .post(`/api/user/${config.guest.id}/groups/${groupId}/games`)
             .set('Accept', 'application/json')
@@ -594,7 +606,7 @@ describe("Games integration tests", () => {
             .send({ gameId })
             .expect('Content-Type', /json/)
             .expect(200);
-        
+
         expect(response.body).toBeTruthy();
         expect(response.body['Added game'].id).toEqual(gameId);
 
@@ -617,7 +629,7 @@ describe("Games integration tests", () => {
     test('Add game to group without gameId replies with 400 BAD_REQUEST', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
-        
+
         const group = await request(app)
             .post(`/api/user/${config.guest.id}/groups`)
             .set('Authorization', `Bearer ${config.guest.token}`)
@@ -625,14 +637,14 @@ describe("Games integration tests", () => {
             .send({ groupName, groupDescription });
 
         const groupId = group.body['Created group'].id;
-        
+
         const response = await request(app)
             .post(`/api/user/${config.guest.id}/groups/${groupId}/games`)
             .set('Accept', 'application/json')
             .set('Authorization', `Bearer ${config.guest.token}`)
             .expect('Content-Type', /json/)
             .expect(400);
-        
+
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
             "cause":
@@ -652,8 +664,10 @@ describe("Games integration tests", () => {
         );
     });
 
-     // ----- removeGameFromGroup tests -----
-     test('Remove game from group works', async () => {
+
+    // ----- removeGameFromGroup tests -----
+
+    test('Remove game from group works', async () => {
         const groupName = 'TestGroup';
         const groupDescription = 'TestDescription';
         const gameId = 'OIXt3DmJU0';
@@ -664,7 +678,7 @@ describe("Games integration tests", () => {
             .send({ groupName, groupDescription });
 
         const groupId = group.body['Created group'].id;
-        
+
         await request(app)
             .post(`/api/user/${config.guest.id}/groups/${groupId}/games`)
             .set('Accept', 'application/json')
@@ -679,12 +693,17 @@ describe("Games integration tests", () => {
             .set('Authorization', `Bearer ${config.guest.token}`)
             .expect('Content-Type', /json/)
             .expect(200);
-        
+
         expect(response.body).toBeTruthy();
         expect(response.body['Removed game'].id).toEqual(gameId);
 
         await fetch(
             `${es_spec.url}/${es_spec.prefix}_games`,
+            { method: 'DELETE' }
+        );
+
+        await fetch(
+            `${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups_${groupId}_games`,
             { method: 'DELETE' }
         );
 
@@ -705,7 +724,7 @@ describe("Games integration tests", () => {
             .send({ groupName, groupDescription });
 
         const groupId = group.body['Created group'].id;
-        
+
         await request(app)
             .post(`/api/user/${config.guest.id}/groups/${groupId}/games`)
             .set('Accept', 'application/json')
@@ -720,7 +739,7 @@ describe("Games integration tests", () => {
             .set('Authorization', `Bearer ${config.guest.token}`)
             .expect('Content-Type', /json/)
             .expect(404);
-        
+
         expect(response.body).toBeTruthy();
         expect(response.body).toEqual({
             "cause":

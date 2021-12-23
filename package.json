@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node borga-launch.js",
     "test": "jest --testTimeout=100000 --roots=tests/unit",
-    "integration-tests": "jest --roots=tests/integration"
+    "integration-tests": "jest --testTimeout=100000 --roots=tests/integration"
   },
   "keywords": [],
   "author": "",
