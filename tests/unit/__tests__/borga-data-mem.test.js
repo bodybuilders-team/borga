@@ -135,9 +135,9 @@ describe("Group tests", () => {
 	test("createGroup returns the name of the created group", () => {
 		expect(dataMem.createGroup(userId1, "ABC", groupName1, groupDescription1))
 			.toEqual({
-				groupId: "ABC",
-				groupName: groupName1,
-				groupDescription: groupDescription1
+				id: "ABC",
+				name: groupName1,
+				description: groupDescription1
 			});
 	});
 
@@ -147,9 +147,9 @@ describe("Group tests", () => {
 
 		expect(dataMem.editGroup(userId1, groupId1, newGroupName, newGroupDescription))
 			.toEqual({
-				groupId: groupId1,
-				newGroupName,
-				newGroupDescription
+				id: groupId1,
+				name: newGroupName,
+				description: newGroupDescription
 			});
 
 		expect(dataMem.getGroupFromUser(userId1, groupId1))
@@ -162,15 +162,20 @@ describe("Group tests", () => {
 
 	test("listUserGroups returns an array containing all group objects", () => {
 		expect(dataMem.listUserGroups(userId1))
-			.toEqual({ [groupId1]: groupObj1 });
+			.toEqual({
+				[groupId1]: {
+					name: groupObj1.name,
+					description: groupObj1.description
+				}
+			});
 	});
 
 	test("deleteGroup deletes a group, returning name of the group", () => {
 		expect(dataMem.deleteGroup(userId1, groupId1))
 			.toEqual({
-				groupId: groupId1,
-				groupName: groupName1,
-				groupDescription: groupDescription1
+				id: groupId1,
+				name: groupName1,
+				description: groupDescription1
 			});
 
 		assertThrowsNotFound(() => dataMem.getGroupFromUser(userId1, groupId1), { groupId: groupId1 });

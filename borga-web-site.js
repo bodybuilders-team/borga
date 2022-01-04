@@ -250,7 +250,7 @@ module.exports = function (services, guest) {
 	async function showUserPage(req, res) {
 		const userId = req.params.userId;
 		try {
-			res.render('user', { user: userId ?  await services.getUser(userId) : undefined });
+			res.render('user', { user: userId ? await services.getUser(userId) : undefined });
 		}
 		catch (error) {
 			console.log(error);

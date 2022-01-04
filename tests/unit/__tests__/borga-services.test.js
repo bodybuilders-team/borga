@@ -156,9 +156,9 @@ describe("Create User groups tests", () => {
 		const res = await defaultServices.createGroup(token1, userId1, groupName1, groupDescription1);
 		expect(res).toBeDefined();
 		expect(res).toEqual({
-			groupId: res.groupId,
-			groupName: groupName1,
-			groupDescription: groupDescription1
+			id: res.id,
+			name: groupName1,
+			description: groupDescription1
 		});
 	});
 });
@@ -185,25 +185,28 @@ describe("User groups operations tests", () => {
 		const res = await defaultServices.editGroup(token1, userId1, groupId1, "Paulão games", groupDescription1);
 		expect(res).toBeDefined();
 		expect(res).toEqual({
-			groupId: groupId1,
-			newGroupName: "Paulão games",
-			newGroupDescription: groupDescription1
+			id: groupId1,
+			name: "Paulão games",
+			description: groupDescription1
 		});
 	});
 
 	test('List groups with valid parameters', async () => {
 		const res = await defaultServices.listUserGroups(token1, userId1);
 		expect(res).toBeDefined();
-		expect(res[groupId1]).toEqual(groupObj1);
+		expect(res[groupId1]).toEqual({
+			name: groupObj1.name,
+			description: groupObj1.description
+		});
 	});
 
 	test('Delete group with valid parameters', async () => {
 		const res = await defaultServices.deleteGroup(token1, userId1, groupId1);
 		expect(res).toBeDefined();
 		expect(res).toEqual({
-			groupId: groupId1,
-			groupName: groupName1,
-			groupDescription: groupDescription1,
+			id: groupId1,
+			name: groupName1,
+			description: groupDescription1,
 		});
 	});
 

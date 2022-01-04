@@ -102,7 +102,11 @@ module.exports = function (guest) {
 		const groupObj = createGroupObj(groupName, groupDescription)
 		user.groups[groupId] = groupObj;
 
-		return { groupId, groupName: groupObj.name, groupDescription: groupObj.description };
+		return {
+			id: groupId,
+			name: groupObj.name,
+			description: groupObj.description
+		};
 	}
 
 
@@ -119,7 +123,11 @@ module.exports = function (guest) {
 		group.name = newGroupName;
 		group.description = newGroupDescription;
 
-		return { groupId, newGroupName, newGroupDescription };
+		return {
+			id: groupId,
+			name: newGroupName,
+			description: newGroupDescription
+		};
 	}
 
 
@@ -129,7 +137,10 @@ module.exports = function (guest) {
 	 * @returns object containing all group objects
 	 */
 	function listUserGroups(userId) {
-		return getUser(userId).groups;
+		const groups = getUser(userId).groups;
+		return Object.fromEntries(Object.entries(groups).map(group =>
+			[group[0], Object.fromEntries(Object.entries(group[1]).filter(entry => entry[0] != "games"))]
+		));
 	}
 
 
@@ -142,7 +153,11 @@ module.exports = function (guest) {
 	function deleteGroup(userId, groupId) {
 		const group = getGroupFromUser(userId, groupId);
 		delete getUser(userId).groups[groupId];
-		return { groupId, groupName: group.name, groupDescription: group.description };
+		return {
+			id: groupId,
+			name: group.name,
+			description: group.description
+		};
 	}
 
 
