@@ -42,7 +42,7 @@ describe("Explore Games integration tests", () => {
 				"image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
 				"publisher": "KOSMOS",
 				"amazon_rank": 133,
-				"price": "29.99",
+				"price": "32.97",
 				"mechanics": [
 					"Dice Rolling",
 					"Network and Route Building",

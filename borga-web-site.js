@@ -127,7 +127,6 @@ module.exports = function (services, guest) {
 		try {
 			const group = await services.getGroupDetails(token, userId, groupId);
 			group.id = groupId;
-			// TODO - mandar game com url para poder meter hiperligação
 
 			res.render('groupDetails', { header: 'Group Details', group });
 		} catch (error) {
@@ -281,7 +280,6 @@ module.exports = function (services, guest) {
 	const router = express.Router();
 	router.use(express.urlencoded({ extended: true }));
 
-
 	// Homepage
 	router.get('/', getHomepage);
 
@@ -300,10 +298,10 @@ module.exports = function (services, guest) {
 
 
 	// Show register/login 
-	router.get('/user', showUserPage);
+	router.get('/user/profile', showUserPage);
 
 	// Show user page 
-	router.get('/user/:userId', showUserPage);
+	router.get('/user/:userId/profile', showUserPage);
 
 	// Register/Login new user - NOT YET IMPLEMENTED
 	router.post('/user', registerUser);

@@ -16,7 +16,7 @@
         <td>Games</td>
         <td>
             {{#each games}}
-            {{this}}{{#unless @last}}, {{/unless}}
+            <a href="/games/{{@key}}">{{this}}</a>{{#unless @last}}, {{/unless}}
             {{/each}}
         </td>
     </tr>
