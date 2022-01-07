@@ -89,8 +89,14 @@ module.exports = function (services, guest) {
 
 			res.render('games', { header: 'Games', gameName, games, groups });
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			console.log(error)
+			if (error.name == "NOT_FOUND" && error.info.gameName) {
+				res.render('error', { error, gameNameNotFound: gameName });
+			}
+			else {
+				console.log(error);
+				res.render('error', { error });
+			}
 		}
 	}
 

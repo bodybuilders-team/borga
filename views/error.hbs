@@ -1,3 +1,7 @@
+{{#if gameNameNotFound}}
+<h1>No game with the name "{{gameNameNotFound}}" was found.</h1>
+{{else}}
+
 <h1>Something went wrong :(</h1>
 
 {{#with error}}
@@ -7,3 +11,5 @@
 <h6>Message: {{message}}</h6>
 <h6>Information: {{#each info}}{ {{@key}}: {{this}} }{{/each}}</h6>
 {{/with}}
+
+{{/if}}

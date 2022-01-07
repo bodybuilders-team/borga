@@ -87,7 +87,7 @@ async function searchGamesByName(gameName, limit, order_by, ascending) {
 	const res = await do_fetch(game_uri);
 
 	if (res.games.length == 0 || res.count == 0)
-		throw errors.NOT_FOUND({ name: gameName });
+		throw errors.NOT_FOUND({ gameName });
 
 	return Promise.all(Object.values(res.games.map(async (game) => await makeGameObj(game))));
 }
