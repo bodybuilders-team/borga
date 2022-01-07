@@ -34,35 +34,9 @@ module.exports = function (guest) {
 		'5d389af1-06db-4401-8aef-36d8d6428f31': "a48309",
 		[guest.token]: [guest.id]
 	};
-
-	const numberOfPopularGames = 20;
-
-
-	/**
-	 * Gets the most popular games.
-	 * @returns an object containing the ids and names of the twenty most popular games
-	 */
-	function getPopularGames() {
-		const gameOccurrences = {};
-
-		for (const userId in users) {
-			for (const groupName in getUser(userId).groups) {
-				for (const gameName in getGroupFromUser(userId, groupName).games) {
-					const currentCount = gameOccurrences[gameName];
-					gameOccurrences[gameName] = currentCount ? currentCount + 1 : 1;
-				}
-			}
-		}
-
-		const sortedGames = Object.entries(gameOccurrences).sort(([, a], [, b]) => b - a).slice(0, numberOfPopularGames);
-		const popularGames = Object.fromEntries(sortedGames.map(game => [game[0], games[game[0]]]));
-
-		return popularGames;
-	}
-
+	
 
 	// ------------------------- Users Functions -------------------------
-
 
 	/**
 	 * Creates a new user given its id and name.
@@ -84,7 +58,6 @@ module.exports = function (guest) {
 
 
 	// ------------------------- Groups Functions -------------------------
-
 
 	/**
 	 * Adds a new group to the user.
@@ -120,13 +93,13 @@ module.exports = function (guest) {
 	 */
 	function editGroup(userId, groupId, newGroupName, newGroupDescription) {
 		const group = getGroupFromUser(userId, groupId);
-		group.name = newGroupName;
-		group.description = newGroupDescription;
+		group.name = newGroupName ? newGroupName : group.name;
+		group.description = newGroupDescription ? newGroupDescription : group.description;
 
 		return {
 			id: groupId,
-			name: newGroupName,
-			description: newGroupDescription
+			name: group.name,
+			description: group.description
 		};
 	}
 
@@ -180,7 +153,6 @@ module.exports = function (guest) {
 
 	// ------------------------- Games Functions -------------------------
 
-
 	/**
 	 * Adds a new game to a group.
 	 * @param {String} userId 
@@ -212,7 +184,6 @@ module.exports = function (guest) {
 
 
 	// ------------------------- Tokens -------------------------
-
 
 	/**
 	 * Return the userId associated with the given token.
@@ -318,8 +289,6 @@ module.exports = function (guest) {
 
 
 	return {
-		getPopularGames,
-
 		//-- User --
 		createNewUser,
 		tokenToUserId,

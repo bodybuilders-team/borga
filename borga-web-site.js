@@ -62,7 +62,7 @@ module.exports = function (services, guest) {
 	 */
 	async function showPopularGames(req, res) {
 		try {
-			const games = Object.values(await services.getPopularGames());
+			const games = await services.getPopularGames();
 			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
 
 			res.render('games', { header: 'Popular Games', games, groups });

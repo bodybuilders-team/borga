@@ -16,65 +16,6 @@ module.exports = function (
 	const userGroupsUri = (userId) => `${usersUri}_${userId}_groups`;
 	const groupGamesUri = (userId, groupId) => `${userGroupsUri(userId)}_${groupId}_games`;
 
-	const numberOfPopularGames = 20;
-
-
-	/**
-	 * Gets the most popular games.
-	 * @returns an object containing the ids and information of the twenty most popular games
-	 */
-	async function getPopularGames() {
-		const gameOccurrences = {};
-
-		try {
-			const usersResponse = await fetch(`${usersUri}/_search`);
-
-			if (usersResponse.status == 200) {
-				const usersAnswer = await usersResponse.json();
-
-				await Promise.all(usersAnswer.hits.hits.map(async (user) => {
-					let foundGamesInUser = [];
-
-					const groupsResponse = await fetch(`${userGroupsUri(user._id)}/_search`);
-
-					if (groupsResponse.status == 200) {
-						const groupsAnswer = await groupsResponse.json();
-
-						await Promise.all(groupsAnswer.hits.hits.map(async (group) => {
-							const gamesResponse = await fetch(`${groupGamesUri(user._id, group._id)}/_search`);
-
-							if (gamesResponse.status == 200) {
-								const gamesAnswer = await gamesResponse.json();
-
-								await Promise.all(gamesAnswer.hits.hits.map(async (game) => {
-									if (!foundGamesInUser.includes(game._id)) {
-										if (!gameOccurrences[game._id]) {
-											gameOccurrences[game._id] = {
-												game: (await (await fetch(`${gamesUri}/_doc/${game._id}`)).json())._source,
-												count: 1
-											};
-										}
-										else gameOccurrences[game._id].count += 1;
-
-										foundGamesInUser.push(game._id);
-									}
-								}));
-							}
-						}));
-					}
-				}));
-			}
-		}
-		catch (err) {
-			console.log(err);
-			throw errors.FAIL(err);
-		}
-
-		const sortedGames = Object.entries(gameOccurrences).sort(([, a], [, b]) => b.count - a.count).slice(0, numberOfPopularGames);
-		const popularGames = Object.fromEntries(sortedGames.map(game => [game[0], game[1].game]));
-
-		return popularGames;
-	}
 
 	// ------------------------- Tokens -------------------------
 
@@ -126,6 +67,7 @@ module.exports = function (
 
 		return token;
 	}
+
 
 	// ------------------------- Users Functions -------------------------
 
@@ -248,8 +190,8 @@ module.exports = function (
 		return await createGroup(
 			userId,
 			groupId,
-			newGroupName ? newGroupName : group.groupName,
-			newGroupDescription ? newGroupDescription : group.groupDescription
+			newGroupName ? newGroupName : group.name,
+			newGroupDescription ? newGroupDescription : group.description
 		);
 	}
 
@@ -351,7 +293,7 @@ module.exports = function (
 	async function getGroupDetails(userId, groupId) {
 		const group = await getGroup(userId, groupId);
 
-		let games = [];
+		let games = {};
 
 		try {
 			const response = await fetch(`${groupGamesUri(userId, groupId)}/_search`);
@@ -448,8 +390,6 @@ module.exports = function (
 
 
 	return {
-		getPopularGames,
-
 		//-- User --
 		createNewUser,
 		getUser,

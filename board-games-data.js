@@ -16,36 +16,7 @@ const HTTP_CLIENT_ERROR = 4;
 const mechanics = {};
 const categories = {};
 
-
-/**
- * Gets the id:name map for mechanics from Board Game Atlas.
- */
-async function getGlobalMechanics() {
-	if (Object.keys(mechanics).length == 0) {
-		const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
-		for (const i in mechanicsRes.mechanics) {
-			const mechanic = mechanicsRes.mechanics[i];
-			mechanics[mechanic.id] = mechanic.name;
-		}
-	}
-
-	return mechanics;
-}
-
-/**
- * Gets the id:name map for categories from Board Game Atlas.
- */
-async function getGlobalCategories() {
-	if (Object.keys(categories).length == 0) {
-		const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
-		for (const i in categoriesRes.categories) {
-			const category = categoriesRes.categories[i];
-			categories[category.id] = category.name;
-		}
-	}
-
-	return categories;
-}
+const numberOfPopularGames = 20;
 
 
 /**
@@ -89,45 +60,15 @@ async function do_fetch(uri) {
 
 
 /**
- * Builds an object containing the game information.
- * @param {Object} gameInfo 
- * @returns object with game information
+ * Gets the most popular games by ranking.
+ * @returns promise with an array containing the most popular games
  */
-async function makeGameObj(gameInfo) {
-	return {
-		id: gameInfo.id,
-		name: gameInfo.name,
-		description: gameInfo.description.replace(/<\/?p>/ig, '\n'),
-		url: gameInfo.url,
-		image_url: gameInfo.image_url,
-		publisher: gameInfo.publisher,
-		amazon_rank: gameInfo.amazon_rank,
-		price: gameInfo.price,
-		mechanics: await getGameMechanics(gameInfo),
-		categories: await getGameCategories(gameInfo)
-	};
-}
+async function getPopularGames() {
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + `&limit=${numberOfPopularGames}&order_by=rank`;
 
+	const res = await do_fetch(game_uri);
 
-/**
- * Gets the name for each mechanic of the given game.
- * @param {Object} game 
- * @returns array with mechanics names
- */
-async function getGameMechanics(game) {
-	const globalMechanics = await getGlobalMechanics();
-	return game.mechanics.map(mechanic => globalMechanics[mechanic.id]);
-}
-
-
-/**
- * Gets the name for each category of the given game.
- * @param {Object} game 
- * @returns array with categories names
- */
-async function getGameCategories(game) {
-	const globalCategories = await getGlobalCategories();
-	return game.categories.map(category => globalCategories[category.id]);
+	return Promise.all(Object.values(res.games.map(async (game) => await makeGameObj(game))));
 }
 
 
@@ -170,7 +111,83 @@ async function searchGamesById(gameId) {
 }
 
 
+// ------------------------- Mechanics and Categories -------------------------
+
+/**
+ * Gets the name for each mechanic of the given game.
+ * @param {Object} game 
+ * @returns array with mechanics names
+ */
+async function getGameMechanics(game) {
+	const globalMechanics = await getGlobalMechanics();
+	return game.mechanics.map(mechanic => globalMechanics[mechanic.id]);
+}
+
+
+/**
+ * Gets the name for each category of the given game.
+ * @param {Object} game 
+ * @returns array with categories names
+ */
+async function getGameCategories(game) {
+	const globalCategories = await getGlobalCategories();
+	return game.categories.map(category => globalCategories[category.id]);
+}
+
+
+/**
+ * Gets the id:name map for mechanics from Board Game Atlas.
+ */
+async function getGlobalMechanics() {
+	if (Object.keys(mechanics).length == 0) {
+		const mechanicsRes = await do_fetch(BOARD_GAME_ATLAS_MECHANICS_URI);
+		for (const i in mechanicsRes.mechanics) {
+			const mechanic = mechanicsRes.mechanics[i];
+			mechanics[mechanic.id] = mechanic.name;
+		}
+	}
+
+	return mechanics;
+}
+
+/**
+ * Gets the id:name map for categories from Board Game Atlas.
+ */
+async function getGlobalCategories() {
+	if (Object.keys(categories).length == 0) {
+		const categoriesRes = await do_fetch(BOARD_GAME_ATLAS_CATEGORIES_URI);
+		for (const i in categoriesRes.categories) {
+			const category = categoriesRes.categories[i];
+			categories[category.id] = category.name;
+		}
+	}
+
+	return categories;
+}
+
+
+/**
+ * Builds an object containing the game information.
+ * @param {Object} gameInfo 
+ * @returns object with game information
+ */
+async function makeGameObj(gameInfo) {
+	return {
+		id: gameInfo.id,
+		name: gameInfo.name,
+		description: gameInfo.description.replace(/<\/?p>/ig, '\n'),
+		url: gameInfo.url,
+		image_url: gameInfo.image_url,
+		publisher: gameInfo.publisher,
+		amazon_rank: gameInfo.amazon_rank,
+		price: gameInfo.price,
+		mechanics: await getGameMechanics(gameInfo),
+		categories: await getGameCategories(gameInfo)
+	};
+}
+
 module.exports = {
+	getPopularGames,
 	searchGamesByName,
 	searchGamesById,
 	getStatusClass,

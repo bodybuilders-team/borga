@@ -124,41 +124,7 @@ describe("Explore Games integration tests", () => {
 
 	// ----- popularGames tests -----
 
-	test('Popular games without any created groups returns {}', async () => {
-		const response = await request(app)
-			.get('/api/games/popular')
-			.set('Accept', 'application/json')
-			.expect('Content-Type', /json/)
-			.expect(200);
-
-		expect(response.body).toBeTruthy();
-		expect(response.body).toEqual({
-			"popularGames": {},
-		});
-	});
-
 	test('Popular games with created groups works', async () => {
-		const userId = config.guest.id;
-		const groupName = 'TestGroup';
-		const groupDescription = 'TestDescription';
-		const gameId = 'OIXt3DmJU0';
-
-		const group = await request(app)
-			.post(`/api/user/${userId}/groups`)
-			.set('Authorization', `Bearer ${config.guest.token}`)
-			.set('Accept', 'application/json')
-			.send({ groupName, groupDescription })
-			.expect(200);
-
-		const groupId = group.body['Created group'].id;
-
-		await request(app)
-			.post(`/api/user/${userId}/groups/${groupId}/games`)
-			.set('Authorization', `Bearer ${config.guest.token}`)
-			.set('Accept', 'application/json')
-			.send({ gameId })
-			.expect(200);
-
 		const response = await request(app)
 			.get('/api/games/popular')
 			.set('Accept', 'application/json')
@@ -168,25 +134,28 @@ describe("Explore Games integration tests", () => {
 		expect(response.body).toBeTruthy();
 		expect(response.body).toEqual({
 			"popularGames": {
-				'OIXt3DmJU0': 'Catan'
+				"TAAifFP590": "Root",
+				"yqR4PtpO8X": "Scythe",
+				"5H5JS0KLzK": "Wingspan",
+				"RLlDWHh7hR": "Gloomhaven",
+				"fDn9rQjH9O": "Terraforming Mars",
+				"i5Oqu5VZgP": "Azul",
+				"7NYbgH2Z2I": "Viticulture: Essential Edition",
+				"6FmFeux5xH": "Pandemic",
+				"kPDxpJZ8PD": "Spirit Island",
+				"j8LdPFmePE": "7 Wonders Duel",
+				"OF145SrX44": "7 Wonders",
+				"GP7Y2xOUzj": "Codenames",
+				"VNBC6yq1WO": "The Castles of Burgundy",
+				"oGVgRSAKwX": "Carcassonne",
+				"O0G8z5Wgz1": "Splendor",
+				"mce5HZPnF5": "Pandemic Legacy: Season 1",
+				"FCuXPSfhDR": "Concordia",
+				"8xos44jY7Q": "Everdell",
+				"AuBvbISHR6": "Ticket to Ride",
+				"3IPVIROfvl": "Brass: Birmingham"
 			},
 		});
-
-
-		await fetch(
-			`${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups`,
-			{ method: 'DELETE' }
-		);
-
-		await fetch(
-			`${es_spec.url}/${es_spec.prefix}_users_${config.guest.id}_groups_${groupId}_games`,
-			{ method: 'DELETE' }
-		);
-
-		await fetch(
-			`${es_spec.url}/${es_spec.prefix}_games`,
-			{ method: 'DELETE' }
-		);
 	});
 });
 
@@ -451,10 +420,10 @@ describe("Groups integration tests", () => {
 
 		expect(response.body).toBeTruthy();
 		expect(response.body).toEqual({
-			"description": groupDescription,
-			"games": [],
 			"id": groupId,
 			"name": groupName,
+			"description": groupDescription,
+			"games": {}
 		});
 
 		await fetch(
@@ -529,9 +498,9 @@ describe("Groups integration tests", () => {
 		expect(response.body).toBeTruthy();
 		expect(response.body).toEqual({
 			'Edited group': {
-				"description": newGroupDescription,
 				"id": groupId,
-				"name": newGroupName
+				"name": newGroupName,
+				"description": newGroupDescription
 			}
 		});
 
@@ -541,7 +510,7 @@ describe("Groups integration tests", () => {
 		);
 	});
 
-	test('Edit Group without NewGroupName or NewGroupDescription replies with 400 BAD_REQUEST', async () => {
+	test('Edit Group without NewGroupName or NewGroupDescription works', async () => {
 		const groupName = 'TestGroup';
 		const groupDescription = 'TestDescription';
 		const group = await request(app)
@@ -559,19 +528,14 @@ describe("Groups integration tests", () => {
 			.set('Authorization', `Bearer ${config.guest.token}`)
 			.set('Accept', 'application/json')
 			.expect('Content-Type', /json/)
-			.expect(400);
+			.expect(200);
 
 		expect(response.body).toBeTruthy();
 		expect(response.body).toEqual({
-			"cause":
-			{
-				"code": 1001,
-				"info": {
-					"newGroupDescription": "required property missing",
-					"newGroupName": "required property missing"
-				},
-				"message": "The request is bad",
-				"name": "BAD_REQUEST"
+			'Edited group': {
+				"id": groupId,
+				"name": groupName,
+				"description": groupDescription
 			}
 		});
 

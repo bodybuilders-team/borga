@@ -192,13 +192,6 @@ describe("Game tests", () => {
 		await ResetMem().then(CreateUser1()).then(CreateGroup1())
 	);
 
-	test("getPopularGames returns names of most popular games", () => {
-		dataMem.addGameToGroup(userId1, groupId1, game1)
-
-		expect(dataMem.getPopularGames())
-			.toEqual({ [gameId1]: game1 });
-	});
-
 	test("addGameToGroup adds a game to a group, returning the name of the added game", () => {
 		expect(dataMem.addGameToGroup(userId1, groupId1, game1))
 			.toEqual(game1);

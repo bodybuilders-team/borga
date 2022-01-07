@@ -81,20 +81,19 @@ module.exports = function (services) {
 				}
 
 				if (schema.body) {
-					for (const property in schema.body.properties) {
+					for (const property in schema.body) {
 						const value = req.body[property];
-						const type = schema.body.properties[property].type;
-						const required = schema.body.properties[property].required;
+						const type = schema.body[property].type;
+						const required = schema.body[property].required;
 
 						if (required && !value) info[property] = "required property missing";
 						else if (value && typeof value !== type) info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
 					}
 
 					for (const property in req.body) {
-						if (!schema.body.properties[property]) info[property] = "unknown body property";
+						if (!schema.body[property]) info[property] = "unknown body property";
 					}
 				}
-
 
 				if (Object.keys(info).length > 0)
 					throw errors.BAD_REQUEST(info);
@@ -317,28 +316,22 @@ module.exports = function (services) {
 	// User 
 	router.post('/user', validateRequest({
 		body: {
-			properties: {
-				userId: { type: "string", required: true },
-				userName: { type: "string", required: true }
-			}
+			userId: { type: "string", required: true },
+			userName: { type: "string", required: true }
 		}
 	}), createNewUser);
 
 	router.post('/user/:userId/groups', validateRequest({
 		body: {
-			properties: {
-				groupName: { type: "string", required: true },
-				groupDescription: { type: "string", required: true }
-			}
+			groupName: { type: "string", required: true },
+			groupDescription: { type: "string", required: true }
 		}
 	}), createGroup);
 
 	router.post('/user/:userId/groups/:groupId', validateRequest({
 		body: {
-			properties: {
-				newGroupName: { type: "string", required: true },
-				newGroupDescription: { type: "string", required: true }
-			}
+			newGroupName: { type: "string", required: false },
+			newGroupDescription: { type: "string", required: false }
 		}
 	}), editGroup);
 
@@ -350,9 +343,7 @@ module.exports = function (services) {
 
 	router.post('/user/:userId/groups/:groupId/games', validateRequest({
 		body: {
-			properties: {
-				gameId: { type: "string", required: true }
-			}
+			gameId: { type: "string", required: true }
 		}
 	}), addGameToGroup);
 
