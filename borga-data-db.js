@@ -79,7 +79,7 @@ module.exports = function (
 	 * @throws ALREADY_EXISTS if the user with userId already exists
 	 */
 	async function createNewUser(userId, userName) {
-		let found = true
+		let found = true;
 
 		try { await getUser(userId) }
 		catch (err) {
@@ -163,6 +163,9 @@ module.exports = function (
 					})
 				}
 			);
+
+			if (response.status != 200 && response.status != 201)
+				throw (await response.json()).error;
 
 			return {
 				id: groupId,
@@ -255,30 +258,33 @@ module.exports = function (
 		const group = await getGroup(userId, groupId);
 
 		try {
-			await fetch(
+			const response1 = await fetch(
 				`${userGroupsUri(userId)}/_doc/${groupId}?refresh=wait_for`,
 				{
 					method: 'DELETE'
 				}
 			);
 
-			await fetch(
+			const response2 = await fetch(
 				`${groupGamesUri(userId, groupId)}`,
 				{
 					method: 'DELETE'
 				}
 			);
 
-			return {
-				id: groupId,
-				name: group.name,
-				description: group.description
-			};
+			if (response1.status == 200)
+				return {
+					id: groupId,
+					name: group.name,
+					description: group.description
+				};
 		}
 		catch (err) {
 			console.log(err);
 			throw errors.FAIL(err);
 		}
+
+		throw errors.NOT_FOUND({ groupId });
 	}
 
 
@@ -336,6 +342,9 @@ module.exports = function (
 				}
 			);
 
+			if (response1.status != 200 && response1.status != 201)
+				throw (await response1.json()).error;
+
 			const response2 = await fetch(
 				`${groupGamesUri(userId, groupId)}/_doc/${gameObj.id}?refresh=wait_for`,
 				{
@@ -346,6 +355,9 @@ module.exports = function (
 					})
 				}
 			);
+
+			if (response2.status != 200 && response2.status != 201)
+				throw (await response2.json()).error;
 		}
 		catch (err) {
 			console.log(err);

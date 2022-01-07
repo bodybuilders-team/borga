@@ -6,54 +6,835 @@
 	},
 	"item": [
 		{
-			"name": "Get popular games",
-			"event": [
+			"name": "DB Operations",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.ok;\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});\r",
-							"\r",
-							"pm.test(\"body contains popularGames string\", function () {\r",
-							"    pm.expect(pm.response.text()).to.include(\"popularGames\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{baseURL}}/games/popular",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"games",
-						"popular"
+					"name": "Users",
+					"item": [
+						{
+							"name": "Get users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/prod_users/_search",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"prod_users",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get test users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/test_users/_search",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"test_users",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create guest Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"guest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbURL}}/prod_users/_doc/guestid",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"prod_users",
+										"_doc",
+										"guestid"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tokens",
+					"item": [
+						{
+							"name": "Get tokens",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/prod_tokens/_search",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"prod_tokens",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get test tokens",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/test_tokens/_search",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"test_tokens",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Index Operations",
+					"item": [
+						{
+							"name": "Delete index",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/:index",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										":index"
+									],
+									"variable": [
+										{
+											"key": "index",
+											"value": "tokens"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get index",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/:index/_search",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										":index",
+										"_search"
+									],
+									"variable": [
+										{
+											"key": "index",
+											"value": "test_users"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete doc",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/:index/_doc/:doc_index",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										":index",
+										"_doc",
+										":doc_index"
+									],
+									"variable": [
+										{
+											"key": "index",
+											"value": null
+										},
+										{
+											"key": "doc_index",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get indices",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/_cat/indices",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"_cat",
+										"indices"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DB Utils",
+					"item": [
+						{
+							"name": "Erase All",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/_all",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"_all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get DB Health",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbURL}}/_cat/health",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"_cat",
+										"health"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Guest Creation",
+					"item": [
+						{
+							"name": "Create test guest",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"guest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbURL}}/test_users/_doc/guestid",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"test_users",
+										"_doc",
+										"guestid"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create guest",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"guest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbURL}}/prod_users/_doc/guestid",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"prod_users",
+										"_doc",
+										"guestid"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create test guest token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"guestid\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbURL}}/test_tokens/_doc/:token",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"test_tokens",
+										"_doc",
+										":token"
+									],
+									"variable": [
+										{
+											"key": "token",
+											"value": "37f315d4-e790-4e5d-943a-b0700fc3d53c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create guest token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"guestid\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbURL}}/prod_tokens/_doc/:token",
+									"host": [
+										"{{dbURL}}"
+									],
+									"path": [
+										"prod_tokens",
+										"_doc",
+										":token"
+									],
+									"variable": [
+										{
+											"key": "token",
+											"value": "37f315d4-e790-4e5d-943a-b0700fc3d53c"
+										}
+									]
+								}
+							},
+							"response": []
+						}
 					]
 				}
-			},
-			"response": [
+			]
+		},
+		{
+			"name": "Other API Operations",
+			"item": [
+				{
+					"name": "Create multiple groups",
+					"item": [
+						{
+							"name": "Create group NegG",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{guestToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groupId\": \"NegG\",\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "guestid"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create group LoLv",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{guestToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groupId\": \"LoLv\",\r\n    \"groupName\": \"Low Level Games\",\r\n    \"groupDescription\": \"This is a group of low level games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "guestid"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create group RPG",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{guestToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groupId\": \"RPG\",\r\n    \"groupName\": \"Role-playing Games\",\r\n    \"groupDescription\": \"This is a group of role-playing games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "guestid"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create group Dice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{guestToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groupId\": \"Dice\",\r\n    \"groupName\": \"Dice games\",\r\n    \"groupDescription\": \"This is a group of dice games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "guestid"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"guestid\",\r\n    \"userName\": \"guest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}/user/",
+							"host": [
+								"{{apiURL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create group guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guestToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupName\": \"naaaaaaa\",\r\n    \"groupDescription\": \"deessccc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}/user/guestid/groups",
+							"host": [
+								"{{apiURL}}"
+							],
+							"path": [
+								"user",
+								"guestid",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add game to group guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guestToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId/games",
+							"host": [
+								"{{apiURL}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"groups",
+								":groupId",
+								"games"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "guestid"
+								},
+								{
+									"key": "groupId",
+									"value": "ca9ee39b-a2e5-49d1-b20f-a2c480aae7ab"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Simple API Operations",
+			"item": [
 				{
 					"name": "Get popular games",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"body contains popularGames string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"popularGames\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
 						"method": "GET",
 						"header": [
 							{
@@ -63,9 +844,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/games/popular",
+							"raw": "{{apiURL}}/games/popular",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"games",
@@ -73,104 +854,84 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "250"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"fa-P6exytjgLKP3/DNOFpO6qBy6zLQ\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:42:47 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"popularGames\": {\n        \"OIXt3DmJU0\": {\n            \"id\": \"OIXt3DmJU0\",\n            \"name\": \"Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n            \"amazon_rank\": 133,\n            \"price\": \"32.97\"\n        }\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Search games by name",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "{{baseURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"games",
-						"search",
-						""
-					],
-					"query": [
-						{
-							"key": "gameName",
-							"value": "Catan"
-						},
-						{
-							"key": "limit",
-							"value": "10"
-						},
-						{
-							"key": "order_by",
-							"value": "amazon_rank"
-						},
-						{
-							"key": "ascending",
-							"value": "true"
+							"name": "Get popular games",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{apiURL}}/games/popular",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"games",
+										"popular"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "585"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"249-0fNXAPmLH/2r+i4jsqKqOJkKJag\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 14:26:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"popularGames\": {\n        \"TAAifFP590\": \"Root\",\n        \"yqR4PtpO8X\": \"Scythe\",\n        \"5H5JS0KLzK\": \"Wingspan\",\n        \"RLlDWHh7hR\": \"Gloomhaven\",\n        \"fDn9rQjH9O\": \"Terraforming Mars\",\n        \"i5Oqu5VZgP\": \"Azul\",\n        \"7NYbgH2Z2I\": \"Viticulture: Essential Edition\",\n        \"6FmFeux5xH\": \"Pandemic\",\n        \"kPDxpJZ8PD\": \"Spirit Island\",\n        \"j8LdPFmePE\": \"7 Wonders Duel\",\n        \"OF145SrX44\": \"7 Wonders\",\n        \"GP7Y2xOUzj\": \"Codenames\",\n        \"VNBC6yq1WO\": \"The Castles of Burgundy\",\n        \"oGVgRSAKwX\": \"Carcassonne\",\n        \"O0G8z5Wgz1\": \"Splendor\",\n        \"mce5HZPnF5\": \"Pandemic Legacy: Season 1\",\n        \"FCuXPSfhDR\": \"Concordia\",\n        \"8xos44jY7Q\": \"Everdell\",\n        \"AuBvbISHR6\": \"Ticket to Ride\",\n        \"3IPVIROfvl\": \"Brass: Birmingham\"\n    }\n}"
 						}
 					]
-				}
-			},
-			"response": [
+				},
 				{
 					"name": "Search games by name",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
 						"method": "GET",
 						"header": [
 							{
@@ -181,9 +942,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
+							"raw": "{{apiURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"games",
@@ -210,102 +971,113 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "2994"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"bb2-vwNuD7Ia6ZBnOv+jFxlSZen4haE\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 22:46:46 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"games\": [\n        {\n            \"id\": \"OIXt3DmJU0\",\n            \"name\": \"Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n            \"publisher\": \"KOSMOS\",\n            \"amazon_rank\": 133,\n            \"price\": \"32.97\"\n        },\n        {\n            \"id\": \"EvYzPCnCGG\",\n            \"name\": \"Catan: 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/EvYzPCnCGG/catan-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 534,\n            \"price\": \"15.58\"\n        },\n        {\n            \"id\": \"NoWy3nPYfj\",\n            \"name\": \"Catan: Seafarers Expansion\",\n            \"url\": \"https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 2618,\n            \"price\": \"31.18\"\n        },\n        {\n            \"id\": \"E5TYKwLTf0\",\n            \"name\": \"Catan: Cities & Knights\",\n            \"url\": \"https://www.boardgameatlas.com/game/E5TYKwLTf0/catan-cities-and-knights-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257359245-51DYsPZcYyL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 4435,\n            \"price\": \"44.00\"\n        },\n        {\n            \"id\": \"Wp2pGHZHIO\",\n            \"name\": \"Catan: Seafarers 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/Wp2pGHZHIO/catan-seafarers-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254869479-51XMaRqBcJL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5113,\n            \"price\": \"20.40\"\n        },\n        {\n            \"id\": \"ULWQvi77f5\",\n            \"name\": \"Catan: Junior\",\n            \"url\": \"https://www.boardgameatlas.com/game/ULWQvi77f5/catan-junior\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1635861914971\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5265,\n            \"price\": \"17.99\"\n        },\n        {\n            \"id\": \"qiJzLWCvPB\",\n            \"name\": \"Catan: Explorers & Pirates\",\n            \"url\": \"https://www.boardgameatlas.com/game/qiJzLWCvPB/catan-explorers-and-pirates-expansion\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257884176-513ASwyUbTL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 8252,\n            \"price\": \"38.89\"\n        },\n        {\n            \"id\": \"tECB3ktBhP\",\n            \"name\": \"Catan: Cities & Knights 5-6 Player Extension\",\n            \"url\": \"https://www.boardgameatlas.com/game/tECB3ktBhP/catan-cities-and-knights-56-player-extension\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254849801-51V-pZNL3hL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 9375,\n            \"price\": \"24.00\"\n        },\n        {\n            \"id\": \"fz1hSbgUN2\",\n            \"name\": \"A Game of Thrones Catan: Brotherhood of the Watch\",\n            \"url\": \"https://www.boardgameatlas.com/game/fz1hSbgUN2/a-game-of-thrones-catan-brotherhood-of-the-watch\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324720093.jpg\",\n            \"publisher\": \"Fantasy Flight Games\",\n            \"amazon_rank\": 10434,\n            \"price\": \"54.37\"\n        },\n        {\n            \"id\": \"iSVnYdrsZQ\",\n            \"name\": \"Rivals for Catan\",\n            \"url\": \"https://www.boardgameatlas.com/game/iSVnYdrsZQ/rivals-for-catan\",\n            \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1610427446373\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 16244,\n            \"price\": \"17.00\"\n        }\n    ]\n}"
-				}
-			]
-		},
-		{
-			"name": "Create new user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});\r",
-							"\r",
-							"var jsonData = JSON.parse(responseBody);\r",
-							"if (!jsonData.cause)\r",
-							"    pm.collectionVariables.set(\"token\", jsonData[\"Created user\"][\"token\"]);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"username\": \"Paulão\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/user",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user"
-					],
-					"query": [
-						{
-							"key": "",
-							"value": null,
-							"disabled": true
+							"name": "Search games by name",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{apiURL}}/games/search/?gameName=Catan&limit=10&order_by=amazon_rank&ascending=true",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"games",
+										"search",
+										""
+									],
+									"query": [
+										{
+											"key": "gameName",
+											"value": "Catan"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "order_by",
+											"value": "amazon_rank"
+										},
+										{
+											"key": "ascending",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "14631"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3927-3kbVSlQKe2uxYkIIIU1sdxzXh10\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:34:07 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"games\": [\n        {\n            \"id\": \"OIXt3DmJU0\",\n            \"name\": \"Catan\",\n            \"description\": \"\\nThe women and men of your expedition build the first two settlements. Fortunately, the land is rich in natural resources. You build roads and new settlements that eventually become cities. Will you succeed in gaining supremacy on Catan? Barter trade dominates the scene. Some resources you have in abundance, other resources are scarce. Ore for wool, brick for lumber - you trade according to what is needed for your current building projects. Proceed strategically! If you found your settlements in the right places and skillfully trade your resources, then the odds will be in your favor. But your opponents are smart too.\\n\\r\\n\\nTo begin the game, we build the game board using hexagonal terrain tiles. Catan is born - a beautiful island with mountains, pastures, hills, fields, and forests, surrounded by the sea.\\n\\r\\n\\nEach of us places two small houses on spaces where three terrain hexes meet. They are our starting settlements.\\n\\r\\n\\nAnd so it begins. I roll two dice. An “11”! Each terrain hex is marked with a die roll number. Each player who owns a settlement adjacent to a terrain hex marked with the number rolled receives a resource produced by this hex. Hills produce brick, forests produce lumber, mountains produce ore, fields produce grain, and pastures produce wool.\\n\\r\\n\\nWe use these resources to expand across Catan: we build roads and new settlements, or we upgrade our existing settlements to cities. For example, a road costs 1 brick and 1 lumber. If we do not have the necessary resources, we can acquire them by trading with our opponents.\\n\\r\\n\\nEach settlement is worth 1 victory point and each city is worth 2 victory points. If you expand cleverly, you may be the first player to reach 10 victory points and thus win the game!\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n            \"publisher\": \"KOSMOS\",\n            \"amazon_rank\": 133,\n            \"price\": \"29.99\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Network and Route Building\",\n                \"Trading\"\n            ],\n            \"categories\": [\n                \"Dice\",\n                \"Economic\",\n                \"Family Game\",\n                \"Negotiation\"\n            ]\n        },\n        {\n            \"id\": \"EvYzPCnCGG\",\n            \"name\": \"Catan: 5-6 Player Extension\",\n            \"description\": \"Now five to six players can explore and settle Catan! In the Catan: 5-6 Player Extension you control a group of settlers exploring and taming the uncharted lands of Catan. Embark on a quest to settle the rich island, competing against more opponents for added fun. ● Add 1-2 more friends or family without sacrificing ease of play. ● Add green and brown settlers and expand your island with 2 more harbors and 11 unique, new terrain tiles. This is NOT a complete game! It is only a game extension for 5-6 players. You need a Catan game (aka The Settlers of Catan) in order to play with this extension! Components ● 11 Hexagonal Regional Tiles ● 2 Frame Pieces with Harbors ● 2 All-Sea Frame Pieces ● 10 Wooden Settlements ● 8 Wooden Cities ● 30 Wooden Roads ● 25 Resource Cards ● 9 Development Cards ● 28 Number Tokens\",\n            \"url\": \"https://www.boardgameatlas.com/game/EvYzPCnCGG/catan-56-player-extension\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 534,\n            \"price\": \"22.50\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Hand Management\",\n                \"Memory\",\n                \"Modular Board\",\n                \"Trading\",\n                \"Network and Route Building\"\n            ],\n            \"categories\": [\n                \"Expansion\",\n                \"Negotiation\"\n            ]\n        },\n        {\n            \"id\": \"NoWy3nPYfj\",\n            \"name\": \"Catan: Seafarers Expansion\",\n            \"description\": \"\\nIn Catan: Seafarers you control a group of bold seafaring settlers exploring and taming the wild, uncharted Isles of Catan. Each game brings you to new seas and new lands. You might even discover the precious gold fields (a very valuable new terrain).<br /><br />Every game is unique and full of fun!<br /><br />Embark on an epic quest to settle the home island, build ships, and chart nearby waters. Guide your brave seafarers to victory through cunning trades and wise development. Be first to create new sea lanes and settle the newly-discovered isles.<br /><br />The best strategy and a nice dash of luck decide who will be the undisputed ruler of the rich Isles of Catan!<br />Capture the adventure of seafaring, exploration, and trade.<br />Catan: Seafarers is a 3-4 player expansion for the best-selling Catan board game. Share some fun at sea!<br /><br />Components<br />60 Wooden Ships<br />1 Pirate Ship<br />6 Frame Pieces<br />19 Sea Hexes<br />11 Hexagonal Region Tiles<br />50 Catan Chits<br />10 Number Tokens<br />10 Harbor Tokens<br />1 Rulebook and Scenarios\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 2618,\n            \"price\": \"29.99\",\n            \"mechanics\": [],\n            \"categories\": [\n                \"Expansion\"\n            ]\n        },\n        {\n            \"id\": \"E5TYKwLTf0\",\n            \"name\": \"Catan: Cities & Knights\",\n            \"description\": \"Dark clouds gather over the once peaceful landscape. Wild barbarians, lured by Catan’s wealth and power, maneuver to attack. Their massive warships loom against the bright orange horizon. You must be strong! Barbarians attack the weakest targets, and the victim of their onslaught will be the player who contributes the least to the defense of Catan.<br /><br /> Don’t take any chances! Field your knights!<br /><br /> In <b>Catan: Cities &amp; Knights</b> you engage in the defense of Catan and compete to build the three great metropolises of Catan. Each of these magnificent urban centers is even more valuable than a city. They’re also immune to the dangerous barbarians. Invest in city improvements, which you acquire using three commodities of trade: coin, paper, and cloth. If you improve your culture, muster your knights, and enrich your fine cities, you will be the master of the great realm of Catan!<br /><br /><b> Components:</b><br /> 36 Commodity Cards<br /> 54 Progress Cards<br /> 6 Victory Point Cards<br /> 3 Wooden Metropolis Pieces<br /> 1 Wooden Merchant Figure<br /> 1 Custom Event Die<br /> 1 Wooden Barbarian Ship<br /> 24 Wooden Knights<br /> 12 City Walls<br /> 4 Development Flip-Charts<br /> 1 Sea Frame Piece<br /> 1 Rulebook<br />\",\n            \"url\": \"https://www.boardgameatlas.com/game/E5TYKwLTf0/catan-cities-and-knights-expansion\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257359245-51DYsPZcYyL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 4435,\n            \"price\": \"44.00\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Hand Management\",\n                \"Memory\",\n                \"Modular Board\",\n                \"Trading\",\n                \"Network and Route Building\"\n            ],\n            \"categories\": [\n                \"Expansion\",\n                \"Medieval\",\n                \"Negotiation\"\n            ]\n        },\n        {\n            \"id\": \"Wp2pGHZHIO\",\n            \"name\": \"Catan: Seafarers 5-6 Player Extension\",\n            \"description\": \"\\nNow five to six players can sail into the wild, uncharted seas and explore and settle the many mysterious islands near Catan!<br /><br />Add one or two more opponents without sacrificing ease of play.<br /><br />Try one of 9 new scenarios! This rich extension adds even more drama to the award-winning game of seafaring, discovery, and trade.<br /><br />Settle islands, build ships, and chart the nearby waters.<br />Discover far-off mines and use your gold and resources to become the undisputed ruler of Catan!<br /><br />NOT a complete game! You need a Catan game (aka The Settlers of Catan), a Catan: 5-6 Player extension, and a Catan: Seafarers expansion in order to play with this game extension!<br /><br />Components<br />30 Wooden Ships<br />7 Sea Tiles<br />2 Gold Field Tiles<br />1 Desert Tile<br />2 Frame Pieces<br />2 Harbor Tokens<br />35 Catan Chits<br />9 Exciting New Scenarios<br />1 Rulebook\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/Wp2pGHZHIO/catan-seafarers-56-player-extension\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254869479-51XMaRqBcJL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5113,\n            \"price\": \"24.00\",\n            \"mechanics\": [],\n            \"categories\": []\n        },\n        {\n            \"id\": \"ULWQvi77f5\",\n            \"name\": \"Catan: Junior\",\n            \"description\": \"\\n<strong>Catan: Junior</strong> takes place on a ring of islands where 2 to 4 players build hideouts, and the mysterious Spooky Island, where the Ghost Captain lives. Each island generates a specific resource: wood, goats, rum or swords and players can acquire gold. <br /><br />Each player starts with two pirate hideouts, then builds ships in order to expand their network. The more hideouts you build, the more resources you may receive. You use your resources to build ships, hideouts or get help from Coco the Parrot. Just watch out for the dreaded Ghost Captain!<br /><br />Be the first player to control seven pirate hideouts and you win the game!\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/ULWQvi77f5/catan-junior\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1635861914971\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 5265,\n            \"price\": \"13.99\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Network and Route Building\"\n            ],\n            \"categories\": [\n                \"Children's Game\",\n                \"Nautical\",\n                \"Pirates\"\n            ]\n        },\n        {\n            \"id\": \"qiJzLWCvPB\",\n            \"name\": \"Catan: Explorers & Pirates\",\n            \"description\": \"\\n<strong>Catan: Explorers &amp; Pirates</strong> includes 5 novel scenarios, each of which builds upon your previous experience. All are easy to learn, rich in character, and lots of fun. In each, you explore an unknown sea by ship and build settlements on the discovered islands.<br /><br />Scenario 1 (“Land Ho!”) introduces you to valuable harbor settlements, shipbuilding, exploration, and overseas settlement—the most important basic rules of this expansion. Each subsequent scenario introduces a new mission and its simple new rules. The game culminates in Scenario 5 (“Explorers &amp; Pirates”), which incorporates all of these very rich new themes in a diverse and exciting campaign of bold exploration and piracy!<br /><br />Explore Catan! Build harbor settlements, ships, settlers, and sailing crews and set out across mysterious seas in search of new lands, spices, fish, and gold fields.<br /><br />Components<br />16 harbor settlements (wood)<br />32 adventurers (wood)<br />12 ships (wood)<br />8 settlers (wood)<br />12 markers (wood double cubes)<br />4 pirate ships (wood)<br />6 fish(wood)<br />24 spice sacks (wood cubes)<br />76 gold coins (die cut)<br />12 frame pieces<br />6 gold field hexes<br />6 fish shoal hexes<br />6 spice hexes<br />6 terrain hexes and 6 number tokens (green backs)<br />6 terrain hexes and 6 number tokens (orange backs)<br />6 pirate lair tokens<br />3 mission cards<br />3 mission victory point cards<br />4 building cost cards\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/qiJzLWCvPB/catan-explorers-and-pirates-expansion\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257884176-513ASwyUbTL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 8252,\n            \"price\": \"39.60\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Negotiation\",\n                \"Network and Route Building\",\n                \"Resource Gathering\"\n            ],\n            \"categories\": [\n                \"Expansion\"\n            ]\n        },\n        {\n            \"id\": \"tECB3ktBhP\",\n            \"name\": \"Catan: Cities & Knights 5-6 Player Extension\",\n            \"description\": \"\\nNow up to 6 players can develop their cultures, build metropolises, and muster their knights against the scourge threatening Catan!<br /><br />Expand and inject even more excitement into your Cities &amp; Knights games without sacrificing ease of play.<br />Add more friends and family and even more drama to the award-winning game of culture, politics, trade, and conflict.<br /><br />NOT a complete game! You need a Catan game (aka The Settlers of Catan), a Catan: 5-6 Player extension, and a Catan: Cities &amp; Knights expansion in order to play with this great game extension!<br /><br /><strong> Components:</strong><br />18 Commodity Cards<br />3 Victory Point Cards<br />12 Wooden Knights<br />6 City Walls<br />2 Development Flip-Charts<br />1 Rulebook/Scenario Booklet\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/tECB3ktBhP/catan-cities-and-knights-56-player-extension\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254849801-51V-pZNL3hL.jpg\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 9375,\n            \"price\": \"29.99\",\n            \"mechanics\": [],\n            \"categories\": []\n        },\n        {\n            \"id\": \"fz1hSbgUN2\",\n            \"name\": \"A Game of Thrones Catan: Brotherhood of the Watch\",\n            \"description\": \"Take the Black! Defend Westeros! Become the Lord Commander! The Brothers of the Night`s Watch seek a new leader from among their ranks. Jeor Mormont wishes to promote one who can improve the infrastructure of the Gift, the bountiful and undeveloped area south of the Wall bestowed to the Watch by the Starks thousands of years ago. Drawing sustenance from the unforgiving landscape of the north offers enough challenges, but whomever takes up this task must also man and defend the Wall against the onslaught of Wildlings fighting their way into Westeros. Many brothers now compete to build, defend, and do what they can to protect Westeros, but only one shall rise above their brothers to become the new Lord Commander. But, be wary - the north holds many dangers, and winter is coming. The battle to defend the Realms of Man begins in A Game of Thrones Catan: Brotherhood of the Watch, a strategic game grounded in the engrossing world of George R. R. Martin`s A Song of Ice and Fire series and adapted for Catan by Klaus and Benjamin Teuber.\",\n            \"url\": \"https://www.boardgameatlas.com/game/fz1hSbgUN2/a-game-of-thrones-catan-brotherhood-of-the-watch\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324720093.jpg\",\n            \"publisher\": \"Fantasy Flight Games\",\n            \"amazon_rank\": 10434,\n            \"price\": \"49.95\",\n            \"mechanics\": [\n                \"Dice Rolling\",\n                \"Hand Management\",\n                \"Modular Board\",\n                \"Trading\",\n                \"Network and Route Building\"\n            ],\n            \"categories\": []\n        },\n        {\n            \"id\": \"iSVnYdrsZQ\",\n            \"name\": \"Rivals for Catan\",\n            \"description\": \"\\nBuild your domain to best your Rivals.<br /><br />The Rivals for Catan puts you in charge of one of the two factions developing newly-settled Catan. Use your under card mix to create your own principality. Explore and settle new lands, acquiring resources through card play and the luck of the dice. Use gold, response combinations, and trade to develop your domain. <br /><br />Expand your settlements and cities recruit heroes, and defend your lands through politics, invention, and intrigue. Your cunning and a dash of luck decides who will be Prince of Catan.\\n\",\n            \"url\": \"https://www.boardgameatlas.com/game/iSVnYdrsZQ/rivals-for-catan\",\n            \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1610427446373\",\n            \"publisher\": \"Catan Studio\",\n            \"amazon_rank\": 16244,\n            \"price\": \"20.00\",\n            \"mechanics\": [\n                \"Card Drafting\",\n                \"Dice Rolling\",\n                \"Hand Management\"\n            ],\n            \"categories\": [\n                \"Card Game\",\n                \"City Building\",\n                \"Medieval\"\n            ]\n        }\n    ]\n}"
 						}
 					]
-				}
-			},
-			"response": [
+				},
 				{
 					"name": "Create new user",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (!jsonData.cause)\r",
+									"    pm.collectionVariables.set(\"token\", jsonData[\"Created user\"][\"token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"username\": \"Paulão\"\r\n}",
+							"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"userName\": \"Paulão\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -313,9 +1085,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user",
+							"raw": "{{apiURL}}/user",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user"
@@ -329,109 +1101,175 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Created successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"userName\": \"Paulão\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "103"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"67-0ZLXnDa4+4Zd8ZmmBrhEdNY8OU0\""
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 19:42:43 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Created user\": {\n        \"userId\": \"12345\",\n        \"token\": \"944716df-96a8-442e-a3e6-834ac0dadde7\",\n        \"userName\": \"Paulão\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "103"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"67-0ZLXnDa4+4Zd8ZmmBrhEdNY8OU0\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:42:43 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Created user\": {\n        \"userId\": \"12345\",\n        \"token\": \"944716df-96a8-442e-a3e6-834ac0dadde7\",\n        \"userName\": \"Paulão\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Create group",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "User already exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"12345\",\r\n    \"userName\": \"Paulão\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "109"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"6d-rDqov42NO9ZdobvWzHdos3kkZP0\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 17:53:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1003,\n        \"name\": \"ALREADY_EXISTS\",\n        \"message\": \"The item already exists\",\n        \"info\": {\n            \"userId\": \"12345\"\n        }\n    }\n}"
 						}
 					]
 				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"groupId\": \"NegG\",\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Create group",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"groupId\": \"NegG\",\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
+							"raw": "{\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -439,9 +1277,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups",
+							"raw": "{{apiURL}}/user/:userId/groups",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -456,114 +1294,109 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "127"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"7f-Ai/v8amlvBX+upeLo1D5hC4LRXU\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:42:44 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Created group\": {\n        \"groupId\": \"NegG\",\n        \"groupName\": \"Negotiation games\",\n        \"groupDescription\": \"This is a group of negotiation games.\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Edit group",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "Created successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groupName\": \"Negotiation games\",\r\n    \"groupDescription\": \"This is a group of negotiation games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "144"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"90-wRP6RcTxvN+1quOJIXdYamiWGzI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 18 Dec 2021 19:13:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Created group\": {\n        \"id\": \"574d6214-037b-4de0-a773-77a33e23b4ad\",\n        \"name\": \"Negotiation games\",\n        \"description\": \"This is a group of negotiation games.\"\n    }\n}"
 						}
 					]
 				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"newGroupName\": \"Negotiation and Economic Games\",\r\n    \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups",
-						":groupId"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						},
-						{
-							"key": "groupId",
-							"value": "NegG"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Edit group",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"newGroupName\": \"Negotiation and Economic Games\",\r\n    \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\r\n}",
+							"raw": "{\r\n    \"newGroupName\": \"Role-Playing Games\",\r\n    \"newGroupDescription\": \"This is a group of role-playing games.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -571,9 +1404,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -588,106 +1421,193 @@
 								},
 								{
 									"key": "groupId",
-									"value": "NegG"
+									"value": "572bc968-87d1-436d-b455-26acf7f58fdc"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Edited successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newGroupName\": \"Negotiation and Economic Games\",\r\n    \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "f670933b-722b-43cb-97d1-aa89f3336085"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "169"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"a9-HPACUxGT/Nz3baHehZq0OTOFutg\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:35:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Edited group\": {\n        \"id\": \"f670933b-722b-43cb-97d1-aa89f3336085\",\n        \"name\": \"Negotiation and Economic Games\",\n        \"description\": \"This is a group of negotiation and economic games.\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "158"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"9e-hvZBfJFNkC3bVR/CfdDZMk9f/5Q\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:28:58 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Edited group\": {\n        \"groupId\": \"NegG\",\n        \"newGroupName\": \"Negotiation and Economic Games\",\n        \"newGroupDescription\": \"This is a group of negotiation and economic games.\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "List all groups from user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "Group doesn't exist",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newGroupName\": \"Role-Playing Games\",\r\n    \"newGroupDescription\": \"This is a group of role-playing games.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "572bc968-87d1-436d-b455-26acf7f58fdc"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"88-EP3CBfYr/BB946eXE9x067fc+04\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 18:05:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1002,\n        \"name\": \"NOT_FOUND\",\n        \"message\": \"The item does not exist\",\n        \"info\": {\n            \"groupId\": \"572bc968-87d1-436d-b455-26acf7f58fdc\"\n        }\n    }\n}"
 						}
 					]
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "List all groups from user",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups",
+							"raw": "{{apiURL}}/user/:userId/groups",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -702,106 +1622,101 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "122"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"7a-N8/yrfPqoniUxk5jSzKgTWsSLfU\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:39:26 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"NegG\": {\n        \"name\": \"Negotiation games\",\n        \"description\": \"This is a group of negotiation games.\",\n        \"games\": {\n            \"OIXt3DmJU0\": \"Catan\"\n        }\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Delete group",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "List all groups from user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "362"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"16a-dNXEdAPkbxVXcCRWP4Xm8xyAuH8\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:37:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"45103531-8450-4970-8ebd-8b3e5d316382\": {\n        \"name\": \"NegG\",\n        \"description\": \"Negotiation games\"\n    },\n    \"f670933b-722b-43cb-97d1-aa89f3336085\": {\n        \"name\": \"Negotiation and Economic Games\",\n        \"description\": \"This is a group of negotiation and economic games.\"\n    },\n    \"839c0857-6e6d-4c6d-bef0-ac9d52e45819\": {\n        \"name\": \"Role-Playing Games\",\n        \"description\": \"This is a group of role-playing games.\"\n    }\n}"
 						}
 					]
 				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups",
-						":groupId"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						},
-						{
-							"key": "groupId",
-							"value": "NegG"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Delete group",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -816,111 +1731,175 @@
 								},
 								{
 									"key": "groupId",
-									"value": "NegG"
+									"value": "00eaf366-3819-440c-bfdf-ffb03d7774e3"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Deleted sucessfully",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "45103531-8450-4970-8ebd-8b3e5d316382"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "111"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"6f-4cAZr6EDqAgRWM/JT410yJ9l2Tk\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:38:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Deleted group\": {\n        \"id\": \"45103531-8450-4970-8ebd-8b3e5d316382\",\n        \"name\": \"NegG\",\n        \"description\": \"Negotiation games\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "153"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"99-QzW9HZthXoTG3G723ysn98BMveQ\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:23:28 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Deleted group\": {\n        \"groupId\": \"NegG\",\n        \"groupName\": \"Negotiation and Economic Games\",\n        \"groupDescription\": \"This is a group of negotiation and economic games.\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Get group details",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "Group doesn't exist",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "28248a5a-8bd1-422b-87e8-1b420fe7e1ee"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"88-/+cE7YiUNzvmOg32f/EYFpO78GM\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 18:08:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1002,\n        \"name\": \"NOT_FOUND\",\n        \"message\": \"The item does not exist\",\n        \"info\": {\n            \"groupId\": \"28248a5a-8bd1-422b-87e8-1b420fe7e1ee\"\n        }\n    }\n}"
 						}
 					]
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups/:groupId",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups",
-						":groupId"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						},
-						{
-							"key": "groupId",
-							"value": "NegG"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Get group details",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups/:groupId",
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -935,115 +1914,169 @@
 								},
 								{
 									"key": "groupId",
-									"value": "NegG"
+									"value": "574d6214-037b-4de0-a773-77a33e23b4ad"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Got group details successfully",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "839c0857-6e6d-4c6d-bef0-ac9d52e45819"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "201"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c9-A3kcvqqwIs+O0Hl/RzY5CFw5fHM\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:39:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"839c0857-6e6d-4c6d-bef0-ac9d52e45819\",\n    \"name\": \"Role-Playing Games\",\n    \"description\": \"This is a group of role-playing games.\",\n    \"games\": {\n        \"NoWy3nPYfj\": \"Catan: Seafarers Expansion\",\n        \"OIXt3DmJU0\": \"Catan\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "93"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"5d-TFoJv/PVmlnRDK6rT2tqAWffAXs\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:39:15 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"name\": \"Negotiation games\",\n    \"description\": \"This is a group of negotiation games.\",\n    \"games\": {}\n}"
-				}
-			]
-		},
-		{
-			"name": "Add game to group",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "Group doesn't exist",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "ff5739dc-e856-46af-be1f-1ea1fc306382"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"88-aTFA15zSiWu+4sn4LcQ+OOdbstU\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 18:10:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1002,\n        \"name\": \"NOT_FOUND\",\n        \"message\": \"The item does not exist\",\n        \"info\": {\n            \"groupId\": \"ff5739dc-e856-46af-be1f-1ea1fc306382\"\n        }\n    }\n}"
 						}
 					]
 				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups/:groupId/games",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups",
-						":groupId",
-						"games"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						},
-						{
-							"key": "groupId",
-							"value": "NegG"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Add game to group",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1056,9 +2089,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups/:groupId/games",
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId/games",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -1074,117 +2107,195 @@
 								},
 								{
 									"key": "groupId",
-									"value": "NegG"
+									"value": "574d6214-037b-4de0-a773-77a33e23b4ad"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Added game to group successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId/games",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId",
+										"games"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "839c0857-6e6d-4c6d-bef0-ac9d52e45819"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2151"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"867-NioLDxzecejsavEla60+k4Q1Rrc\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:40:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Added game\": {\n        \"id\": \"OIXt3DmJU0\",\n        \"name\": \"Catan\",\n        \"description\": \"\\nThe women and men of your expedition build the first two settlements. Fortunately, the land is rich in natural resources. You build roads and new settlements that eventually become cities. Will you succeed in gaining supremacy on Catan? Barter trade dominates the scene. Some resources you have in abundance, other resources are scarce. Ore for wool, brick for lumber - you trade according to what is needed for your current building projects. Proceed strategically! If you found your settlements in the right places and skillfully trade your resources, then the odds will be in your favor. But your opponents are smart too.\\n\\r\\n\\nTo begin the game, we build the game board using hexagonal terrain tiles. Catan is born - a beautiful island with mountains, pastures, hills, fields, and forests, surrounded by the sea.\\n\\r\\n\\nEach of us places two small houses on spaces where three terrain hexes meet. They are our starting settlements.\\n\\r\\n\\nAnd so it begins. I roll two dice. An “11”! Each terrain hex is marked with a die roll number. Each player who owns a settlement adjacent to a terrain hex marked with the number rolled receives a resource produced by this hex. Hills produce brick, forests produce lumber, mountains produce ore, fields produce grain, and pastures produce wool.\\n\\r\\n\\nWe use these resources to expand across Catan: we build roads and new settlements, or we upgrade our existing settlements to cities. For example, a road costs 1 brick and 1 lumber. If we do not have the necessary resources, we can acquire them by trading with our opponents.\\n\\r\\n\\nEach settlement is worth 1 victory point and each city is worth 2 victory points. If you expand cleverly, you may be the first player to reach 10 victory points and thus win the game!\\n\",\n        \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n        \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n        \"amazon_rank\": 133,\n        \"price\": \"29.99\",\n        \"mechanics\": [\n            \"Dice Rolling\",\n            \"Network and Route Building\",\n            \"Trading\"\n        ],\n        \"categories\": [\n            \"Dice\",\n            \"Economic\",\n            \"Family Game\",\n            \"Negotiation\"\n        ]\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "233"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"e9-bWmkcgM/TuSoclaRVhv3fx/wJPw\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:42:46 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Added game\": {\n        \"id\": \"OIXt3DmJU0\",\n        \"name\": \"Catan\",\n        \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n        \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n        \"amazon_rank\": 133,\n        \"price\": \"32.97\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Remove game from group",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {\r",
-							"     pm.response.to.be.withBody;\r",
-							"     pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+							"name": "Group doesn't exist",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"gameId\": \"OIXt3DmJU0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId/games",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId",
+										"games"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "ff5739dc-e856-46af-be1f-1ea1fc306382"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"88-aTFA15zSiWu+4sn4LcQ+OOdbstU\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 18:12:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1002,\n        \"name\": \"NOT_FOUND\",\n        \"message\": \"The item does not exist\",\n        \"info\": {\n            \"groupId\": \"ff5739dc-e856-46af-be1f-1ea1fc306382\"\n        }\n    }\n}"
 						}
 					]
 				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/user/:userId/groups/:groupId/games/:gameId",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"user",
-						":userId",
-						"groups",
-						":groupId",
-						"games",
-						":gameId"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "12345"
-						},
-						{
-							"key": "groupId",
-							"value": "NegG"
-						},
-						{
-							"key": "gameId",
-							"value": "OIXt3DmJU0"
-						}
-					]
-				}
-			},
-			"response": [
 				{
 					"name": "Remove game from group",
-					"originalRequest": {
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response must be valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"     pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/user/:userId/groups/:groupId/games/:gameId",
+							"raw": "{{apiURL}}/user/:userId/groups/:groupId/games/:gameId",
 							"host": [
-								"{{baseURL}}"
+								"{{apiURL}}"
 							],
 							"path": [
 								"user",
@@ -1201,50 +2312,157 @@
 								},
 								{
 									"key": "groupId",
-									"value": "NegG"
+									"value": "db70a043-d73b-4f82-b922-f259cd1d73eb"
 								},
 								{
 									"key": "gameId",
-									"value": "OIXt3DmJU0"
+									"value": "tECB3ktBhP"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "Remove game from group",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId/games/:gameId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId",
+										"games",
+										":gameId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "839c0857-6e6d-4c6d-bef0-ac9d52e45819"
+										},
+										{
+											"key": "gameId",
+											"value": "NoWy3nPYfj"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1432"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"598-zbKhbqKly+d2qqRciEGiNudf+Aw\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 17 Dec 2021 13:41:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Removed game\": {\n        \"id\": \"NoWy3nPYfj\",\n        \"name\": \"Catan: Seafarers Expansion\",\n        \"description\": \"\\nIn Catan: Seafarers you control a group of bold seafaring settlers exploring and taming the wild, uncharted Isles of Catan. Each game brings you to new seas and new lands. You might even discover the precious gold fields (a very valuable new terrain).<br /><br />Every game is unique and full of fun!<br /><br />Embark on an epic quest to settle the home island, build ships, and chart nearby waters. Guide your brave seafarers to victory through cunning trades and wise development. Be first to create new sea lanes and settle the newly-discovered isles.<br /><br />The best strategy and a nice dash of luck decide who will be the undisputed ruler of the rich Isles of Catan!<br />Capture the adventure of seafaring, exploration, and trade.<br />Catan: Seafarers is a 3-4 player expansion for the best-selling Catan board game. Share some fun at sea!<br /><br />Components<br />60 Wooden Ships<br />1 Pirate Ship<br />6 Frame Pieces<br />19 Sea Hexes<br />11 Hexagonal Region Tiles<br />50 Catan Chits<br />10 Number Tokens<br />10 Harbor Tokens<br />1 Rulebook and Scenarios\\n\",\n        \"url\": \"https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion\",\n        \"image_url\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg\",\n        \"amazon_rank\": 2618,\n        \"price\": \"29.99\",\n        \"mechanics\": [],\n        \"categories\": [\n            \"Expansion\"\n        ]\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "235"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"eb-ligL3vT0Ciwo1UX9x5NVUSn3hmM\""
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 02 Dec 2021 19:30:12 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
+							"name": "Group doesn't exist",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{apiURL}}/user/:userId/groups/:groupId/games/:gameId",
+									"host": [
+										"{{apiURL}}"
+									],
+									"path": [
+										"user",
+										":userId",
+										"groups",
+										":groupId",
+										"games",
+										":gameId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "12345"
+										},
+										{
+											"key": "groupId",
+											"value": "db70a043-d73b-4f82-b922-f259cd1d73eb"
+										},
+										{
+											"key": "gameId",
+											"value": "tECB3ktBhP"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"88-F58NkVhl3l/0kUj8ynpJRNBJWdw\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 07 Jan 2022 18:14:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"cause\": {\n        \"code\": 1002,\n        \"name\": \"NOT_FOUND\",\n        \"message\": \"The item does not exist\",\n        \"info\": {\n            \"groupId\": \"db70a043-d73b-4f82-b922-f259cd1d73eb\"\n        }\n    }\n}"
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"Removed game\": {\n        \"id\": \"OIXt3DmJU0\",\n        \"name\": \"Catan\",\n        \"url\": \"https://www.boardgameatlas.com/game/OIXt3DmJU0/catan\",\n        \"image\": \"https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg\",\n        \"amazon_rank\": 133,\n        \"price\": \"32.97\"\n    }\n}"
+					]
 				}
 			]
 		}
@@ -1271,12 +2489,20 @@
 	],
 	"variable": [
 		{
-			"key": "baseURL",
-			"value": "http://localhost:8888"
+			"key": "apiURL",
+			"value": "http://localhost:8888/api"
 		},
 		{
 			"key": "token",
 			"value": ""
+		},
+		{
+			"key": "guestToken",
+			"value": "24d39d68-bf68-4076-a425-12c6aac398e5"
+		},
+		{
+			"key": "dbURL",
+			"value": "http://localhost:9200"
 		}
 	]
 }

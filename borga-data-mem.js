@@ -4,6 +4,7 @@
 const errors = require('./borga-errors');
 const crypto = require('crypto');
 
+
 module.exports = function (guest) {
 	/**
 	 * Object that represents a map of all users: "userId": "userObj".
@@ -34,7 +35,7 @@ module.exports = function (guest) {
 		'5d389af1-06db-4401-8aef-36d8d6428f31': "a48309",
 		[guest.token]: [guest.id]
 	};
-	
+
 
 	// ------------------------- Users Functions -------------------------
 
@@ -111,9 +112,18 @@ module.exports = function (guest) {
 	 */
 	function listUserGroups(userId) {
 		const groups = getUser(userId).groups;
-		return Object.fromEntries(Object.entries(groups).map(group =>
-			[group[0], Object.fromEntries(Object.entries(group[1]).filter(entry => entry[0] != "games"))]
-		));
+
+		return Object.fromEntries(
+			Object.entries(groups).map(group =>
+				[
+					group[0],
+					{
+						name: group[1].name,
+						description: group[1].description
+					}
+				]
+			)
+		);
 	}
 
 

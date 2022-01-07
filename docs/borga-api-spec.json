@@ -30,14 +30,26 @@
               "application/json": {
                 "example": {
                   "popularGames": {
-                    "OIXt3DmJU0": {
-                      "id": "OIXt3DmJU0",
-                      "name": "Catan",
-                      "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
-                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
-                      "amazon_rank": 133,
-                      "price": "32.97"
-                    }
+                    "TAAifFP590": "Root",
+                    "yqR4PtpO8X": "Scythe",
+                    "5H5JS0KLzK": "Wingspan",
+                    "RLlDWHh7hR": "Gloomhaven",
+                    "fDn9rQjH9O": "Terraforming Mars",
+                    "i5Oqu5VZgP": "Azul",
+                    "7NYbgH2Z2I": "Viticulture: Essential Edition",
+                    "6FmFeux5xH": "Pandemic",
+                    "kPDxpJZ8PD": "Spirit Island",
+                    "j8LdPFmePE": "7 Wonders Duel",
+                    "OF145SrX44": "7 Wonders",
+                    "GP7Y2xOUzj": "Codenames",
+                    "VNBC6yq1WO": "The Castles of Burgundy",
+                    "oGVgRSAKwX": "Carcassonne",
+                    "O0G8z5Wgz1": "Splendor",
+                    "mce5HZPnF5": "Pandemic Legacy: Season 1",
+                    "FCuXPSfhDR": "Concordia",
+                    "8xos44jY7Q": "Everdell",
+                    "AuBvbISHR6": "Ticket to Ride",
+                    "3IPVIROfvl": "Brass: Birmingham"
                   }
                 }
               }
@@ -100,29 +112,59 @@
                     {
                       "id": "OIXt3DmJU0",
                       "name": "Catan",
+                      "description": "\nThe women and men of your expedition build the first two settlements. Fortunately, the land is rich in natural resources. You build roads and new settlements that eventually become cities. Will you succeed in gaining supremacy on Catan? Barter trade dominates the scene. Some resources you have in abundance, other resources are scarce. Ore for wool, brick for lumber - you trade according to what is needed for your current building projects. Proceed strategically! If you found your settlements in the right places and skillfully trade your resources, then the odds will be in your favor. But your opponents are smart too.\n\r\n\nTo begin the game, we build the game board using hexagonal terrain tiles. Catan is born - a beautiful island with mountains, pastures, hills, fields, and forests, surrounded by the sea.\n\r\n\nEach of us places two small houses on spaces where three terrain hexes meet. They are our starting settlements.\n\r\n\nAnd so it begins. I roll two dice. An “11”! Each terrain hex is marked with a die roll number. Each player who owns a settlement adjacent to a terrain hex marked with the number rolled receives a resource produced by this hex. Hills produce brick, forests produce lumber, mountains produce ore, fields produce grain, and pastures produce wool.\n\r\n\nWe use these resources to expand across Catan: we build roads and new settlements, or we upgrade our existing settlements to cities. For example, a road costs 1 brick and 1 lumber. If we do not have the necessary resources, we can acquire them by trading with our opponents.\n\r\n\nEach settlement is worth 1 victory point and each city is worth 2 victory points. If you expand cleverly, you may be the first player to reach 10 victory points and thus win the game!\n",
                       "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
-                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                      "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
                       "publisher": "KOSMOS",
                       "amazon_rank": 133,
-                      "price": "32.97"
-                    },
-                    {
-                      "id": "E5TYKwLTf0",
-                      "name": "Catan: Cities & Knights",
-                      "url": "https://www.boardgameatlas.com/game/E5TYKwLTf0/catan-cities-and-knights-expansion",
-                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257359245-51DYsPZcYyL.jpg",
-                      "publisher": "Catan Studio",
-                      "amazon_rank": 4435,
-                      "price": "44.00"
+                      "price": "32.97",
+                      "mechanics": [
+                        "Dice Rolling",
+                        "Network and Route Building",
+                        "Trading"
+                      ],
+                      "categories": [
+                        "Dice",
+                        "Economic",
+                        "Family Game",
+                        "Negotiation"
+                      ]
                     },
                     {
                       "id": "EvYzPCnCGG",
                       "name": "Catan: 5-6 Player Extension",
+                      "description": "Now five to six players can explore and settle Catan! In the Catan: 5-6 Player Extension you control a group of settlers exploring and taming the uncharted lands of Catan. Embark on a quest to settle the rich island, competing against more opponents for added fun. ● Add 1-2 more friends or family without sacrificing ease of play. ● Add green and brown settlers and expand your island with 2 more harbors and 11 unique, new terrain tiles. This is NOT a complete game! It is only a game extension for 5-6 players. You need a Catan game (aka The Settlers of Catan) in order to play with this extension! Components ● 11 Hexagonal Regional Tiles ● 2 Frame Pieces with Harbors ● 2 All-Sea Frame Pieces ● 10 Wooden Settlements ● 8 Wooden Cities ● 30 Wooden Roads ● 25 Resource Cards ● 9 Development Cards ● 28 Number Tokens",
                       "url": "https://www.boardgameatlas.com/game/EvYzPCnCGG/catan-56-player-extension",
-                      "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg",
+                      "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254797611-51uLrWkNt0L.jpg",
                       "publisher": "Catan Studio",
                       "amazon_rank": 534,
-                      "price": "15.49"
+                      "price": "22.50",
+                      "mechanics": [
+                        "Dice Rolling",
+                        "Hand Management",
+                        "Memory",
+                        "Modular Board",
+                        "Trading",
+                        "Network and Route Building"
+                      ],
+                      "categories": [
+                        "Expansion",
+                        "Negotiation"
+                      ]
+                    },
+                    {
+                      "id": "NoWy3nPYfj",
+                      "name": "Catan: Seafarers Expansion",
+                      "description": "\nIn Catan: Seafarers you control a group of bold seafaring settlers exploring and taming the wild, uncharted Isles of Catan. Each game brings you to new seas and new lands. You might even discover the precious gold fields (a very valuable new terrain).<br /><br />Every game is unique and full of fun!<br /><br />Embark on an epic quest to settle the home island, build ships, and chart nearby waters. Guide your brave seafarers to victory through cunning trades and wise development. Be first to create new sea lanes and settle the newly-discovered isles.<br /><br />The best strategy and a nice dash of luck decide who will be the undisputed ruler of the rich Isles of Catan!<br />Capture the adventure of seafaring, exploration, and trade.<br />Catan: Seafarers is a 3-4 player expansion for the best-selling Catan board game. Share some fun at sea!<br /><br />Components<br />60 Wooden Ships<br />1 Pirate Ship<br />6 Frame Pieces<br />19 Sea Hexes<br />11 Hexagonal Region Tiles<br />50 Catan Chits<br />10 Number Tokens<br />10 Harbor Tokens<br />1 Rulebook and Scenarios\n",
+                      "url": "https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion",
+                      "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg",
+                      "publisher": "Catan Studio",
+                      "amazon_rank": 2618,
+                      "price": "29.99",
+                      "mechanics": [],
+                      "categories": [
+                        "Expansion"
+                      ]
                     }
                   ]
                 }
@@ -195,11 +237,11 @@
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1002,
+                    "code": 1003,
                     "name": "ALREADY_EXISTS",
-                    "message": "The item already exists {\"userId\":\"A48287\"}",
+                    "message": "The item already exists",
                     "info": {
-                      "userId": "A48287"
+                      "userId": "12345"
                     }
                   }
                 }
@@ -238,9 +280,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "groupId": {
-                    "type": "string"
-                  },
                   "groupName": {
                     "type": "string"
                   },
@@ -260,43 +299,24 @@
               "application/json": {
                 "example": {
                   "Created group": {
-                    "groupId": "NegG",
-                    "groupName": "Negotiation games",
-                    "groupDescription": "This is a group of negotiation games."
+                    "id": "574d6214-037b-4de0-a773-77a33e23b4ad",
+                    "name": "Negotiation games",
+                    "description": "This is a group of negotiation games."
                   }
                 }
               }
             }
           },
-          "404": {
-            "description": "not found",
+          "401": {
+            "description": "unauthenticated",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
-                    "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                    "info": {
-                      "userId": "A4828723"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "already exists",
-            "content": {
-              "application/json": {
-                "example": {
-                  "cause": {
-                    "code": 1002,
-                    "name": "ALREADY_EXISTS",
-                    "message": "The item already exists {\"groupName\":\"FPS Games\"}",
-                    "info": {
-                      "groupName": "FPS Games"
-                    }
+                    "code": 1005,
+                    "name": "UNAUTHENTICATED",
+                    "message": "Invalid or missing token",
+                    "info": "Please insert a valid user token"
                   }
                 }
               }
@@ -331,29 +351,32 @@
             "content": {
               "application/json": {
                 "example": {
-                  "NegG": {
-                    "name": "Negotiation games",
-                    "description": "This is a group of negotiation games.",
-                    "games": {
-                      "OIXt3DmJU0": "Catan"
-                    }
+                  "45103531-8450-4970-8ebd-8b3e5d316382": {
+                    "name": "NegG",
+                    "description": "Negotiation games"
+                  },
+                  "f670933b-722b-43cb-97d1-aa89f3336085": {
+                    "name": "Negotiation and Economic Games",
+                    "description": "This is a group of negotiation and economic games."
+                  },
+                  "839c0857-6e6d-4c6d-bef0-ac9d52e45819": {
+                    "name": "Role-Playing Games",
+                    "description": "This is a group of role-playing games."
                   }
                 }
               }
             }
           },
-          "404": {
-            "description": "not found",
+          "401": {
+            "description": "unauthenticated",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
-                    "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
-                    "info": {
-                      "userId": "A4828723"
-                    }
+                    "code": 1005,
+                    "name": "UNAUTHENTICATED",
+                    "message": "Invalid or missing token",
+                    "info": "Please insert a valid user token"
                   }
                 }
               }
@@ -400,13 +423,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "groupName": {
-                    "type": "string"
-                  },
                   "newGroupName": {
                     "type": "string"
                   },
-                  "newDescription": {
+                  "newGroupDescription": {
                     "type": "string"
                   }
                 }
@@ -422,25 +442,25 @@
               "application/json": {
                 "example": {
                   "Edited group": {
-                    "groupId": "NegG",
-                    "newGroupName": "Negotiation and Economic Games",
-                    "newGroupDescription": "This is a group of negotiation and economic games."
+                    "id": "f670933b-722b-43cb-97d1-aa89f3336085",
+                    "name": "Negotiation and Economic Games",
+                    "description": "This is a group of negotiation and economic games."
                   }
                 }
               }
             }
           },
           "404": {
-            "description": "user or group not found",
+            "description": "group doesn't exist",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
+                    "code": 1002,
                     "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "message": "The item does not exist",
                     "info": {
-                      "userId": "A4828723"
+                      "groupId": "572bc968-87d1-436d-b455-26acf7f58fdc"
                     }
                   }
                 }
@@ -486,25 +506,25 @@
               "application/json": {
                 "example": {
                   "Deleted group": {
-                    "groupId": "NegG",
-                    "groupName": "Negotiation and Economic Games",
-                    "groupDescription": "This is a group of negotiation and economic games."
+                    "id": "45103531-8450-4970-8ebd-8b3e5d316382",
+                    "name": "NegG",
+                    "description": "Negotiation games"
                   }
                 }
               }
             }
           },
           "404": {
-            "description": "user or group not found",
+            "description": "group doesn't exist",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
+                    "code": 1002,
                     "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "message": "The item does not exist",
                     "info": {
-                      "userId": "A4828723"
+                      "groupId": "28248a5a-8bd1-422b-87e8-1b420fe7e1ee"
                     }
                   }
                 }
@@ -549,9 +569,13 @@
             "content": {
               "application/json": {
                 "example": {
-                  "name": "Negotiation games",
-                  "description": "This is a group of negotiation games.",
-                  "games": {}
+                  "id": "839c0857-6e6d-4c6d-bef0-ac9d52e45819",
+                  "name": "Role-Playing Games",
+                  "description": "This is a group of role-playing games.",
+                  "games": {
+                    "NoWy3nPYfj": "Catan: Seafarers Expansion",
+                    "OIXt3DmJU0": "Catan"
+                  }
                 }
               }
             }
@@ -562,11 +586,11 @@
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
+                    "code": 1002,
                     "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "message": "The item does not exist",
                     "info": {
-                      "userId": "A4828723"
+                      "groupId": "ff5739dc-e856-46af-be1f-1ea1fc306382"
                     }
                   }
                 }
@@ -632,26 +656,38 @@
                   "Added game": {
                     "id": "OIXt3DmJU0",
                     "name": "Catan",
+                    "description": "\nThe women and men of your expedition build the first two settlements. Fortunately, the land is rich in natural resources. You build roads and new settlements that eventually become cities. Will you succeed in gaining supremacy on Catan? Barter trade dominates the scene. Some resources you have in abundance, other resources are scarce. Ore for wool, brick for lumber - you trade according to what is needed for your current building projects. Proceed strategically! If you found your settlements in the right places and skillfully trade your resources, then the odds will be in your favor. But your opponents are smart too.\n\r\n\nTo begin the game, we build the game board using hexagonal terrain tiles. Catan is born - a beautiful island with mountains, pastures, hills, fields, and forests, surrounded by the sea.\n\r\n\nEach of us places two small houses on spaces where three terrain hexes meet. They are our starting settlements.\n\r\n\nAnd so it begins. I roll two dice. An “11”! Each terrain hex is marked with a die roll number. Each player who owns a settlement adjacent to a terrain hex marked with the number rolled receives a resource produced by this hex. Hills produce brick, forests produce lumber, mountains produce ore, fields produce grain, and pastures produce wool.\n\r\n\nWe use these resources to expand across Catan: we build roads and new settlements, or we upgrade our existing settlements to cities. For example, a road costs 1 brick and 1 lumber. If we do not have the necessary resources, we can acquire them by trading with our opponents.\n\r\n\nEach settlement is worth 1 victory point and each city is worth 2 victory points. If you expand cleverly, you may be the first player to reach 10 victory points and thus win the game!\n",
                     "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
-                    "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
+                    "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
                     "amazon_rank": 133,
-                    "price": "32.97"
+                    "price": "29.99",
+                    "mechanics": [
+                      "Dice Rolling",
+                      "Network and Route Building",
+                      "Trading"
+                    ],
+                    "categories": [
+                      "Dice",
+                      "Economic",
+                      "Family Game",
+                      "Negotiation"
+                    ]
                   }
                 }
               }
             }
           },
           "404": {
-            "description": "user or group not found",
+            "description": "group doesn't exist",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
+                    "code": 1002,
                     "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "message": "The item does not exist",
                     "info": {
-                      "userId": "A4828723"
+                      "groupId": "ff5739dc-e856-46af-be1f-1ea1fc306382"
                     }
                   }
                 }
@@ -708,28 +744,33 @@
               "application/json": {
                 "example": {
                   "Removed game": {
-                    "id": "OIXt3DmJU0",
-                    "name": "Catan",
-                    "url": "https://www.boardgameatlas.com/game/OIXt3DmJU0/catan",
-                    "image": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
-                    "amazon_rank": 133,
-                    "price": "32.97"
+                    "id": "NoWy3nPYfj",
+                    "name": "Catan: Seafarers Expansion",
+                    "description": "\nIn Catan: Seafarers you control a group of bold seafaring settlers exploring and taming the wild, uncharted Isles of Catan. Each game brings you to new seas and new lands. You might even discover the precious gold fields (a very valuable new terrain).<br /><br />Every game is unique and full of fun!<br /><br />Embark on an epic quest to settle the home island, build ships, and chart nearby waters. Guide your brave seafarers to victory through cunning trades and wise development. Be first to create new sea lanes and settle the newly-discovered isles.<br /><br />The best strategy and a nice dash of luck decide who will be the undisputed ruler of the rich Isles of Catan!<br />Capture the adventure of seafaring, exploration, and trade.<br />Catan: Seafarers is a 3-4 player expansion for the best-selling Catan board game. Share some fun at sea!<br /><br />Components<br />60 Wooden Ships<br />1 Pirate Ship<br />6 Frame Pieces<br />19 Sea Hexes<br />11 Hexagonal Region Tiles<br />50 Catan Chits<br />10 Number Tokens<br />10 Harbor Tokens<br />1 Rulebook and Scenarios\n",
+                    "url": "https://www.boardgameatlas.com/game/NoWy3nPYfj/catan-seafarers-expansion",
+                    "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559257503054-51u0777bL3L.jpg",
+                    "amazon_rank": 2618,
+                    "price": "29.99",
+                    "mechanics": [],
+                    "categories": [
+                      "Expansion"
+                    ]
                   }
                 }
               }
             }
           },
           "404": {
-            "description": "user, group or game not found",
+            "description": "group doesn't exist",
             "content": {
               "application/json": {
                 "example": {
                   "cause": {
-                    "code": 1001,
+                    "code": 1002,
                     "name": "NOT_FOUND",
-                    "message": "The item does not exist {\"userId\":\"A4828723\"}",
+                    "message": "The item does not exist",
                     "info": {
-                      "userId": "A4828723"
+                      "groupId": "db70a043-d73b-4f82-b922-f259cd1d73eb"
                     }
                   }
                 }
