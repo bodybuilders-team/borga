@@ -113,7 +113,7 @@ describe("Explore Games integration tests", () => {
 				"cause":
 				{
 					"code": 1002,
-					"info": { "name": "hdfgshgfdhsgdfhsgfhdsgh" },
+					"info": { "gameName": "hdfgshgfdhsgdfhsgfhdsgh" },
 					"message": "The item does not exist",
 					"name": "NOT_FOUND"
 				}
@@ -166,11 +166,12 @@ describe('User integration tests', () => {
 	test('Create new user works', async () => {
 		const userId = 'testguestid';
 		const userName = 'TestGuest';
+		const password = '1234';
 
 		const response = await request(app)
 			.post('/api/user')
 			.set('Accept', 'application/json')
-			.send({ userId, userName })
+			.send({ userId, userName, password })
 			.expect('Content-Type', /json/)
 			.expect(200);
 
@@ -210,6 +211,7 @@ describe('User integration tests', () => {
 				{
 					"code": 1001,
 					"info": {
+						"password": "required property missing",
 						"userId": "required property missing",
 						"userName": "required property missing"
 					},

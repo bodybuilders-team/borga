@@ -6,13 +6,24 @@ const express = require('express');
 
 module.exports = function (services, guest) {
 
+
+	/**
+	 * Gets the userId from the request.
+	 * @param {Object} req 
+	 * @returns the userId from the request
+	 */
+	function getUserId(req) {
+		return req.user && req.user.userId;
+	}
+
+
 	/**
 	 * Gets the token from the request.
 	 * @param {Object} req 
 	 * @returns the token from the request
 	 */
 	function getBearerToken(req) {
-		return guest.token; // to be improved...
+		return req.user && req.user.token;
 	}
 
 
@@ -22,7 +33,7 @@ module.exports = function (services, guest) {
 	 * @param {Object} res 
 	 */
 	function getHomepage(req, res) {
-		res.render('home');
+		res.render('home', { user: req.user });
 	}
 
 
@@ -32,7 +43,7 @@ module.exports = function (services, guest) {
 	 * @param {Object} res 
 	 */
 	function getSearchPage(req, res) {
-		res.render('search');
+		res.render('search', { user: req.user });
 	}
 
 
@@ -45,9 +56,9 @@ module.exports = function (services, guest) {
 		const gameId = req.params.gameId;
 		try {
 			const game = await services.getGameDetails(gameId);
-			const groups = Object.values(await services.listUserGroups(getBearerToken(req), guest.id)); // To be improved
+			const groups = Object.values(await services.listUserGroups(getBearerToken(req), getUserId(req)));
 
-			res.render('gameDetails', { header: 'Game Details', game, groups });
+			res.render('gameDetails', { header: 'Game Details', game, groups, user: req.user });
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -63,9 +74,9 @@ module.exports = function (services, guest) {
 	async function showPopularGames(req, res) {
 		try {
 			const games = await services.getPopularGames();
-			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
+			const groups = await services.listUserGroups(getBearerToken(req), getUserId(req));
 
-			res.render('games', { header: 'Popular Games', games, groups });
+			res.render('games', { header: 'Popular Games', games, groups, user: req.user });
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -85,9 +96,9 @@ module.exports = function (services, guest) {
 
 		try {
 			const games = await services.searchGamesByName(gameName, limit, order_by);
-			const groups = await services.listUserGroups(getBearerToken(req), guest.id); // To be improved
+			const groups = await services.listUserGroups(getBearerToken(req), getUserId(req));
 
-			res.render('games', { header: 'Games', gameName, games, groups });
+			res.render('games', { header: 'Games', gameName, games, groups, user: req.user });
 		} catch (error) {
 			console.log(error)
 			if (error.name == "NOT_FOUND" && error.info.gameName) {
@@ -112,7 +123,7 @@ module.exports = function (services, guest) {
 
 		try {
 			const groups = await services.listUserGroups(token, userId);
-			res.render('groups', { groups });
+			res.render('groups', { groups, user: req.user });
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -134,7 +145,7 @@ module.exports = function (services, guest) {
 			const group = await services.getGroupDetails(token, userId, groupId);
 			group.id = groupId;
 
-			res.render('groupDetails', { header: 'Group Details', group });
+			res.render('groupDetails', { header: 'Group Details', group, user: req.user });
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
@@ -248,14 +259,17 @@ module.exports = function (services, guest) {
 
 
 	/**
-	 * Shows the register page.
+	 * Shows the user page.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
 	async function showUserPage(req, res) {
 		const userId = req.params.userId;
+
 		try {
-			res.render('user', { user: userId ? await services.getUser(userId) : undefined });
+			const user = await services.getUser(userId);
+
+			res.render('user', { user: req.user });
 		}
 		catch (error) {
 			console.log(error);
@@ -263,9 +277,19 @@ module.exports = function (services, guest) {
 		}
 	}
 
-	// NOT YET IMPLEMENTED
+
 	/**
-	 * Register new user
+	 * Shows the register/login page.
+	 * @param {Object} req 
+	 * @param {Object} res 
+	 */
+	async function getRegisterLoginPage(req, res) {
+		res.render('register_login');
+	}
+
+
+	/**
+	 * Register and logins a new user.
 	 * @param {Object} req 
 	 * @param {Object} res 
 	 */
@@ -273,13 +297,52 @@ module.exports = function (services, guest) {
 		const userName = req.body.userName;
 		const userId = req.body.userId;
 		const password = req.body.password;
+
 		try {
-			//const userInfo = await services.createNewUser(userId, userName);
-			res.redirect('/user');
+			await services.createNewUser(userId, userName, password);
+			doLogin(req, res);
 		} catch (error) {
 			console.log(error);
 			res.render('error', { error });
 		}
+	}
+
+
+	/**
+	 * Logins user
+	 * @param {Object} req 
+	 * @param {Object} res 
+	 */
+	async function doLogin(req, res) {
+		const userId = req.body.userId;
+		const password = req.body.password;
+
+		try {
+			const user = await services.checkCredentials(userId, password);
+			user.userId = userId;
+			user.token = await services.getToken(userId);
+
+			req.login(user, err => {
+				if (err)
+					console.log('LOGIN ERROR', err);
+
+				res.redirect(`/user/${userId}/profile`);
+			});
+		} catch (error) {
+			console.log('LOGIN EXCEPTION', error);
+			res.redirect('/');
+		}
+	}
+
+
+	/**
+	 * Logouts user
+	 * @param {Object} req 
+	 * @param {Object} res 
+	 */
+	async function doLogout(req, res) {
+		req.logout();
+		res.redirect('/');
 	}
 
 
@@ -302,15 +365,21 @@ module.exports = function (services, guest) {
 	// Show game details
 	router.get('/games/:gameId', showGameDetails);
 
-
-	// Show register/login 
-	router.get('/user/profile', showUserPage);
-
 	// Show user page 
 	router.get('/user/:userId/profile', showUserPage);
 
-	// Register/Login new user - NOT YET IMPLEMENTED
-	router.post('/user', registerUser);
+
+	// Show Register/Login page
+	router.get('/auth', getRegisterLoginPage);
+
+	// Register new user
+	router.post('/register', registerUser);
+
+	// Login
+	router.post('/login', doLogin);
+
+	// Register new user
+	router.post('/logout', doLogout);
 
 
 	// Show groups

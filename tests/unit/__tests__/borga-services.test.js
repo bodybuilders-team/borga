@@ -147,7 +147,7 @@ describe("User tests", () => {
 	});
 
 	test('Create valid new user ', async () => {
-		const res = await defaultServices.createNewUser("profid", "Paulão");
+		const res = await defaultServices.createNewUser("profid", "Paulão", "1234");
 		expect(res).toBeDefined();
 		expect(res.userId).toEqual("profid");
 		expect(res.userName).toEqual("Paulão");

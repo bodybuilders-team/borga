@@ -209,6 +209,9 @@
                   },
                   "userName": {
                     "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
                   }
                 }
               }

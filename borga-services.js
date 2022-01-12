@@ -42,6 +42,37 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
+	 * Checks if both userId and password are associated.
+	 * @param {String} userId
+	 * @param {String} password
+	 * @returns user object
+	 * @throws MISSING_PARAM if userId or password are missing
+	 * @throws UNAUTHENTICATED if the userId and password are not associated
+	 */
+	async function checkCredentials(userId, password) {
+		if (!userId || !password)
+			throw errors.MISSING_PARAM('missing credentials');
+
+		const user = await data_int.getUser(userId);
+
+		if (user.passwordHash !== getHashedPassword(password))
+			throw errors.UNAUTHENTICATED({ username, password });
+
+		return user;
+	}
+
+
+	/**
+	 * Receives a password and returns hashed password using sha256 algorithm.
+	 * @param {String} password 
+	 * @returns hashed password
+	 */
+	function getHashedPassword(password) {
+		return crypto.createHash('sha256').update(password).digest('hex');
+	}
+
+
+	/**
 	 * Checks if both token and userId are associated.
 	 * @param {String} token
 	 * @param {String} userId
@@ -82,21 +113,25 @@ module.exports = function (data_ext, data_int) {
 
 
 	/**
-	 * Creates a new user given its id and name.
+	 * Creates a new user given its id, name and password.
 	 * @param {String} userId 
 	 * @param {String} userName 
+	 * @param {String} password 
 	 * @returns a promise with an object with the new user information
 	 */
-	async function createNewUser(userId, userName) {
+	async function createNewUser(userId, userName, password) {
 		checkBadRequest({
 			body: {
 				userId: { value: userId, type: 'string', required: true },
-				userName: { value: userName, type: 'string', required: true }
+				userName: { value: userName, type: 'string', required: true },
+				password: { value: password, type: 'string', required: true }
 			}
 		});
-		if (userId != userId.toLowerCase()) throw errors.BAD_REQUEST({ userId: "User id has to be lowercase!" });
 
-		return await data_int.createNewUser(userId, userName);
+		if (userId != userId.toLowerCase())
+			throw errors.BAD_REQUEST({ userId: "User id has to be lowercase!" });
+
+		return await data_int.createNewUser(userId, userName, getHashedPassword(password));
 	}
 
 
@@ -237,6 +272,15 @@ module.exports = function (data_ext, data_int) {
 		return await data_int.getUser(userId);
 	}
 
+	/**
+	 * Gets one token associated with userId.
+	 * @param {String} userId 
+	 * @returns the token
+	 */
+	 async function getToken(userId) {
+		return await data_int.getToken(userId);
+	}
+
 
 	return {
 		getPopularGames,
@@ -244,6 +288,7 @@ module.exports = function (data_ext, data_int) {
 
 		createNewUser,
 		getUser,
+		getToken,
 		createGroup,
 		editGroup,
 		listUserGroups,
@@ -252,5 +297,7 @@ module.exports = function (data_ext, data_int) {
 		getGameDetails,
 		addGameToGroup,
 		removeGameFromGroup,
+
+		checkCredentials
 	};
 };

@@ -1,6 +1,13 @@
 'use strict';
 
 
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+
+passport.serializeUser((userInfo, done) => { done(null, userInfo); });
+passport.deserializeUser((userInfo, done) => { done(null, userInfo); });
+
 module.exports = function (es_spec, guest) {
 
 	const data_ext_games = require('./board-games-data.js');
@@ -16,8 +23,14 @@ module.exports = function (es_spec, guest) {
 	const web_api = require('./borga-web-api.js')(services);
 	const web_site = require('./borga-web-site.js')(services, guest);
 
-	const express = require('express');
 	const app = express();
+	app.use(session({
+		secret: 'isel-ipw-borga',
+		resave: false,
+		saveUninitialized: false
+	}));
+	app.use(passport.initialize());
+	app.use(passport.session());
 
 	app.set('view engine', 'hbs');
 

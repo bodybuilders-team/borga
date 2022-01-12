@@ -14,6 +14,7 @@ const userId1 = "123456";
 const userId2 = "a48309";
 const token1 = '5d389af1-06db-4401-8aef-36d8d6428f31';
 const userName1 = "Paulão";
+const defaultHashedPassword = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 const groupName1 = "Paulão Games";
 const groupDescription1 = "This is a description";
 const gameId1 = "I9azM1kA6l";
@@ -42,7 +43,7 @@ const ResetMem = async () => dataMem.resetMem();
 /**
  * Creates a new user with the information of the tests constants.
  */
-const CreateUser1 = async () => dataMem.createNewUser(userId1, userName1);
+const CreateUser1 = async () => dataMem.createNewUser(userId1, userName1, defaultHashedPassword);
 
 /**
  * Creates a new group with the information of the tests constants.
@@ -88,15 +89,16 @@ describe("User tests", () => {
 	);
 
 	test("createUserObj creates an user object from a name", () => {
-		expect(dataMem.createUserObj(userName1))
+		expect(dataMem.createUserObj(userName1, defaultHashedPassword))
 			.toEqual({
-				name: userName1,
+				userName: userName1,
+				passwordHash: defaultHashedPassword,
 				groups: {}
 			});
 	});
 
 	test("createNewUser creates an user, returning id of the new user", () => {
-		const createdUser = dataMem.createNewUser("1234567", userName1);
+		const createdUser = dataMem.createNewUser("1234567", userName1, defaultHashedPassword);
 
 		expect(createdUser.userId).toEqual("1234567");
 		expect(createdUser.userName).toEqual(userName1);
@@ -107,7 +109,7 @@ describe("User tests", () => {
 	});
 
 	test("createNewUser throws if user already exists", () => {
-		assertThrowsAlreadyExists(() => dataMem.createNewUser(userId1, userName1), { userId: userId1 });
+		assertThrowsAlreadyExists(() => dataMem.createNewUser(userId1, userName1, defaultHashedPassword), { userId: userId1 });
 	});
 });
 
@@ -224,7 +226,8 @@ describe('Utils tests', () => {
 	test("getUser returns a user object", () => {
 		expect(dataMem.getUser(userId1))
 			.toEqual({
-				name: userName1,
+				userName: userName1,
+				passwordHash: defaultHashedPassword,
 				groups: { [groupId1]: groupObj1 }
 			});
 	});

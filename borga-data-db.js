@@ -69,16 +69,44 @@ module.exports = function (
 	}
 
 
+	/**
+	 * Gets an user token.
+	 * @param {String} userId 
+	 * @returns the user token
+	 * @throws NOT_FOUND if the token doesn't exist
+	 */
+	async function getToken(userId) {
+		try {
+			const response = await fetch(`${tokensUri}/_search`);
+			const tokens = (await response.json()).hits.hits;
+
+			for (const token of tokens) {
+				if (token._source.userId == userId)
+					return token._id;
+			}
+
+			if (response.status == 400)
+				throw (await response.json()).error;
+		}
+		catch (err) {
+			console.log(err);
+			throw errors.FAIL(err);
+		}
+		throw errors.NOT_FOUND({ 'token for user': userId });
+	}
+
+
 	// ------------------------- Users Functions -------------------------
 
 	/**
 	 * Creates a new user given its id and name.
 	 * @param {String} userId 
 	 * @param {String} userName 
+	 * @param {String} passwordHash 
 	 * @returns an object with the new user information
 	 * @throws ALREADY_EXISTS if the user with userId already exists
 	 */
-	async function createNewUser(userId, userName) {
+	async function createNewUser(userId, userName, passwordHash) {
 		let found = true;
 
 		try { await getUser(userId) }
@@ -95,7 +123,8 @@ module.exports = function (
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						userName
+						userName,
+						passwordHash
 					})
 				}
 			);
@@ -418,6 +447,7 @@ module.exports = function (
 		removeGameFromGroup,
 
 		//-- Tokens --
-		tokenToUserId
+		tokenToUserId,
+		getToken
 	};
 }

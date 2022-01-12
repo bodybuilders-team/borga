@@ -151,8 +151,9 @@ module.exports = function (services) {
 		try {
 			const userId = req.body.userId;
 			const userName = req.body.userName;
+			const password = req.body.password;
 
-			const userInfo = await services.createNewUser(userId, userName);
+			const userInfo = await services.createNewUser(userId, userName, password);
 			res.json({ "Created user": userInfo });
 		} catch (err) {
 			onError(res, err);
@@ -317,7 +318,8 @@ module.exports = function (services) {
 	router.post('/user', validateRequest({
 		body: {
 			userId: { type: "string", required: true },
-			userName: { type: "string", required: true }
+			userName: { type: "string", required: true },
+			password: { type: "string", required: true }
 		}
 	}), createNewUser);
 

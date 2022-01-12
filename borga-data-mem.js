@@ -6,19 +6,35 @@ const crypto = require('crypto');
 
 
 module.exports = function (guest) {
+
+	const defaultHashedPassword = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
 	/**
 	 * Object that represents a map of all users: "userId": "userObj".
 	 * Example of an userObj : {
 	 * 		"name" : "Paulão",
+	 * 		"hashedPassword": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
 	 * 		"groups": {}
 	 * }
 	 * Contains 3 starting users.
 	 */
 	let users = {
-		"a48280": createUserObj("André Jesus"),
-		"a48287": createUserObj("Nyckollas Brandão"),
-		"a48309": createUserObj("André Santos"),
-		[guest.id]: createUserObj("guest")
+		"a48280": createUserObj(
+			"André Jesus",
+			defaultHashedPassword
+		),
+		"a48287": createUserObj(
+			"Nyckollas Brandão",
+			defaultHashedPassword
+		),
+		"a48309": createUserObj(
+			"André Santos",
+			defaultHashedPassword
+		),
+		[guest.id]: createUserObj(
+			[guest.name],
+			defaultHashedPassword
+		)
 	};
 
 	/**
@@ -43,16 +59,17 @@ module.exports = function (guest) {
 	 * Creates a new user given its id and name.
 	 * @param {String} userId 
 	 * @param {String} userName 
+	 * @param {String} passwordHash 
 	 * @returns an object with the new user information
 	 * @throws ALREADY_EXISTS if the user with userId already exists
 	 */
-	function createNewUser(userId, userName) {
+	function createNewUser(userId, userName, passwordHash) {
 		if (users[userId]) throw errors.ALREADY_EXISTS({ userId });
 
 		const token = crypto.randomUUID();
 		tokens[token] = userId;
 
-		users[userId] = createUserObj(userName);
+		users[userId] = createUserObj(userName, passwordHash);
 
 		return { userId, token, userName };
 	}
@@ -209,13 +226,15 @@ module.exports = function (guest) {
 
 
 	/**
-	 * Creates a new user object given its name.
+	 * Creates a new user object given its name and hashed password.
 	 * @param {String} userName 
+	 * @param {String} passwordHash 
 	 * @returns the user object 
 	 */
-	function createUserObj(userName) {
+	function createUserObj(userName, passwordHash) {
 		return {
-			name: userName,
+			userName,
+			passwordHash,
 			groups: {}
 		};
 	}
