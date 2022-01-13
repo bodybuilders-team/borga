@@ -21,7 +21,7 @@ module.exports = function (es_spec, guest) {
 	const services = require('./borga-services.js')(data_ext_games, data_int);
 
 	const web_api = require('./borga-web-api.js')(services);
-	const web_site = require('./borga-web-site.js')(services, guest);
+	const web_site = require('./borga-web-site.js')(services);
 
 	const app = express();
 	app.use(session({

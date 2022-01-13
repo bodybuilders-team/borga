@@ -25,6 +25,11 @@ module.exports = function (services) {
 	}
 
 
+	function getUserToken(req) {
+		return req.user && req.user.token;
+	}
+
+
 	/**
 	 * Sends as response an object containing the cause of the error.
 	 * @param {Object} res 
@@ -168,7 +173,7 @@ module.exports = function (services) {
 	 */
 	async function createGroup(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupName = req.body.groupName;
 			const groupDescription = req.body.groupDescription;
@@ -188,7 +193,7 @@ module.exports = function (services) {
 	 */
 	async function editGroup(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 			const newGroupName = req.body.newGroupName;
@@ -209,7 +214,7 @@ module.exports = function (services) {
 	 */
 	async function listGroups(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 
 			const groups = await services.listUserGroups(token, userId);
@@ -227,7 +232,7 @@ module.exports = function (services) {
 	 */
 	async function deleteGroup(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 
@@ -246,7 +251,7 @@ module.exports = function (services) {
 	 */
 	async function getGroupDetails(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 
@@ -265,7 +270,7 @@ module.exports = function (services) {
 	 */
 	async function addGameToGroup(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 			const gameId = req.body.gameId;
@@ -285,7 +290,7 @@ module.exports = function (services) {
 	 */
 	async function removeGameFromGroup(req, res) {
 		try {
-			const token = getBearerToken(req);
+			const token = getUserToken(req);
 			const userId = req.params.userId;
 			const groupId = req.params.groupId;
 			const gameId = req.params.gameId;
@@ -298,10 +303,23 @@ module.exports = function (services) {
 	}
 
 
+	function extractToken(req, res, next) {
+		const bearerToken = getBearerToken(req);
+
+		if (bearerToken)
+			req.user = { token: bearerToken }
+
+		next();
+	}
+
+
 	const router = express.Router();
+
 	router.use('/docs', openApiUi.serve);
 	router.get('/docs', openApiUi.setup(openApiSpec));
+
 	router.use(express.json());
+	router.use(extractToken);
 
 
 	// Games 

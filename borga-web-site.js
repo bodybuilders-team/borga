@@ -4,7 +4,7 @@
 const express = require('express');
 
 
-module.exports = function (services, guest) {
+module.exports = function (services) {
 
 
 	/**
@@ -201,26 +201,6 @@ module.exports = function (services, guest) {
 
 
 	/**
-	 * Deletes a group.
-	 * @param {Object} req 
-	 * @param {Object} res 
-	 */
-	async function deleteGroup(req, res) {
-		const token = getBearerToken(req);
-		const userId = req.params.userId;
-		const groupId = req.params.groupId;
-
-		try {
-			await services.deleteGroup(token, userId, groupId);
-			res.redirect(`/user/${userId}/groups`);
-		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
-		}
-	}
-
-
-	/**
 	 * Adds a game to a group.
 	 * @param {Object} req 
 	 * @param {Object} res 
@@ -233,27 +213,6 @@ module.exports = function (services, guest) {
 
 		try {
 			await services.addGameToGroup(token, userId, groupId, gameId);
-			res.redirect(`/user/${userId}/groups/${groupId}`);
-		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
-		}
-	}
-
-
-	/**
-	 * Removes a game from a group.
-	 * @param {Object} req 
-	 * @param {Object} res 
-	 */
-	async function removeGameFromGroup(req, res) {
-		const token = getBearerToken(req);
-		const userId = req.params.userId;
-		const groupId = req.params.groupId;
-		const gameId = req.params.gameId;
-
-		try {
-			await services.removeGameFromGroup(token, userId, groupId, gameId);
 			res.redirect(`/user/${userId}/groups/${groupId}`);
 		} catch (error) {
 			console.log(error);
@@ -286,12 +245,12 @@ module.exports = function (services, guest) {
 			await services.createNewUser(userId, userName, password);
 			doLogin(req, res);
 		} catch (error) {
-			console.log(error);
-
 			if (error.name == 'ALREADY_EXISTS')
 				res.render('register_login', { already_exists: error })
-			else
-				res.redirect(`/`);
+			else {
+				console.log(error);
+				res.render('error', { error });
+			}
 		}
 	}
 
@@ -317,12 +276,13 @@ module.exports = function (services, guest) {
 				res.redirect(`/`);
 			});
 		} catch (error) {
-			console.log('LOGIN EXCEPTION', error);
 
 			if (error.name == 'UNAUTHENTICATED')
 				res.render('register_login', { unauthenticated: error })
-			else
-				res.redirect(`/`);
+			else {
+				console.log('LOGIN EXCEPTION', error);
+				res.render('error', { error });
+			}
 		}
 	}
 
@@ -383,15 +343,8 @@ module.exports = function (services, guest) {
 	// Show group details
 	router.post('/user/:userId/groups/:groupId', editGroup);
 
-	// Deletes a group -> To be replaced
-	router.post('/user/:userId/groups/:groupId/delete', deleteGroup);
-
-
 	// Adds a game to a group
 	router.post('/user/:userId/groups/:groupId/games/:gameId', addGameToGroup);
-
-	// Removes a game from a group -> To be replaced
-	router.post('/user/:userId/groups/:groupId/games/:gameId/remove', removeGameFromGroup);
 
 	return router;
 };
