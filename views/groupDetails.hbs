@@ -68,7 +68,7 @@
             <hr>
 
             <form method="POST"
-                onsubmit="this.action = '/user/{{user.userId}}/groups/{{id}}/games/' + this.game.value + '/remove';">
+                onsubmit="this.action = '/user/{{../user.userId}}/groups/{{id}}/games/' + this.game.value + '/remove';">
                 <select class="form-select inline w-50" aria-label="Game selection" id="game" required>
                     <option value="" selected>Select a game</option>
                     {{#each games}}

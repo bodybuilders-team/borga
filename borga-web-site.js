@@ -56,8 +56,9 @@ module.exports = function (services, guest) {
 		const gameId = req.params.gameId;
 		try {
 			const game = await services.getGameDetails(gameId);
-			const groups = Object.values(await services.listUserGroups(getBearerToken(req), getUserId(req)));
-
+			const groups = (req.user)
+				? await services.listUserGroups(getBearerToken(req), getUserId(req))
+				: {}
 			res.render('gameDetails', { header: 'Game Details', game, groups, user: req.user });
 		} catch (error) {
 			console.log(error);
@@ -74,7 +75,9 @@ module.exports = function (services, guest) {
 	async function showPopularGames(req, res) {
 		try {
 			const games = await services.getPopularGames();
-			const groups = await services.listUserGroups(getBearerToken(req), getUserId(req));
+			const groups = (req.user)
+				? await services.listUserGroups(getBearerToken(req), getUserId(req))
+				: {}
 
 			res.render('games', { header: 'Popular Games', games, groups, user: req.user });
 		} catch (error) {
@@ -96,8 +99,9 @@ module.exports = function (services, guest) {
 
 		try {
 			const games = await services.searchGamesByName(gameName, limit, order_by);
-			const groups = await services.listUserGroups(getBearerToken(req), getUserId(req));
-
+			const groups = (req.user)
+				? await services.listUserGroups(getBearerToken(req), getUserId(req))
+				: {}
 			res.render('games', { header: 'Games', gameName, games, groups, user: req.user });
 		} catch (error) {
 			console.log(error)
@@ -259,26 +263,6 @@ module.exports = function (services, guest) {
 
 
 	/**
-	 * Shows the user page.
-	 * @param {Object} req 
-	 * @param {Object} res 
-	 */
-	async function showUserPage(req, res) {
-		const userId = req.params.userId;
-
-		try {
-			const user = await services.getUser(userId);
-
-			res.render('user', { user: req.user });
-		}
-		catch (error) {
-			console.log(error);
-			res.render('error', { error });
-		}
-	}
-
-
-	/**
 	 * Shows the register/login page.
 	 * @param {Object} req 
 	 * @param {Object} res 
@@ -303,7 +287,11 @@ module.exports = function (services, guest) {
 			doLogin(req, res);
 		} catch (error) {
 			console.log(error);
-			res.render('error', { error });
+
+			if (error.name == 'ALREADY_EXISTS')
+				res.render('register_login', { already_exists: error })
+			else
+				res.redirect(`/`);
 		}
 	}
 
@@ -326,11 +314,15 @@ module.exports = function (services, guest) {
 				if (err)
 					console.log('LOGIN ERROR', err);
 
-				res.redirect(`/user/${userId}/profile`);
+				res.redirect(`/`);
 			});
 		} catch (error) {
 			console.log('LOGIN EXCEPTION', error);
-			res.redirect('/');
+
+			if (error.name == 'UNAUTHENTICATED')
+				res.render('register_login', { unauthenticated: error })
+			else
+				res.redirect(`/`);
 		}
 	}
 
@@ -364,9 +356,6 @@ module.exports = function (services, guest) {
 
 	// Show game details
 	router.get('/games/:gameId', showGameDetails);
-
-	// Show user page 
-	router.get('/user/:userId/profile', showUserPage);
 
 
 	// Show Register/Login page

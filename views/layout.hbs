@@ -13,37 +13,23 @@
 </head>
 
 <body>
-    <div>
-        <nav class="nav nav-pills">
-            <a class="navbar-brand" href="/"><img src="/public/table-games.png" alt="" width="30" height="30"></a>
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="/search">Search Games</a>
-            <a class="nav-link" href="/popularGames">Popular Games</a>
-            {{#with user}}
-            <a class="nav-link" href="/user/{{userId}}/groups">Groups</a>
-            <a class="nav-link" href="/user/{{userId}}/profile">Profile</a>
-            <form action="/logout" method="POST">
-                <!-- Form used because POST is used in logout -->
-                <input class="nav-link" type="submit" value="Logout">
-            </form>
-            {{else}}
-            <a class="nav-link" href="/auth">Register/Login</a>
-            {{/with}}
-        </nav>
-        <div class="form-check form-switch  top-right">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                onclick="changeMode()">
-            <label class="form-check-label" for="flexSwitchCheckDefault">DarkMode</label>
-        </div>
-    </div>
+    <nav class="nav nav-pills">
+        <a class="navbar-brand" href="/"><img src="/public/table-games.png" alt="" width="34"></a>
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/search">Search Games</a>
+        <a class="nav-link" href="/popularGames">Popular Games</a>
+        {{#with user}}
+        <a class="nav-link" href="/user/{{userId}}/groups">Groups</a>
+        <h5 class="nav-link"><span class="badge bg-primary">{{userName}} / {{userId}}</span></h5>
+        <form action="/logout" method="POST">
+            <!-- Form used because POST is used in logout -->
+            <input class="nav-link" type="submit" value="Logout">
+        </form>
+        {{else}}
+        <a class="nav-link" href="/auth">Register/Login</a>
+        {{/with}}
+    </nav>
 
-    <script type="text/javascript" src="../borga-web-site.js"></script>
-    <script>
-        function changeMode() {
-            var element = document.body;
-            element.classList.toggle("dark-mode");
-        }
-    </script>
 
     <hr>
     {{{body}}}

@@ -56,7 +56,7 @@ module.exports = function (data_ext, data_int) {
 		const user = await data_int.getUser(userId);
 
 		if (user.passwordHash !== getHashedPassword(password))
-			throw errors.UNAUTHENTICATED({ username, password });
+			throw errors.UNAUTHENTICATED({ userId, password });
 
 		return user;
 	}

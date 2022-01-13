@@ -16,11 +16,6 @@ td {
 	vertical-align: middle;
 }
 
-.dark-mode {
-	background-color: #252526;
-	color: white;
-}
-
 .game-image{
 	max-width: 100%;
 	max-height: 100%;

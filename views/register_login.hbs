@@ -30,6 +30,11 @@
 
                     <button type="submit" class="btn btn-primary">Register</button>
                 </form>
+                {{#if already_exists}}
+                <div class="alert alert-danger mt-4" role="alert">
+                    User with specified userID already exists!
+                </div>
+                {{/if}}
             </div>
         </div>
 
@@ -55,6 +60,11 @@
 
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
+                {{#if unauthenticated}}
+                <div class="alert alert-danger mt-4" role="alert">
+                    Password or userID is wrong.
+                </div>
+                {{/if}}
             </div>
         </div>
     </div>
