@@ -1,7 +1,7 @@
 {
   "name": "a2-ipw-borga",
   "version": "1.0.0",
-  "description": "",
+  "description": "ISEL-LEIC-IPW 2021/2022 Assignment - BORGA (BOaRd Games Application)",
   "main": "borga-server.js",
   "scripts": {
     "start": "node borga-launch.js",
