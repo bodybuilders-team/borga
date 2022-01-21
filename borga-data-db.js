@@ -41,9 +41,10 @@ module.exports = function (
 
 
 	/**
-	 * Creates a token, associating it to a userId.
+	 * Creates a token, randomly generated, associating it to a userId.
+	 * Uses crypto.randomUUID() for random token generation.
 	 * @param {String} token 
-	 * @returns token
+	 * @returns the created token
 	 */
 	async function createToken(userId) {
 		const token = crypto.randomUUID();

@@ -53,6 +53,41 @@ module.exports = function (guest) {
 	};
 
 
+	// ------------------------- Tokens -------------------------
+
+	/**
+	 * Return the userId associated with the given token.
+	 * @param {String} token 
+	 * @returns the userId associated with the given token
+	 */
+	 function tokenToUserId(token) {
+		return tokens[token];
+	}
+
+
+	/**
+	 * Created a token, randomly generated.
+	 * @returns the created token
+	 */
+	function createToken() {
+		return crypto.randomUUID();
+	}
+
+	/**
+	 * Gets an user token.
+	 * @param {String} userId 
+	 * @returns the user token
+	 * @throws NOT_FOUND if the token doesn't exist
+	 */
+	 function getToken(userId) {
+		for(token in tokens){
+			if(tokens[token] == userId)
+				return token
+		}
+		throw errors.NOT_FOUND({ 'token for user': userId });
+	}
+
+
 	// ------------------------- Users Functions -------------------------
 
 	/**
@@ -66,7 +101,7 @@ module.exports = function (guest) {
 	function createNewUser(userId, userName, passwordHash) {
 		if (users[userId]) throw errors.ALREADY_EXISTS({ userId });
 
-		const token = crypto.randomUUID();
+		const token = createToken();
 		tokens[token] = userId;
 
 		users[userId] = createUserObj(userName, passwordHash);
@@ -210,18 +245,6 @@ module.exports = function (guest) {
 	}
 
 
-	// ------------------------- Tokens -------------------------
-
-	/**
-	 * Return the userId associated with the given token.
-	 * @param {String} token 
-	 * @returns the userId associated with the given token
-	 */
-	function tokenToUserId(token) {
-		return tokens[token];
-	}
-
-
 	// ------------------------- Utils -------------------------
 
 
@@ -334,7 +357,8 @@ module.exports = function (guest) {
 
 		//-- Tokens --
 		tokenToUserId,
-
+		getToken,
+		
 		//-- Utils --
 		createUserObj,
 		createGroupObj,
