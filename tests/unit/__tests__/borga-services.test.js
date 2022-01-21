@@ -84,7 +84,7 @@ describe("Search tests", () => {
 });
 
 
-test("getPopularGames returns names of most popular games", async() => {
+test("getPopularGames returns names of most popular games", async () => {
 	expect(await mockDataExt.getPopularGames())
 		.toEqual([
 			{ id: "TAAifFP590", name: "Root" },

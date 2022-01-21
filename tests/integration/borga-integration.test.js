@@ -33,7 +33,9 @@ describe("Explore Games integration tests", () => {
 			.expect(200);
 
 		expect(response.body).toBeTruthy();
-		expect(response.body.games[0]).toEqual(
+		const game = response.body.games[0];
+		game.price = undefined;
+		expect(game).toEqual(
 			{
 				"id": "OIXt3DmJU0",
 				"name": "Catan",
@@ -42,7 +44,7 @@ describe("Explore Games integration tests", () => {
 				"image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324722072.jpg",
 				"publisher": "KOSMOS",
 				"amazon_rank": 133,
-				"price": "32.00",
+				"price": undefined,
 				"mechanics": [
 					"Dice Rolling",
 					"Network and Route Building",

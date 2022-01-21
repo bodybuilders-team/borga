@@ -277,7 +277,7 @@ module.exports = function (data_ext, data_int) {
 	 * @param {String} userId 
 	 * @returns the token
 	 */
-	 async function getToken(userId) {
+	async function getToken(userId) {
 		return await data_int.getToken(userId);
 	}
 
