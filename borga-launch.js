@@ -1,7 +1,7 @@
 'use strict';
 
 
-const default_port = 8888;
+const default_port = process.env['PORT'];
 const port = process.argv[2] || default_port;
 
 const config = require('./borga-config');
