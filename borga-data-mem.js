@@ -80,9 +80,9 @@ module.exports = function (guest) {
 	 * @throws NOT_FOUND if the token doesn't exist
 	 */
 	 function getToken(userId) {
-		for(token in tokens){
+		for(const token in tokens){
 			if(tokens[token] == userId)
-				return token
+				return token;
 		}
 		throw errors.NOT_FOUND({ 'token for user': userId });
 	}
