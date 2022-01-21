@@ -11,13 +11,15 @@ passport.deserializeUser((userInfo, done) => { done(null, userInfo); });
 module.exports = function (es_spec, guest) {
 
 	const data_ext_games = require('./board-games-data.js');
-	//const data_int = require('./borga-data-mem.js')(guest);
-	const data_int =
+	const data_int = require('./borga-data-mem.js')(guest);
+	/**
+	 * const data_int =
 		require('./borga-data-db')(
 			es_spec.url,
 			es_spec.prefix
 		);
-
+	 */
+	
 	const services = require('./borga-services.js')(data_ext_games, data_int);
 
 	const web_api = require('./borga-web-api.js')(services);

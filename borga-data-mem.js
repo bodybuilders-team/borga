@@ -320,8 +320,7 @@ module.exports = function (guest) {
 	return {
 		//-- User --
 		createNewUser,
-		tokenToUserId,
-
+	
 		//-- Group --
 		createGroup,
 		editGroup,
