@@ -175,7 +175,7 @@ async function makeGameObj(gameInfo) {
 	return {
 		id: gameInfo.id,
 		name: gameInfo.name,
-		description: gameInfo.description.replace(/<\/?p>/ig, '\n'),
+		description: gameInfo.description.replace(/(<\/?p>|<br \/>)/ig, '\n'),
 		url: gameInfo.url,
 		image_url: gameInfo.image_url,
 		publisher: gameInfo.publisher,

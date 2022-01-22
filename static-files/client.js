@@ -61,7 +61,10 @@ function setupForList() {
      */
     async function onRemoveGame() {
         const selectedGame = document.querySelector('#gameSelection');
-        const gamePath = this.id.substring(8) + selectedGame.value;
+        const selected = selectedGame.value;
+        if (selected == "") return;
+
+        const gamePath = this.id.substring(8) + selected;
 
         try {
             await apiRemoveGame(gamePath);

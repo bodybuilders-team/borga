@@ -11,7 +11,10 @@ const es_spec = {
 	prefix: 'prod'
 };
 
+// When true, uses the borga-data-db module, otherwise uses the borga-data-mem
+const USE_DATA_DB = false; 
+
 const server = require('./borga-server');
-const app = server(es_spec, config.guest);
+const app = server(es_spec, config.guest, USE_DATA_DB);
 
 app.listen(port);
