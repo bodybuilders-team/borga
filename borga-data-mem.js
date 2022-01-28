@@ -7,7 +7,7 @@ const crypto = require('crypto');
 
 module.exports = function (guest) {
 
-	const defaultHashedPassword = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+	const DEFAULT_HASHED_PASSWORD = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
 	/**
 	 * Object that represents a map of all users: "userId": "userObj".
@@ -21,19 +21,19 @@ module.exports = function (guest) {
 	let users = {
 		"a48280": createUserObj(
 			"André Jesus",
-			defaultHashedPassword
+			DEFAULT_HASHED_PASSWORD
 		),
 		"a48287": createUserObj(
 			"Nyckollas Brandão",
-			defaultHashedPassword
+			DEFAULT_HASHED_PASSWORD
 		),
 		"a48309": createUserObj(
 			"André Santos",
-			defaultHashedPassword
+			DEFAULT_HASHED_PASSWORD
 		),
 		[guest.id]: createUserObj(
 			[guest.name],
-			defaultHashedPassword
+			DEFAULT_HASHED_PASSWORD
 		)
 	};
 
@@ -60,7 +60,7 @@ module.exports = function (guest) {
 	 * @param {String} token 
 	 * @returns the userId associated with the given token
 	 */
-	 function tokenToUserId(token) {
+	function tokenToUserId(token) {
 		return tokens[token];
 	}
 
@@ -79,9 +79,9 @@ module.exports = function (guest) {
 	 * @returns the user token
 	 * @throws NOT_FOUND if the token doesn't exist
 	 */
-	 function getToken(userId) {
-		for(const token in tokens){
-			if(tokens[token] == userId)
+	function getToken(userId) {
+		for (const token in tokens) {
+			if (tokens[token] == userId)
 				return token;
 		}
 		throw errors.NOT_FOUND({ 'token for user': userId });
@@ -121,7 +121,7 @@ module.exports = function (guest) {
 	 * @returns an object with the new group information
 	 * @throws ALREADY_EXISTS if the user already has a group with the given groupId
 	 */
-	function createGroup(userId, groupId, groupName, groupDescription) {
+	function writeGroup(userId, groupId, groupName, groupDescription) {
 		const user = getUser(userId)
 		if (user.groups[groupId]) throw errors.ALREADY_EXISTS({ groupId });
 
@@ -134,6 +134,10 @@ module.exports = function (guest) {
 			description: groupObj.description
 		};
 	}
+
+
+	// Creates a group
+	const createGroup = writeGroup;
 
 
 	/**
@@ -343,7 +347,7 @@ module.exports = function (guest) {
 	return {
 		//-- User --
 		createNewUser,
-	
+
 		//-- Group --
 		createGroup,
 		editGroup,
@@ -358,7 +362,7 @@ module.exports = function (guest) {
 		//-- Tokens --
 		tokenToUserId,
 		getToken,
-		
+
 		//-- Utils --
 		createUserObj,
 		createGroupObj,

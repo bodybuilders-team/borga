@@ -53,12 +53,15 @@ module.exports = function (data_ext, data_int) {
 		if (!userId || !password)
 			throw errors.MISSING_PARAM('missing credentials');
 
-		const user = await data_int.getUser(userId);
+		try {
+			const user = await data_int.getUser(userId);
+			if (user.passwordHash !== getHashedPassword(password)) throw {};
 
-		if (user.passwordHash !== getHashedPassword(password))
+			return user;
+		}
+		catch (error) {
 			throw errors.UNAUTHENTICATED({ userId, password });
-
-		return user;
+		}
 	}
 
 
@@ -109,6 +112,16 @@ module.exports = function (data_ext, data_int) {
 			query: { gameName }
 		});
 		return await data_ext.searchGamesByName(gameName, limit, order_by, ascending);
+	}
+
+
+	/**
+	 * Gets an object containing the game details.
+	 * @param {String} gameId
+	 * @returns promise an object containing the game details
+	 */
+	async function getGameDetails(gameId) {
+		return await data_ext.searchGamesById(gameId);
 	}
 
 
@@ -220,15 +233,6 @@ module.exports = function (data_ext, data_int) {
 		return await data_int.getGroupDetails(userId, groupId);
 	}
 
-
-	/**
-	 * Gets an object containing the game details.
-	 * @param {String} gameId
-	 * @returns promise an object containing the game details
-	 */
-	async function getGameDetails(gameId) {
-		return await data_ext.searchGamesById(gameId);
-	}
 
 
 	/**

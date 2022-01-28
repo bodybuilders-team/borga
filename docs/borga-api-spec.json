@@ -191,6 +191,61 @@
         }
       }
     },
+    "/games/{gameId}": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Gets the game details.",
+        "parameters": [
+          {
+            "name": "gameId",
+            "in": "path",
+            "description": "The ID of the game to search.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "game": {
+                    "id": "TAAifFP590",
+                    "name": "Root",
+                    "description": "\nFind adventure in this marvelous asymmetric game. Root provides limitless replay value as you and your friends explore the unique factions all wanting to rule a fantastic forest kingdom. Play as the Marquise de Cat and dominate the woods, extracting its riches and policing its inhabitants, as the Woodland Alliance, gathering supporters and coordinate revolts against the ruling regime, the Eyrie Dynasties, regaining control of the woods while keeping your squabbling court at bay, or as the Vagabond, seeking fame and fortune as you forge alliances and rivalries with the other players. Each faction has its own play style and paths to victory, providing an immersive game experience you will want to play again and again.\n",
+                    "url": "https://www.boardgameatlas.com/game/TAAifFP590/root",
+                    "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1629324760985.jpg",
+                    "amazon_rank": 16636,
+                    "price": "47.99",
+                    "mechanics": [
+                      "Action / Movement Programming",
+                      "Action Queue",
+                      "Area Control",
+                      "Dice Rolling",
+                      "Engine Building",
+                      "Hand Management",
+                      "Point to Point Movement",
+                      "Race",
+                      "Variable Player Powers"
+                    ],
+                    "categories": [
+                      "Adventure",
+                      "Animals",
+                      "Asymmetric"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user": {
       "post": {
         "tags": [

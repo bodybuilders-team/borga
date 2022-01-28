@@ -25,6 +25,11 @@ module.exports = function (services) {
 	}
 
 
+	/**
+	 * Get the user token from the request.
+	 * @param {Object} req 
+	 * @returns user token
+	 */
 	function getUserToken(req) {
 		return req.user && req.user.token;
 	}
@@ -37,6 +42,7 @@ module.exports = function (services) {
 	 */
 	function onError(res, err) {
 		switch (err.name) {
+			case 'MISSING_PARAM':
 			case 'BAD_REQUEST':
 				res.status(400);
 				break;
@@ -53,9 +59,6 @@ module.exports = function (services) {
 				res.status(502);
 				break;
 			case 'FAIL':
-				console.log(err);
-				res.status(500);
-				break;
 			default:
 				console.log(err);
 				res.status(500);
@@ -77,11 +80,13 @@ module.exports = function (services) {
 				if (schema.query) {
 					for (const i in schema.query.required) {
 						const param = schema.query.required[i];
-						if (!req.query[param]) info[param] = "required parameter missing";
+						if (!req.query[param])
+							info[param] = "required parameter missing";
 					}
 
 					for (const param in req.query) {
-						if (!schema.query.params.includes(param)) info[param] = "unknown query parameter";
+						if (!schema.query.params.includes(param))
+							info[param] = "unknown query parameter";
 					}
 				}
 
@@ -91,12 +96,15 @@ module.exports = function (services) {
 						const type = schema.body[property].type;
 						const required = schema.body[property].required;
 
-						if (required && !value) info[property] = "required property missing";
-						else if (value && typeof value !== type) info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
+						if (required && !value)
+							info[property] = "required property missing";
+						else if (value && typeof value !== type)
+							info[property] = "wrong type. expected " + type + ". instead got " + typeof value;
 					}
 
 					for (const property in req.body) {
-						if (!schema.body[property]) info[property] = "unknown body property";
+						if (!schema.body[property])
+							info[property] = "unknown body property";
 					}
 				}
 
@@ -133,14 +141,31 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function searchGamesByName(req, res) {
-		try {
-			const gameName = req.query.gameName;
-			const limit = req.query.limit;
-			const order_by = req.query.order_by;
-			const ascending = req.query.ascending;
+		const gameName = req.query.gameName;
+		const limit = req.query.limit;
+		const order_by = req.query.order_by;
+		const ascending = req.query.ascending;
 
+		try {
 			const games = await services.searchGamesByName(gameName, limit, order_by, ascending);
 			res.json({ games });
+		} catch (err) {
+			onError(res, err);
+		}
+	}
+
+
+	/**
+	 * Sends as response an object containing the game details obtained given an id.
+	 * @param {Object} req 
+	 * @param {Object} res 
+	 */
+	async function getGameDetails(req, res) { // TODO add to documentation
+		const gameId = req.params.gameId;
+
+		try {
+			const game = await services.getGameDetails(gameId);
+			res.json({ game });
 		} catch (err) {
 			onError(res, err);
 		}
@@ -153,11 +178,11 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function createNewUser(req, res) {
-		try {
-			const userId = req.body.userId;
-			const userName = req.body.userName;
-			const password = req.body.password;
+		const userId = req.body.userId;
+		const userName = req.body.userName;
+		const password = req.body.password;
 
+		try {
 			const userInfo = await services.createNewUser(userId, userName, password);
 			res.json({ "Created user": userInfo });
 		} catch (err) {
@@ -172,12 +197,12 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function createGroup(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupName = req.body.groupName;
-			const groupDescription = req.body.groupDescription;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupName = req.body.groupName;
+		const groupDescription = req.body.groupDescription;
 
+		try {
 			const groupInfo = await services.createGroup(token, userId, groupName, groupDescription);
 			res.json({ "Created group": groupInfo });
 		} catch (err) {
@@ -192,13 +217,13 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function editGroup(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupId = req.params.groupId;
-			const newGroupName = req.body.newGroupName;
-			const newGroupDescription = req.body.newGroupDescription;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupId = req.params.groupId;
+		const newGroupName = req.body.newGroupName;
+		const newGroupDescription = req.body.newGroupDescription;
 
+		try {
 			const groupInfo = await services.editGroup(token, userId, groupId, newGroupName, newGroupDescription);
 			res.json({ "Edited group": groupInfo });
 		} catch (err) {
@@ -213,10 +238,10 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function listGroups(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
 
+		try {
 			const groups = await services.listUserGroups(token, userId);
 			res.json(groups);
 		} catch (err) {
@@ -231,11 +256,11 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function deleteGroup(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupId = req.params.groupId;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupId = req.params.groupId;
 
+		try {
 			const groupInfo = await services.deleteGroup(token, userId, groupId);
 			res.json({ "Deleted group": groupInfo });
 		} catch (err) {
@@ -250,11 +275,11 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function getGroupDetails(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupId = req.params.groupId;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupId = req.params.groupId;
 
+		try {
 			const details = await services.getGroupDetails(token, userId, groupId);
 			res.json(details);
 		} catch (err) {
@@ -269,12 +294,12 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function addGameToGroup(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupId = req.params.groupId;
-			const gameId = req.body.gameId;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupId = req.params.groupId;
+		const gameId = req.body.gameId;
 
+		try {
 			const addedGame = await services.addGameToGroup(token, userId, groupId, gameId);
 			res.json({ "Added game": addedGame });
 		} catch (err) {
@@ -289,12 +314,12 @@ module.exports = function (services) {
 	 * @param {Object} res 
 	 */
 	async function removeGameFromGroup(req, res) {
-		try {
-			const token = getUserToken(req);
-			const userId = req.params.userId;
-			const groupId = req.params.groupId;
-			const gameId = req.params.gameId;
+		const token = getUserToken(req);
+		const userId = req.params.userId;
+		const groupId = req.params.groupId;
+		const gameId = req.params.gameId;
 
+		try {
 			const name = await services.removeGameFromGroup(token, userId, groupId, gameId);
 			res.json({ "Removed game": name });
 		} catch (err) {
@@ -302,7 +327,12 @@ module.exports = function (services) {
 		}
 	}
 
-
+	/**
+	 * Extracts the bearer token in the requests and executes the callback function.
+	 * @param {Object} req 
+	 * @param {Object} res 
+	 * @param {Function} next 
+	 */
 	function extractToken(req, res, next) {
 		const bearerToken = getBearerToken(req);
 
@@ -331,6 +361,8 @@ module.exports = function (services) {
 			required: ["gameName"]
 		}
 	}), searchGamesByName);
+
+	router.get('/games/:gameId', getGameDetails);
 
 	// User 
 	router.post('/user', validateRequest({

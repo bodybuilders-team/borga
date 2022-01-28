@@ -12,7 +12,7 @@ const es_spec = {
 	url: config.es_url,
 	prefix: 'test'
 };
-const app = server(es_spec, config.guest);
+const app = server(es_spec, config.guest, true);
 
 
 test('Confirm database is running', async () => {

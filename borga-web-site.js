@@ -28,6 +28,38 @@ module.exports = function (services) {
 
 
 	/**
+	 * Sends as response an object containing the cause of the error.
+	 * @param {Object} res 
+	 * @param {Object} error
+	 */
+	function onError(res, error) {
+		switch (error.name) {
+			case 'MISSING_PARAM':
+			case 'BAD_REQUEST':
+				res.status(400);
+				break;
+			case 'UNAUTHENTICATED':
+				res.status(401);
+				break;
+			case 'NOT_FOUND':
+				res.status(404);
+				break;
+			case 'ALREADY_EXISTS':
+				res.status(409);
+				break;
+			case 'EXT_SVC_FAIL':
+				res.status(502);
+				break;
+			case 'FAIL':
+			default:
+				console.log(error);
+				res.status(500);
+		}
+		res.render('error', { error });
+	}
+
+
+	/**
 	 * Gets the home page.
 	 * @param {Object} req 
 	 * @param {Object} res 
@@ -61,8 +93,7 @@ module.exports = function (services) {
 				: {}
 			res.render('gameDetails', { header: 'Game Details', game, groups, user: req.user });
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -81,8 +112,7 @@ module.exports = function (services) {
 
 			res.render('games', { header: 'Popular Games', games, groups, user: req.user });
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -109,8 +139,7 @@ module.exports = function (services) {
 				res.render('error', { error, gameNameNotFound: gameName });
 			}
 			else {
-				console.log(error);
-				res.render('error', { error });
+				onError(res, error);
 			}
 		}
 	}
@@ -129,8 +158,7 @@ module.exports = function (services) {
 			const groups = await services.listUserGroups(token, userId);
 			res.render('groups', { groups, user: req.user });
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -151,8 +179,7 @@ module.exports = function (services) {
 
 			res.render('groupDetails', { header: 'Group Details', group, user: req.user });
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -172,8 +199,7 @@ module.exports = function (services) {
 			const group = await services.createGroup(token, userId, groupName, groupDescription);
 			res.redirect(`/user/${userId}/groups/${group.id}`);
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -194,8 +220,7 @@ module.exports = function (services) {
 			await services.editGroup(token, userId, groupId, newGroupName, newGroupDescription);
 			res.redirect(`/user/${userId}/groups/${groupId}`);
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -215,8 +240,7 @@ module.exports = function (services) {
 			await services.addGameToGroup(token, userId, groupId, gameId);
 			res.redirect(`/user/${userId}/groups/${groupId}`);
 		} catch (error) {
-			console.log(error);
-			res.render('error', { error });
+			onError(res, error);
 		}
 	}
 
@@ -248,8 +272,7 @@ module.exports = function (services) {
 			if (error.name == 'ALREADY_EXISTS')
 				res.render('register_login', { already_exists: error })
 			else {
-				console.log(error);
-				res.render('error', { error });
+				onError(res, error);
 			}
 		}
 	}
@@ -276,12 +299,10 @@ module.exports = function (services) {
 				res.redirect(`/`);
 			});
 		} catch (error) {
-
 			if (error.name == 'UNAUTHENTICATED')
 				res.render('register_login', { unauthenticated: error })
 			else {
-				console.log('LOGIN EXCEPTION', error);
-				res.render('error', { error });
+				onError(res, error);
 			}
 		}
 	}
@@ -309,7 +330,7 @@ module.exports = function (services) {
 
 
 	// Show popular games
-	router.get('/popularGames', showPopularGames);
+	router.get('/games/popular', showPopularGames);
 
 	// Show games searched
 	router.get('/games', showSearchedGames);
@@ -340,7 +361,7 @@ module.exports = function (services) {
 	// Show group details
 	router.get('/user/:userId/groups/:groupId', showGroupDetails);
 
-	// Show group details
+	// Edit group
 	router.post('/user/:userId/groups/:groupId', editGroup);
 
 	// Adds a game to a group

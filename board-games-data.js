@@ -16,7 +16,7 @@ const HTTP_CLIENT_ERROR = 4;
 const mechanics = {};
 const categories = {};
 
-const numberOfPopularGames = 20;
+const NUMBER_OF_POPULAR_GAMES = 20;
 
 
 /**
@@ -64,7 +64,7 @@ async function do_fetch(uri) {
  * @returns promise with an array containing the most popular games
  */
 async function getPopularGames() {
-	const game_uri = BOARD_GAME_ATLAS_BASE_URI + `&limit=${numberOfPopularGames}&order_by=rank`;
+	const game_uri = BOARD_GAME_ATLAS_BASE_URI + `&limit=${NUMBER_OF_POPULAR_GAMES}&order_by=rank`;
 
 	const res = await do_fetch(game_uri);
 

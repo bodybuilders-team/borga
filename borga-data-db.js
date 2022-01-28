@@ -3,7 +3,7 @@
 
 const errors = require('./borga-errors');
 const crypto = require('crypto');
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
 
 
 module.exports = function (
@@ -171,14 +171,14 @@ module.exports = function (
 	// ------------------------- Groups Functions -------------------------
 
 	/**
-	 * Adds a new group to the user.
+	 * Writes a new group to the user.
 	 * @param {String} userId 
 	 * @param {String} groupId
 	 * @param {String} groupName 
 	 * @param {String} groupDescription 
-	 * @returns an object with the new group information
+	 * @returns an object with the wrote group information
 	 */
-	async function createGroup(userId, groupId, groupName, groupDescription) {
+	async function writeGroup(userId, groupId, groupName, groupDescription) {
 		await getUser(userId);
 
 		try {
@@ -208,6 +208,9 @@ module.exports = function (
 		}
 	}
 
+	// Creates a group
+	const createGroup = writeGroup;
+
 
 	/**
 	 * Edits a group by changing its name and description.
@@ -220,7 +223,7 @@ module.exports = function (
 	async function editGroup(userId, groupId, newGroupName, newGroupDescription) {
 		const group = await getGroup(userId, groupId);
 
-		return await createGroup(
+		return await writeGroup(
 			userId,
 			groupId,
 			newGroupName ? newGroupName : group.name,
