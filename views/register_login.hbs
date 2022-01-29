@@ -9,14 +9,15 @@
                         <label for="userName" class="form-label">User Name:</label>
                         <input type="text" class="form-control" id="userName" name="userName"
                             aria-describedby="userName" placeholder="Enter User Name" pattern="[a-zA-Z0-9]{4,20}"
-                            title="Only alphanumeric characters. Length: [4, 20] characters" required>
+                            title="Only alphanumeric characters. Length: [4, 20] characters" maxlength="20" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="userName" class="form-label">User Id:</label>
-                        <input type="text" class="form-control" id="userName" name="userId" placeholder="Enter User Id"
+                        <label for="userId" class="form-label">User Id:</label>
+                        <input type="text" class="form-control" id="userId" name="userId" placeholder="Enter User Id"
                             pattern="[a-z0-9]{4,20}"
-                            title="Only lowercase letters and digits. Length: [4, 20] characters" required>
+                            title="Only lowercase letters and digits. Length: [4, 20] characters" maxlength="20"
+                            required>
                         <small id="idHelp" class="form-text text-muted">
                             User Id is recommended to be some short and easy to remember.
                             Only lowercase letters and numbers are allowed.
@@ -27,8 +28,7 @@
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" class="form-control" id="password" name="password"
                             placeholder="Enter Your Password" pattern="[a-zA-Z0-9]{4,20}"
-                            title="Only alphanumeric characters. Length: [4, 20] characters"
-                            required>
+                            title="Only alphanumeric characters. Length: [4, 20] characters" maxlength="20" required>
                         <small id="passwordHelp" class="form-text text-muted">
                             Don't share your password with anyone.
                             Only alphanumeric characters. Length: [4, 20] characters.
@@ -54,15 +54,15 @@
                         <label for="userId" class="form-label">User Id:</label>
                         <input type="text" class="form-control" id="userId" name="userId" aria-describedby="userId"
                             placeholder="Enter Your User Id" pattern="[a-z0-9]{4,20}"
-                            title="Only lowercase letters and digits. Length: [4, 20] characters" required>
+                            title="Only lowercase letters and digits. Length: [4, 20] characters" maxlength="20"
+                            required>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" class="form-control" id="password" name="password"
                             placeholder="Enter Your Password" pattern="[a-zA-Z0-9]{4,20}"
-                            title="Only alphanumeric characters. Length: [4, 20] characters"
-                            required>
+                            title="Only alphanumeric characters. Length: [4, 20] characters" maxlength="20" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Login</button>

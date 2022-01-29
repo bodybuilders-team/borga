@@ -141,8 +141,15 @@ module.exports = function (data_ext, data_int) {
 			}
 		});
 
-		if (userId != userId.toLowerCase())
-			throw errors.BAD_REQUEST({ userId: "User id has to be lowercase!" });
+		if (!userId.match(/[a-z0-9]{4,20}/)) {
+			throw errors.BAD_REQUEST({ userId: "Only lowercase letters and digits. Length: [4, 20] characters" })
+		}
+		if (!userName.match(/[a-zA-Z0-9]{4,20}/)) {
+			throw errors.BAD_REQUEST({ userId: "Only alphanumeric characters. Length: [4, 20] characters" })
+		}
+		if (!password.match(/[a-zA-Z0-9]{4,20}/)) {
+			throw errors.BAD_REQUEST({ password: "Only alphanumeric characters. Length: [4, 20] characters" })
+		}
 
 		return await data_int.createNewUser(userId, userName, getHashedPassword(password));
 	}
