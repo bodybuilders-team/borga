@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/games/popular": {
+    "/api/games/popular": {
       "get": {
         "tags": [
           "games"
@@ -58,7 +58,7 @@
         }
       }
     },
-    "/games/search": {
+    "/api/games/search": {
       "get": {
         "tags": [
           "games"
@@ -191,7 +191,7 @@
         }
       }
     },
-    "/games/{gameId}": {
+    "/api/games/{gameId}": {
       "get": {
         "tags": [
           "games"
@@ -246,7 +246,7 @@
         }
       }
     },
-    "/user": {
+    "/api/user": {
       "post": {
         "tags": [
           "user"
@@ -309,7 +309,7 @@
         }
       }
     },
-    "/user/{userId}/groups": {
+    "/api/user/{userId}/groups": {
       "post": {
         "tags": [
           "user"
@@ -443,7 +443,7 @@
         }
       }
     },
-    "/user/{userId}/groups/{groupId}": {
+    "/api/user/{userId}/groups/{groupId}": {
       "post": {
         "tags": [
           "user"
@@ -658,7 +658,7 @@
         }
       }
     },
-    "/user/{userId}/groups/{groupId}/games": {
+    "/api/user/{userId}/groups/{groupId}/games": {
       "post": {
         "tags": [
           "user"
@@ -755,7 +755,7 @@
         }
       }
     },
-    "/user/{userId}/groups/{groupId}/games/{gameId}": {
+    "/api/user/{userId}/groups/{groupId}/games/{gameId}": {
       "delete": {
         "tags": [
           "user"
